@@ -6,7 +6,7 @@ import generatedRoutes from 'virtual:generated-pages'
 import App from './App.vue'
 import '@/styles/global.scss'
 
-const API_URL = "http://127.0.0.1:3000/api"
+const API_URL = import.meta.env.VITE_API_URL || "/api"
 
 // Vue Router
 const routes = setupLayouts(generatedRoutes)
