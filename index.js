@@ -6,7 +6,7 @@ const path = require('path');
 
 require('dotenv').config();
 
-async function start() {
+async function start(opts = {}) {
 	const usid = new USID();
 	const app = Fastify({ logger: true });
 	const prisma = new PrismaClient({});
@@ -37,11 +37,19 @@ async function start() {
 		}
 	})
 
-	return app.listen(process.env.PORT || 3000, (err, address) => {
+	const handler = (err, address) => {
 		if (err) throw err
 		app.log.info(`server listening on ${address}`);
-	})
+	}
+
+	const PORT = process.env.PORT || opts?.port || 3000
+	const HOST = process.env.HOST || opts?.host || false
+
+	return HOST ? app.listen(PORT, HOST, handler) : app.listen(PORT, handler)
 }
 
 
-start()
+start({
+	host: '0.0.0.0',
+	port: '80'
+})

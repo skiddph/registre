@@ -2,20 +2,18 @@
 import { watchEffect } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import AdminDashboard from '@/components/AdminDashboard.vue'
 
 const store = useStore()
 const router = useRouter()
 
 watchEffect(() => {
-  if (!(store.state.token && store.state.role === 1)) {
+  if (!(store.state.token && store.state.role === 2)) {
     router.push('/')
   }
 })
 
 </script>
 <template>
-  <div>
-    <h1>Superadmin Layout</h1>
-    <router-view />
-  </div>
+    <AdminDashboard />
 </template>

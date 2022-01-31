@@ -15,7 +15,7 @@ model User {
   user String @unique
   name String
   // role 1 - superadmin
-  // role 2 - admin
+  // role 2 - admin (default)
   role Int    @default(2)
   hash String
 }
@@ -39,22 +39,22 @@ model Position {
 }
 
 model InOutState {
-  id       Int        @id @unique @default(autoincrement())
-  in      DateTime    @default(now())
-  out     DateTime
-  isOut   Boolean     @default(false)
+  id       Int      @id @unique @default(autoincrement())
+  in       DateTime @default(now())
+  out      DateTime
+  isOut    Boolean  @default(false)
   Employee Employee @relation(fields: employee, references: id)
   employee Int
 }
 
 model Employee {
-  id       Int       @id @unique @default(autoincrement())
-  name     String
-  Office   Office?   @relation(fields: [office], references: [name])
-  office String?
-  Unit     Unit?     @relation(fields: [unit], references: [name])
-  unit     String?
-  Position Position? @relation(fields: [position], references: [name])
-  position String?
+  id         Int          @id @unique @default(autoincrement())
+  name       String
+  Office     Office?      @relation(fields: [office], references: [name])
+  office     String?
+  Unit       Unit?        @relation(fields: [unit], references: [name])
+  unit       String?
+  Position   Position?    @relation(fields: [position], references: [name])
+  position   String?
   InOutState InOutState[]
 }

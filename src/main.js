@@ -19,10 +19,10 @@ const router = createRouter({
 const store = createStore({
   state: {
     app: {
-      name: "Registre"
+      name: "QR Logbook"
     },
-    token: '',
-    role: '',
+    token: '111',
+    role: 1,
     name: '',
     user: '',
     usercount: 0,
