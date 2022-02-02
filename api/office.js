@@ -1,6 +1,5 @@
 module.exports = function(app, base_url) {
   app.get(`${base_url}/office/:office`, async (req, res) => {
-    req.user = await getUserFromToken(req);
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
     const { office } = req.params;
     const data = await app.prisma.office.create({ data: { name: office } });
@@ -9,7 +8,6 @@ module.exports = function(app, base_url) {
   })
 
   app.delete(`${base_url}/office/:office`, async (req, res) => {
-    req.user = await getUserFromToken(req);
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
     const { office } = req.params;
     const deletedOffice = await app.prisma.office.delete({
@@ -20,7 +18,6 @@ module.exports = function(app, base_url) {
   })
 
   app.get(`${base_url}/offices`, async (req, res) => {
-    req.user = await getUserFromToken(req);
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
     const data = await app.prisma.office.findMany();
     if (data) return res.send(data);

@@ -15,6 +15,7 @@ async function start(opts = {}) {
 	await app.register(require('fastify-cors'), {})
 	await app.register(require('fastify-jwt'), { secret: process.env.JWT_SECRET || usid.rand(24) })
 	await app.register(require('./api'), { prefix: '/api' })
+	
 	if (process.env.NODE_ENV === 'production') {
 		await app.register(require('fastify-static'), {
 			root: path.join(__dirname, 'public')
@@ -28,11 +29,15 @@ async function start(opts = {}) {
 	await app.addHook('preValidation', async (req, res) => {
 		req.user = null;
 		try {
+			if(!req.headers.authorization){
+				return
+			}
 			const token = req.headers.authorization.split(' ')[ 1 ];
 			const decoded = await app.jwt.verify(token);
 			req.user = await app.prisma.user.findUnique({ where: { id: decoded.user } })
-			console.log('valdated')
-		} catch (error) {
+			req.user = _.omit(req.user, ['hash'])
+		} catch (e) {
+			console.log(e)
 			req.user = null;
 		}
 	})
