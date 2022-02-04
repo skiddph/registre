@@ -9,7 +9,11 @@ import DashboardActions from './DashboardActions.vue'
 import AddForm from './AddForm.vue'
 import SearchResult from './SearchResult.vue'
 
-store.dispatch('getList')
+
+watchEffect(() => {
+  // store.dispatch('setActive', store.state.dash.active)
+  store.dispatch('getList')
+})
 
 </script>
 

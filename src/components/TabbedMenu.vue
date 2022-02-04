@@ -7,7 +7,7 @@ const store = useStore()
 const tabs = ref([ 'Employees', 'Office', 'Unit', 'Position' ]);
 store.commit('setTabs', tabs.value)
 
-const active = ref(0);
+const active = ref(store.state.dash.active);
 
 watchEffect(() => {
   if (store.state.role == 1) {

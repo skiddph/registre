@@ -29,6 +29,47 @@ const loading = ref(false);
 watch([store.state.dash], () => {
   tabs.value = store.state.dash.tabs
   active.value = store.state.dash.active
+
+  if (store.state.dash.edit){
+    id.value = store.state.dash.id
+    if (active.value == 0) {
+      for(let i = 0; i < store.state.employees.length; i++){
+        if (store.state.employees[i].id == id.value){
+          name.value = store.state.employees[i].name
+          office.value = store.state.employees[i].office
+          unit.value = store.state.employees[i].unit
+          position.value = store.state.employees[i].position
+        }
+      }
+    } else if (active.value == 1) {
+      for(let i = 0; i < store.state.offices.length; i++){
+        if (store.state.offices[i].id == id.value){
+          name.value = store.state.offices[i].name
+        }
+      }
+    } else if (active.value == 2) {
+      for(let i = 0; i < store.state.units.length; i++){
+        if (store.state.units[i].id == id.value){
+          name.value = store.state.units[i].name
+        }
+      }
+    } else if (active.value == 3) {
+      for(let i = 0; i < store.state.positions.length; i++){
+        if (store.state.positions[i].id == id.value){
+          name.value = store.state.positions[i].name
+        }
+      }
+    } else if (active.value == 4) {
+      for(let i = 0; i < store.state.admins.length; i++){
+        if (store.state.admins[i].id == id.value){
+          name.value = store.state.admins[i].name
+          user.value = store.state.admins[i].user
+          pass.value = ""
+          cpass.value = ""
+        }
+      }
+    }
+  }
 })
 
 const actions = [
@@ -191,9 +232,169 @@ const actions = [
   },
 ]
 
+const update_a = [
+  // Employee
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        id: id.value,
+        name: name.value,
+        office: office.value,
+        unit: unit.value,
+        position: position.value,
+      }
+    }
+
+    await store.dispatch('update', {...data, id: store.state.dash.id})
+      .then(e => {
+        error.value = e?.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          office.value = ''
+          unit.value = ''
+          position.value = ''
+          store.commit('setEditState', {state:false,id:0})
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to update employee"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Office
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('update', {...data, id: store.state.dash.id})
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setEditState', {state:false,id:0})
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to update office"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Unit
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('update', {...data, id: store.state.dash.id})
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setEditState', {state:false,id:0})
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to update unit"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Position
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('update', {...data, id: store.state.dash.id})
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setEditState', {state:false,id:0})
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to update position"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Admin
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+        user: user.value,
+        pass: pass.value,
+      }
+    }
+
+    if (pass.value !== cpass.value) {
+      error.value = 'Passwords do not match'
+      loading.value = false
+      return
+    } else {
+      await store.dispatch('update', {...data, id: store.state.dash.id})
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          user.value = ''
+          pass.value = ''
+          cpass.value = ''
+          store.commit('setEditState', {state:false,id:0})
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to update admin"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+    }
+  },
+]
+
 </script>
 <template>
-  <div v-if="store.state.dash.add" class="add-form-container">
+  <div v-if="store.state.dash.add || store.state.dash.edit" class="add-form-container">
     <div class="add-form">
       <h1 class="form-title">Add {{ tabs[ active ] }}</h1>
       <div v-if="error" class="message">
@@ -253,8 +454,10 @@ const actions = [
 
       <!--- Actions -->
       <div class="add-form-actions">
-        <button @click="store.commit('setAddState', false)">Cancel</button>
-        <button @click="actions[ active ]">Add</button>
+        <button v-if="store.state.dash.add" @click="store.commit('setAddState', false)">Cancel</button>
+        <button v-if="store.state.dash.add" @click="actions[ active ]">Add</button>
+        <button v-if="store.state.dash.edit" @click="store.commit('setEditState', {state:false,id:0})">Cancel</button>
+        <button v-if="store.state.dash.edit" @click="update_a[ active ]">Update</button>
       </div>
     </div>
   </div>

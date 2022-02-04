@@ -22,6 +22,8 @@ const store = createStore({
       tabs: [],
       active: 0,
       add: false,
+      edit: false,
+      id: 0,
       search: ""
     }
   },
@@ -57,6 +59,14 @@ const store = createStore({
     },
     setAddState(state, add) {
       state.dash.add = add
+    },
+    setEditState(state, edit) {
+      try {
+        state.dash.edit = edit.state
+        state.dash.id = edit.id
+      } catch (e) {
+
+      }
     },
     setLists(state, { offices, units, positions, employees, admins }) {
       state.offices = offices

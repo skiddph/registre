@@ -33,22 +33,22 @@ module.exports = function (app, base_url) {
   })
 
   // Delete Unit
-  app.delete(`${base_url}/unit/:unit`, async (req, res) => {
+  app.delete(`${base_url}/unit/:id`, async (req, res) => {
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
-    const { unit } = req.params;
+    const { id } = req.params;
     const deletedUnit = await app.prisma.unit.delete({
-      where: { name: unit }
+      where: { id: Number(id) }
     })
     if (deletedUnit) return res.send({ name: deletedUnit.name });
     else return res.code(500).send({ error: 'Failed to delete unit' });
   })
 
   // Delete Position
-  app.delete(`${base_url}/position/:position`, async (req, res) => {
+  app.delete(`${base_url}/position/:id`, async (req, res) => {
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
-    const { position } = req.params;
+    const { id } = req.params;
     const deletedPosition = await app.prisma.position.delete({
-      where: { name: position }
+      where: { id: Number(id) }
     })
     if (deletedPosition) return res.send({ name: deletedPosition.name });
     else return res.code(500).send({ error: 'Failed to delete position' });
