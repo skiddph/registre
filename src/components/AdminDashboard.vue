@@ -11,7 +11,6 @@ import SearchResult from './SearchResult.vue'
 
 
 watchEffect(() => {
-  // store.dispatch('setActive', store.state.dash.active)
   store.dispatch('getList')
 })
 
