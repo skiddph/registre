@@ -93,7 +93,7 @@ const store = createStore({
     },
     async register({ commit, state }, { name, user, pass }) {
       const auth = state.token ? true : false;
-      return await fetch(`${API_URL}/register`, {
+      return await fetch(`${API_URL}/user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const store = createStore({
         }
       })
         .then(e => e.json())
-        .then(async (e) => ({success: e.id ? true : false}))
+        .then(async (e) => ({ success: e.id ? true : false }))
         .catch(e => ({ error: e.message || e.error }))
     },
     setActive({ commit }, active) {
@@ -147,9 +147,9 @@ const store = createStore({
       commit('setAddState', false)
       commit('setSearch', "")
     },
-    async getList({ commit,state }) {
-      if(state.token){
-        return await fetch(`${API_URL}/list`,{
+    async getList({ commit, state }) {
+      if (state.token) {
+        return await fetch(`${API_URL}/list`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${state.token}`
@@ -159,8 +159,131 @@ const store = createStore({
           .then(e => commit('setLists', e))
           .catch(e => ({ error: e.message || e.error }))
       }
+    },
+    async delete({state}, { tab, id }) {
+      if (state.token) {
+        let action = ''
+        switch (tab) {
+          case 0:
+            action = 'employee'
+            break;
+          case 1:
+            action = 'office'
+            break;
+          case 2:
+            action = 'unit'
+            break;
+          case 3:
+            action = 'position'
+            break;
+          case 4:
+            action = 'user'
+            break;
+        }
+        return await fetch(`${API_URL}/${action}/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${state.token}`
+          }
+        })
+          .then(e => e.json())
+          .then(async (e) => {
+            await store.dispatch('getList')
+            return { success: e.id ? true : false , ...e}
+          })
+          .catch(e => ({ error: e.message || e.error }))
+      } else {
+        return {error: "No token"}
+      }
+    },
+    async update({ state }, { tab, id, data }) {
+      for (let key in data) {
+        if (data[key] === '') {
+          return { error: `${key} can't be empty` }
+        }
+      }
+      if (state.token) {
+        let action = ''
+        switch (tab) {
+          case 0:
+            action = 'employee'
+            break;
+          case 1:
+            action = 'office'
+            break;
+          case 2:
+            action = 'unit'
+            break;
+          case 3:
+            action = 'position'
+            break;
+          case 4:
+            action = 'user'
+            break;
+        }
+        return await fetch(`${API_URL}/${action}/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+          .then(e => e.json())
+          .then(async (e) => {
+            await store.dispatch('getList')
+            return { success: e.id ? true : false, ...e }
+          })
+          .catch(e => ({ error: e.message || e.error }))
+      } else {
+        return {error: "No token"}
+      }
+    },
+    async create({ state }, { tab, data }) {
+      for (let key in data) {
+        if (data[key] === '') {
+          return { error: `${key} is required` }
+        }
+      }
+
+      if (state.token) {
+        let action = ''
+        switch (tab) {
+          case 0:
+            action = 'employee'
+            break;
+          case 1:
+            action = 'office'
+            break;
+          case 2:
+            action = 'unit'
+            break;
+          case 3:
+            action = 'position'
+            break;
+          case 4:
+            action = 'user'
+            break;
+        }
+        return await fetch(`${API_URL}/${action}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+          .then(e => e.json())
+          .then(async (e) => {
+            await store.dispatch('getList')
+            return { success: e.id ? true : false, ...e }
+          })
+          .catch(e => ({ error: e.message || e.error }))
+      } else {
+        return {error: "No token"}
+      }
     }
   }
-});
+})
 
 export default store;

@@ -15,6 +15,7 @@ module.exports = function(app, base_url) {
         200: {
           type: 'object',
           properties: {
+            id: { type: 'string' },
             token: { type: 'string' },
             name: { type: 'string' },
             user: { type: 'string' },

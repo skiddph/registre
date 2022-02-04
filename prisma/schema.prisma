@@ -44,11 +44,11 @@ model InOutState {
   out      DateTime
   isOut    Boolean  @default(false)
   Employee Employee @relation(fields: employee, references: id)
-  employee Int
+  employee String
 }
 
 model Employee {
-  id         Int          @id @unique @default(autoincrement())
+  id         String       @id @unique
   name       String
   Office     Office?      @relation(fields: [office], references: [name])
   office     String?

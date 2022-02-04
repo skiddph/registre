@@ -52,31 +52,42 @@ watchEffect(() => {
   }
 })
 
+const updateList = () => {
+  employees = ref(store.state.employees);
+  offices = ref(store.state.offices);
+  units = ref(store.state.units);
+  positions = ref(store.state.positions);
+  admins = ref(store.state.admins);
+}
+
+const action = {
+  delete: (id) => {
+    store.dispatch('delete', { tab: active.value, id })
+
+  },
+  edit: (id) => {
+    store.dispatch('edit', { tab: active.value, id })
+  },
+}
+
 </script>
 <template>
   <div class="search-result-container">
     <div class="result-for" v-if="search">
-      <span class="result-for-text">{{ th.length }} Results for: </span>
-      <span class="query"> {{ search }}</span>
+      <span class="result-for-text">{{ th.length }} Results for:</span>
+      <span class="query">{{ search }}</span>
     </div>
     <div class="table-container">
       <table v-if="result.length > 0">
         <tr class="w-full">
-          <th v-for="(     v, k     ) in th" :key="k">{{ v }}</th>
+          <th v-for="(  v, k  ) in th" :key="k">{{ v }}</th>
           <th>Actions</th>
         </tr>
-        <tr v-for="  item   in result">
-          <td v-for="  h   in th" :key="`${item.id}-${h}`">{{ item[ h ] }}</td>
+        <tr v-for="  item  in result">
+          <td v-for="  h  in th" :key="`${item.id}-${h}`">{{ item[ h ] }}</td>
           <td>
-            <button
-              v-if="th.length > 1"
-              class="edit"
-              @click="store.dispatch('edit', { tab: active, id: item.id })"
-            >Edit</button>
-            <button
-              class="delete"
-              @click="store.dispatch('delete', { tab: active, id: item.id })"
-            >Delete</button>
+            <button v-if="th.length > 1" class="edit" @click="action.edit(item.id)">Edit</button>
+            <button class="delete" @click="action.delete(item.id)">Delete</button>
           </td>
         </tr>
       </table>
@@ -88,10 +99,10 @@ watchEffect(() => {
 </template>
 <style lang="scss" scoped>
 .search-result-container {
-  @apply w-full ;
+  @apply w-full;
 
   .result-for {
-    @apply py-2  text-gray-600 text-sm ;
+    @apply py-2  text-gray-600 text-sm;
 
     .result-for-text {
       @apply font-bold;
@@ -108,10 +119,10 @@ watchEffect(() => {
     table {
       @apply w-full border-b;
 
-      th{
+      th {
         @apply capitalize;
       }
-      
+
       tr:first-child {
         @apply bg-gray-100;
       }
@@ -126,7 +137,8 @@ watchEffect(() => {
           @apply text-right;
         }
 
-        th,td {
+        th,
+        td {
           @apply px-2 py-2 sm:py-3;
         }
 

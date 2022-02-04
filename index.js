@@ -33,7 +33,15 @@ async function start(opts = {}) {
 				return
 			}
 			const token = req.headers.authorization.split(' ')[ 1 ];
-			const decoded = await app.jwt.verify(token);
+
+			let decoded;
+
+			try {
+				decoded = await app.jwt.verify(token);
+			} catch (err) {
+				return
+			}
+			
 			req.user = await app.prisma.user.findUnique({ where: { id: decoded.user } })
 			req.user = _.omit(req.user, ['hash'])
 		} catch (e) {

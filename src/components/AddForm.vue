@@ -31,12 +31,176 @@ watch([store.state.dash], () => {
   active.value = store.state.dash.active
 })
 
+const actions = [
+  // Employee
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        id: id.value,
+        name: name.value,
+        office: office.value,
+        unit: unit.value,
+        position: position.value,
+      }
+    }
+
+    await store.dispatch('create', data)
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          office.value = ''
+          unit.value = ''
+          position.value = ''
+          store.commit('setAddState', false)
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to add employee"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Office
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('create', data)
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setAddState', false)
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to add office"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Unit
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('create', data)
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setAddState', false)
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to add unit"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Position
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+      }
+    }
+
+    await store.dispatch('create', data)
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          store.commit('setAddState', false)
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to add position"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  },
+
+  // Admin
+  async () => {
+    error.value = ''
+    loading.value = true
+    let data = {
+      tab: active.value,
+      data: {
+        name: name.value,
+        user: user.value,
+        pass: pass.value,
+      }
+    }
+
+    if (pass.value !== cpass.value) {
+      error.value = 'Passwords do not match'
+      loading.value = false
+      return
+    } else {
+      await store.dispatch('create', data)
+      .then(e => {
+        error.value = e.error || false
+        if (!error.value) {
+          name.value = ''
+          id.value = ''
+          user.value = ''
+          pass.value = ''
+          cpass.value = ''
+          store.commit('setAddState', false)
+        }
+      })
+      .catch(e => {
+        error.value = e.error || e.message || "Failed to add admin"
+      })
+      .finally(() => {
+        loading.value = false
+      })
+    }
+  },
+]
+
 </script>
 <template>
   <div v-if="store.state.dash.add" class="add-form-container">
     <div class="add-form">
       <h1 class="form-title">Add {{ tabs[ active ] }}</h1>
-
+      <div v-if="error" class="message">
+        <span class="error"  @click="error = ''">
+          {{ error }}
+        </span>
+      </div>
       <!-- Employee -->
       <div v-if="active == 0">
         <label for="id">Employee ID</label>
@@ -44,16 +208,16 @@ watch([store.state.dash], () => {
         <label for="name">Name</label>
         <input type="text" name="name" v-model="name" autocomplete="off" />
         <label for="office">Office</label>
-        <select name="office">
-          <option v-for="(   v, k   ) in store.state.offices" :key="k" :value="v">{{ v }}</option>
+        <select name="office" v-model="office">
+          <option v-for="v in store.state.offices" :key="v.id" :value="v.name">{{v.name}}</option>
         </select>
         <label for="unit">Unit</label>
-        <select name="unit">
-          <option v-for="(   v, k   ) in store.state.units" :key="k" :value="v">{{ v }}</option>
+        <select name="unit" v-model="unit">
+          <option v-for="v in store.state.units" :key="v.id" :value="v.name">{{v.name}}</option>
         </select>
         <label for="position">Position</label>
-        <select name="position">
-          <option v-for="(   v, k   ) in store.state.positions" :key="k" :value="v">{{ v }}</option>
+        <select name="position" v-model="position">
+          <option v-for="v in store.state.positions" :key="v.id" :value="v.name">{{v.name}}</option>
         </select>
       </div>
 
@@ -106,6 +270,15 @@ watch([store.state.dash], () => {
 
     .form-title {
       @apply text-2xl font-bold mb-4;
+    }
+
+    .message {
+      @apply  text-center mb-4 text-sm;
+
+      .error {
+        @apply text-red-500;
+        cursor: pointer;
+      }
     }
 
     label {
