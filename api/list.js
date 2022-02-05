@@ -2,7 +2,6 @@ const _ = require('lodash')
 
 module.exports = function (app, base_url) {
   app.get(`${base_url}/list`, async (req, res) => {
-    console.log(req.user)
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' });
     const { role } = req.user;
     if (!(role === 1 || role === 2)) return res.code(401).send({ error: 'Unauthorized role' });

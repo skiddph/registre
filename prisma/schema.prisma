@@ -38,13 +38,17 @@ model Position {
   Employee Employee[]
 }
 
-model InOutState {
+model Logs {
   id       Int      @id @unique @default(autoincrement())
-  in       DateTime @default(now())
-  out      DateTime
+  in       Int    
+  out      Int      @default(0)
   isOut    Boolean  @default(false)
   Employee Employee @relation(fields: employee, references: id)
   employee String
+  name     String
+  office   String
+  unit     String
+  position String
 }
 
 model Employee {
@@ -56,5 +60,5 @@ model Employee {
   unit       String?
   Position   Position?    @relation(fields: [position], references: [name])
   position   String?
-  InOutState InOutState[]
+  Logs Logs[]
 }

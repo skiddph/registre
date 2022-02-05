@@ -89,7 +89,7 @@ const action = {
 <template>
   <div class="search-result-container">
     <div class="result-for" v-if="search">
-      <span class="result-for-text">{{ th.length }} Results for:</span>
+      <span class="result-for-text">{{ result.length }} Results for:</span>
       <span class="query">{{ search }}</span>
     </div>
     <div class="table-container">

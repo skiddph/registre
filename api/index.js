@@ -9,6 +9,7 @@ const api = async (app, opts) => {
   require('./update')(app, base_url);
   require('./login')(app, base_url);
   require('./list')(app, base_url);
+  require('./log')(app, base_url);
 
   return
 }
