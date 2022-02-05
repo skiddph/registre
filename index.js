@@ -3,14 +3,24 @@ const { PrismaClient } = require('@prisma/client');
 const _ = require("lodash");
 const USID = require('usid');
 const path = require('path');
+const fs = require('fs');
 
 require('dotenv').config();
 
 async function start(opts = {}) {
 	const usid = new USID();
 	const app = Fastify({
+		http2: true,
+		https: {
+			allowHTTP1: true,
+			key: fs.readFileSync(path.resolve(__dirname, './cert/server.key')),
+			cert: fs.readFileSync(path.resolve(__dirname, './cert/server.crt')),
+		},
 		logger: true
 	});
+
+	app.register(require('fastify-https-redirect'));
+	
 	const prisma = new PrismaClient({});
 
 	app.decorate('prisma', prisma);
@@ -64,5 +74,5 @@ async function start(opts = {}) {
 
 start({
 	host: '0.0.0.0',
-	port: '80'
+	port: '3000'
 })
