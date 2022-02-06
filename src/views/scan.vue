@@ -1,4 +1,7 @@
 <template>
+  <audio ref="in" :src="SoundIn"></audio>
+  <audio ref="out" :src="SoundOut"></audio>
+  <audio ref="err" :src="SoundError"></audio>
   <div ref="cont" class="scanner-container">
     <qrcode-stream :camera="camera" :torch="torch" @detect="onDetect" @init="onInit">
       <div class="message-container">
@@ -34,6 +37,11 @@
 </template>
 <script>
 import Indicator from '@/components/Indicator.vue'
+import SoundIn from '@/assets/in.mp3'
+import SoundOut from '@/assets/out.mp3'
+import SoundError from '@/assets/error.mp3'
+import { Howl } from 'howler'
+
 export default {
   components: {
     Indicator
@@ -51,6 +59,12 @@ export default {
       lastDecode: Date.now() * 1000,
       idle: null,
       idle2: null,
+      sndIn: null,
+      sndOut: null,
+      sndError: null,
+      SoundIn: SoundIn,
+      SoundOut: SoundOut,
+      SoundError: SoundError
     }
   },
   methods: {
@@ -61,18 +75,22 @@ export default {
         this.state = 'error'
         this.error = res.error
         this.success = ''
+        this.$refs.err.play()
       } else if (res?.isOut) {
         this.state = 'out'
         this.success = 'Out'
         this.error = ''
+        this.$refs.out.play()
       } else if (res?.id) {
         this.state = 'in'
         this.success = 'In'
         this.error = ''
+        this.$refs.in.play()
       } else {
         this.state = 'error'
         this.error = 'Unknown error'
         this.success = ''
+        this.$refs.err.play()
       }
     },
     async onDetect(promise) {
