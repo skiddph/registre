@@ -40,7 +40,6 @@ import Indicator from '@/components/Indicator.vue'
 import SoundIn from '@/assets/in.mp3'
 import SoundOut from '@/assets/out.mp3'
 import SoundError from '@/assets/error.mp3'
-import { Howl } from 'howler'
 
 export default {
   components: {
