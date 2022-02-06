@@ -10,7 +10,8 @@
         "preview": "vite preview --host",
         "api": "cross-env PORT=3000 NODE_ENV=development nodemon index.js",
         "serve": "cross-env NODE_ENV=production vite build && node index.js",
-        "setup": "cross-env NODE_ENV=production vite build && npx prisma migrate dev -n init && npx prisma migrate deploy"
+        "setup": "cross-env NODE_ENV=production vite build && npx prisma migrate dev -n init && npx prisma migrate deploy && npx prisma db push",
+        "reset": "npx prisma migrate reset --force"
     },
     "dependencies": {
         "@prisma/client": "^3.8.1",

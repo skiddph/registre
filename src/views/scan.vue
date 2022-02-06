@@ -47,6 +47,7 @@ export default {
       error: '',
       success: '',
       state: 'loading',
+      lastDecode: Date.now() * 1000,
       idle: null
     }
   },
@@ -84,14 +85,18 @@ export default {
         await this.log(content)
           .then(() => {
             this.loading = false
-            setTimeout(() => {
-              if (this.state !== 'ready' && this.state !== 'loading') this.state = 'ready'
-            }, 1000)
+            if ((this.lastDecode - 5000) > (Date.now() * 1000)) {
+              setTimeout(() => {
+                if (this.state !== 'ready' && this.state !== 'loading') {
+                  this.state = 'ready'
+                  this.error = ''
+                  this.success = ''
+                }
+              }, 5000)
+            }
 
             this.idle = setTimeout(() => {
               if (this.state === 'ready') {
-                this.error = ''
-                this.success = ''
                 let tmp = this.camera
                 this.toggleCamera()
                 setTimeout(() => {
@@ -99,6 +104,9 @@ export default {
                 }, 2000)
               }
             }, 15000)
+          })
+          .finally(()=>{
+            this.lastDecode = Date.now() * 1000
           })
       } catch (error) {
         this.state = 'error'

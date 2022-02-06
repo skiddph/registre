@@ -27,7 +27,7 @@ async function start(opts = {}) {
 	const prisma = new PrismaClient({});
 
 	app.decorate('prisma', prisma);
-	await app.register(require('fastify-cors'), {})
+	if (process.env.NODE_ENV === 'development')  await app.register(require('fastify-cors'), {})
 	await app.register(require('fastify-jwt'), { secret: process.env.JWT_SECRET || usid.rand(24) })
 	await app.register(require('./api'), { prefix: '/api' })
 	await app.register(require('fastify-static'), { root: path.join(__dirname, 'dist') })
