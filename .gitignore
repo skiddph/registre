@@ -5,3 +5,5 @@ dist-ssr
 *.local
 *.env
 prisma/dev.db
+prisma/migrations
+prisma/dev.db-journal

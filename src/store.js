@@ -292,6 +292,16 @@ const store = createStore({
       } else {
         return {error: "No token"}
       }
+    },
+    async log(ctx, id) {
+      return await fetch(`${API_URL}/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ id })
+      })
+        .then(e => e.json())
+        .then(e => e)
+        .catch(e => ({ error: e.message || e.error }))
     }
   }
 })

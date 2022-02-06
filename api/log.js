@@ -1,8 +1,8 @@
 const _ = require('lodash')
 
 module.exports = function (app, base_url) {
-  app.get(`${base_url}/log/:id`, async (req, res) => {
-    const { id } = req.params;
+  app.post(`${base_url}/log`, async (req, res) => {
+    const { id } = req.body;
 
     if (!id) return res.code(400).send({ error: 'Bad request' });
 

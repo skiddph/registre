@@ -24,8 +24,3 @@ watchEffect(() => {
     <SearchResult />
   </div>
 </template>
-<style lang="scss" scoped>
-.dashboard-container {
-  @apply p-0 w-full;
-}
-</style>

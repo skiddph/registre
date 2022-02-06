@@ -28,6 +28,3 @@ watchEffect(async () => {
 <template>
   <div>loading...</div>
 </template>
-<route lang="yaml">
-layout: default
-</route>

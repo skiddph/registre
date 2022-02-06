@@ -36,33 +36,3 @@ const setActive = (index) => {
     <div class="item spacer inactive"></div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.tabbed-menu {
-  @apply w-full flex flex-wrap items-end justify-start mb-4;
-
-  .item {
-    @apply sm:py-2 sm:px-4 p-2;
-
-    &.pointer {
-      @apply cursor-pointer;
-    }
-
-    &.active {
-      @apply border-x border-t border-gray-300;
-    }
-
-    &.inactive {
-      border-bottom: 1px solid #e6e6e6;
-    }
-
-    &.spacer {
-      flex: 1;
-    }
-
-    .count {
-      @apply text-xs text-gray-600;
-    }
-  }
-}
-</style>

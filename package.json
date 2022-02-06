@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "entry": "index.js",
     "scripts": {
-        "start": "node index.js",
+        "start": "cross-env NODE_ENV=production node index.js",
         "dev": "cross-env NODE_ENV=development VITE_API_URL=http://127.0.0.1:3000/api vite --port 80 --host --https",
         "build": "vite build",
         "preview": "vite preview --host",
@@ -24,6 +24,7 @@
         "fastify-static": "^4.5.0",
         "lodash": "^4.17.21",
         "postcss-import": "^14.0.2",
+        "qrcode-reader-vue3": "^3.1.2",
         "usid": "^1.0.21",
         "vue": "^3.2.25",
         "vue-router": "^4.0.12"
