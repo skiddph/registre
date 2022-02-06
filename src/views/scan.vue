@@ -13,6 +13,7 @@
     </div>
 
     <div class="legends">
+      <h3>Legends</h3>
       <div>
         <Indicator state="ready" />- Ready
       </div>
@@ -48,7 +49,8 @@ export default {
       success: '',
       state: 'loading',
       lastDecode: Date.now() * 1000,
-      idle: null
+      idle: null,
+      idle2: null,
     }
   },
   methods: {
@@ -76,6 +78,7 @@ export default {
     async onDetect(promise) {
       try {
         clearTimeout(this.idle)
+        clearTimeout(this.idle2)
       } catch {
         //
       }
@@ -85,15 +88,13 @@ export default {
         await this.log(content)
           .then(() => {
             this.loading = false
-            if ((this.lastDecode - 5000) > (Date.now() * 1000)) {
-              setTimeout(() => {
-                if (this.state !== 'ready' && this.state !== 'loading') {
-                  this.state = 'ready'
-                  this.error = ''
-                  this.success = ''
-                }
-              }, 5000)
-            }
+            this.idle2 = setTimeout(() => {
+              if (this.state !== 'ready' && this.state !== 'loading') {
+                this.state = 'ready'
+                this.error = ''
+                this.success = ''
+              }
+            }, 3000)
 
             this.idle = setTimeout(() => {
               if (this.state === 'ready') {
@@ -105,7 +106,7 @@ export default {
               }
             }, 15000)
           })
-          .finally(()=>{
+          .finally(() => {
             this.lastDecode = Date.now() * 1000
           })
       } catch (error) {

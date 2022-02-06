@@ -25,6 +25,32 @@ const store = createStore({
       edit: false,
       id: 0,
       search: ""
+    },
+    logs: [],
+    logsFilter: {
+      from: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(),
+        day: new Date().getDate(),
+        hour: 0,
+        minute: 0,
+        second: 0,
+        ms: 0
+      },
+      to: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(),
+        day: new Date().getDate(),
+        hour: 23,
+        minute: 59,
+        second: 59,
+        ms: 999
+      },
+      id: "",
+      position: "",
+      unit: "",
+      office: "",
+      name: ""
     }
   },
   mutations: {
@@ -77,6 +103,12 @@ const store = createStore({
     },
     setSearch(state, search) {
       state.dash.search = search
+    },
+    setLogs(state, logs) {
+      state.logs = logs
+    },
+    setLogsFilter(state, filter) {
+      state.logsFilter = filter
     }
   },
   actions: {
@@ -302,6 +334,40 @@ const store = createStore({
         .then(e => e.json())
         .then(e => e)
         .catch(e => ({ error: e.message || e.error }))
+    },
+    async getLogs({ commit, state ,dispatch }) {
+      return await fetch(`${API_URL}/logs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${state.token}`
+        },
+        body: JSON.stringify(state.logsFilter)
+      })
+        .then(e => e.json())
+        .then(e => {
+          if(Array.isArray(e)) dispatch('sortLogs', e)
+          return e
+        })
+        .catch(e => ({ error: e.message || e.error }))
+    },
+    sortLogs({commit}, logs) {
+      logs.sort((a, b) => {
+        if (a.in < b.in) return 1
+        if (a.in > b.in) return -1
+        return 0
+      })
+      for (let i = 0; i < logs.length; i++) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        let p_in = new Date(logs[i].in)
+        let p_out = new Date(logs[i].out)
+        // format datetime to string - Jan 1, 2019 12:00 AM
+        logs[i].in = `${months[p_in.getMonth()]} ${p_in.getDate()}, ${p_in.getFullYear()} ${p_in.getHours() > 12 ? p_in.getHours() - 12 : p_in.getHours()}:${p_in.getMinutes()} ${p_in.getHours() >= 12 ? 'PM' : 'AM'}`
+        logs[i].out = logs[i].isOut ? `${months[p_out.getMonth()]} ${p_out.getDate()}, ${p_out.getFullYear()} ${p_out.getHours() > 12 ? p_out.getHours() - 12 : p_out.getHours()}:${p_out.getMinutes()} ${p_out.getHours() >= 12 ? 'PM' : 'AM'}` : '-'
+        delete logs[i].isOut
+        delete logs[i].id
+      }
+     commit('setLogs', logs)
     }
   }
 })

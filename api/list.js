@@ -9,7 +9,7 @@ module.exports = function (app, base_url) {
     const offices = await app.prisma.office.findMany({})
     const units = await app.prisma.unit.findMany({})
     const positions = await app.prisma.position.findMany({})
-    let admins = role == 1 ? await app.prisma.user.findMany({ where: {role: 2 } }) : []
+    let admins = role == 1 ? await app.prisma.user.findMany() : []
     admins = admins.map(admin => _.omit(admin, ['hash']))
 
     return await res.send({

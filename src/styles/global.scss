@@ -22,7 +22,7 @@ $max-width: 1200px;
 	}
 
 	.navbar-container {
-		@apply w-full flex flex-col items-center justify-center shadow;
+		@apply w-full flex flex-col items-center justify-center shadow sticky top-0 bg-white;
 
 		.navbar {
 			@apply px-2 py-0 w-full flex flex-row items-center justify-start;
@@ -118,7 +118,7 @@ $max-width: 1200px;
 		}
 	
 		.legends {
-			@apply w-full;
+			@apply w-full text-sm;
 	
 			div {
 				@apply flex flex-row items-center justify-start;
@@ -149,6 +149,7 @@ $max-width: 1200px;
 			background-color: #dd8533;
 		}
 	}
+
 	.search-result-container {
 		@apply w-full;
 	
@@ -308,6 +309,43 @@ $max-width: 1200px;
 	
 			.count {
 				@apply text-xs text-gray-600;
+			}
+		}
+	}
+	.logs-wrapper {
+		@apply w-full;
+		.actions {
+			@apply flex flex-row justify-between items-center py-4;
+			input {
+				@apply mr-2 py-2 px-3 border outline-none rounded-md w-full border-gray-400;
+				flex: 1;
+			}
+			button {
+				@apply px-4 py-2 text-white bg-blue-500 hover:bg-blue-700 rounded-md transition duration-300 ease-in-out;
+			}
+		}
+		.logs-container {
+			@apply w-full;
+	
+			table {
+				@apply w-full text-sm;
+				border-collapse: collapse;
+	
+				tr {
+	
+					th {
+						@apply capitalize;
+					}
+	
+					td,
+					th {
+						@apply p-2;
+					}
+				}
+			}
+	
+			table, th, td {
+				border: .5px solid #ccc;
 			}
 		}
 	}
