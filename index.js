@@ -4,11 +4,13 @@ const _ = require("lodash");
 const USID = require('usid');
 const path = require('path');
 const fs = require('fs');
+const net = require('./lib/net');
+
 require('dotenv').config();
 
 async function start(opts = {}) {
 
-	const fastifyOpts = { logger: true }
+	const fastifyOpts = {  }
 
 	if (process.env.NODE_ENV === 'production') {
 		fastifyOpts.http2 = true;
@@ -17,6 +19,8 @@ async function start(opts = {}) {
 			key: fs.readFileSync(path.resolve(__dirname, './cert/server.key')),
 			cert: fs.readFileSync(path.resolve(__dirname, './cert/server.crt')),
 		}
+	} else {
+		fastifyOpts.logger = true
 	}
 
 	const usid = new USID();
@@ -59,8 +63,22 @@ async function start(opts = {}) {
 	})
 
 	const handler = (err, address) => {
-		if (err) throw err
-		app.log.info(`server listening on ${address}`)
+		if (err) {
+			console.log('Failed to start server')
+			throw err
+		}
+
+		const protocol = address.includes('https') ? 'https' : 'http'
+		const port = app.server.address().port
+
+		console.log('Server started\n\nLinks:')
+		console.log(`\tLocal - ${protocol}://127.0.0.1:${port}/`)
+		
+		for (let key in net){
+			if (net[ key ].length == 1) {
+				console.log(`\t${key} - ${protocol}://${net[ key ][ 0 ]}:${port}/`)
+			}
+		}
 	}
 
 	const PORT = process.env.PORT || opts?.port || 3000

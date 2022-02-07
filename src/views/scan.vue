@@ -4,10 +4,15 @@
   <audio ref="err" :src="SoundError"></audio>
   <div ref="cont" class="scanner-container">
     <qrcode-stream :camera="camera" :torch="torch" @detect="onDetect" @init="onInit">
-      <div class="message-container">
-        <Indicator :state="state" />
-        <span v-if="error" class="message error">{{ error }}</span>
-        <span v-if="success" class="message success">{{ success }}</span>
+      <div>
+        <div class="message-container">
+          <Indicator :state="state" />
+          <span v-if="error" class="message error">{{ error }}</span>
+          <span v-if="success" class="message success">{{ success }}</span>
+        </div>
+        <div>
+          <span v-if="employee" class="employee-name">Employee: {{employee}}</span>
+        </div>
       </div>
     </qrcode-stream>
     <div class="actions">
@@ -47,13 +52,14 @@ export default {
   },
   data() {
     return {
-      cameras: [ 'rear', 'front' ],
+      cameras: [ 'auto', 'rear', 'front' ],
       activeCamera: 0,
       camera: 'auto',
       hasTorch: false,
       torch: false,
       error: '',
       success: '',
+      employee: '',
       state: 'loading',
       lastDecode: Date.now() * 1000,
       idle: null,
@@ -74,21 +80,25 @@ export default {
         this.state = 'error'
         this.error = res.error
         this.success = ''
+        this.employee = ''
         this.$refs.err.play()
       } else if (res?.isOut) {
         this.state = 'out'
         this.success = 'Out'
         this.error = ''
+        this.employee = res.name
         this.$refs.out.play()
       } else if (res?.id) {
         this.state = 'in'
         this.success = 'In'
         this.error = ''
+        this.employee = res.name
         this.$refs.in.play()
       } else {
         this.state = 'error'
         this.error = 'Unknown error'
         this.success = ''
+        this.employee = ''
         this.$refs.err.play()
       }
     },
@@ -110,6 +120,7 @@ export default {
                 this.state = 'ready'
                 this.error = ''
                 this.success = ''
+                this.employee = ''
               }
             }, 3000)
 

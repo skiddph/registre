@@ -100,7 +100,10 @@ $max-width: 1200px;
 	.scanner-container {
 		@apply w-full flex flex-col items-center justify-center mt-4;
 		max-width: 500px;
-	
+		.employee-name {
+			@apply text-sm text-white bg-gray-700 px-2;
+		}
+		
 		.message-container {
 			@apply w-full flex flex-row items-center justify-start;
 	

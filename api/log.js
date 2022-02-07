@@ -42,7 +42,7 @@ module.exports = function (app, base_url) {
         }
       })
         .then(log => {
-          return res.send({ id: log.id })
+          return res.send({ id: log.id, name: log.name })
         })
         .catch(err => {
           console.log(err)

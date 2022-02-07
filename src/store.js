@@ -361,7 +361,6 @@ const store = createStore({
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         let p_in = new Date(logs[i].in)
         let p_out = new Date(logs[i].out)
-        // format datetime to string - Jan 1, 2019 12:00 AM
         logs[i].in = `${months[p_in.getMonth()]} ${p_in.getDate()}, ${p_in.getFullYear()} ${p_in.getHours() > 12 ? p_in.getHours() - 12 : p_in.getHours()}:${p_in.getMinutes()} ${p_in.getHours() >= 12 ? 'PM' : 'AM'}`
         logs[i].out = logs[i].isOut ? `${months[p_out.getMonth()]} ${p_out.getDate()}, ${p_out.getFullYear()} ${p_out.getHours() > 12 ? p_out.getHours() - 12 : p_out.getHours()}:${p_out.getMinutes()} ${p_out.getHours() >= 12 ? 'PM' : 'AM'}` : '-'
         delete logs[i].isOut
