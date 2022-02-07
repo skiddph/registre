@@ -13,7 +13,7 @@ export default defineConfig({
         }),
         Pages({
             extensions: [ 'vue', 'md' ],
-            syncIndex: false,
+            importMode: 'sync',
             dirs: "src/views"
         }),
         Layouts({
@@ -25,5 +25,10 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'src'),
         }
+    },
+    base: '',
+    build: {
+        extractCSS: true,
+        minify: 'terser'
     }
 })
