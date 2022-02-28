@@ -7,3 +7,4 @@ dist-ssr
 prisma/dev.db
 prisma/migrations
 prisma/dev.db-journal
+release/
