@@ -202,7 +202,7 @@ const store = createStore({
           .catch(e => ({ error: e.message || e.error }))
       }
     },
-    async delete({state}, { tab, id }) {
+    async delete({ state }, { tab, id }) {
       if (state.token) {
         let action = ''
         switch (tab) {
@@ -231,16 +231,16 @@ const store = createStore({
           .then(e => e.json())
           .then(async (e) => {
             await store.dispatch('getList')
-            return { success: e.id ? true : false , ...e}
+            return { success: e.id ? true : false, ...e }
           })
           .catch(e => ({ error: e.message || e.error }))
       } else {
-        return {error: "No token"}
+        return { error: "No token" }
       }
     },
     async update({ state }, { tab, id, data }) {
       for (let key in data) {
-        if (data[key] === '') {
+        if (data[ key ] === '') {
           return { error: `${key} can't be empty` }
         }
       }
@@ -278,12 +278,12 @@ const store = createStore({
           })
           .catch(e => ({ error: e.message || e.error }))
       } else {
-        return {error: "No token"}
+        return { error: "No token" }
       }
     },
     async create({ state }, { tab, data }) {
       for (let key in data) {
-        if (data[key] === '') {
+        if (data[ key ] === '') {
           return { error: `${key} is required` }
         }
       }
@@ -322,20 +322,20 @@ const store = createStore({
           })
           .catch(e => ({ error: e.message || e.error }))
       } else {
-        return {error: "No token"}
+        return { error: "No token" }
       }
     },
     async log(ctx, id) {
       return await fetch(`${API_URL}/log`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })
       })
         .then(e => e.json())
         .then(e => e)
         .catch(e => ({ error: e.message || e.error }))
     },
-    async getLogs({ commit, state ,dispatch }) {
+    async getLogs({ commit, state, dispatch }) {
       return await fetch(`${API_URL}/logs`, {
         method: 'POST',
         headers: {
@@ -345,28 +345,30 @@ const store = createStore({
         body: JSON.stringify(state.logsFilter)
       })
         .then(e => e.json())
-        .then(e => {
-          if(Array.isArray(e)) dispatch('sortLogs', e)
-          return e
-        })
+        .then(e => dispatch('toLogs', e))
         .catch(e => ({ error: e.message || e.error }))
     },
-    sortLogs({commit}, logs) {
-      logs.sort((a, b) => {
-        if (a.in < b.in) return 1
-        if (a.in > b.in) return -1
-        return 0
-      })
-      for (let i = 0; i < logs.length; i++) {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        let p_in = new Date(logs[i].in)
-        let p_out = new Date(logs[i].out)
-        logs[i].in = `${months[p_in.getMonth()]} ${p_in.getDate()}, ${p_in.getFullYear()} ${p_in.getHours() > 12 ? p_in.getHours() - 12 : p_in.getHours()}:${p_in.getMinutes()} ${p_in.getHours() >= 12 ? 'PM' : 'AM'}`
-        logs[i].out = logs[i].isOut ? `${months[p_out.getMonth()]} ${p_out.getDate()}, ${p_out.getFullYear()} ${p_out.getHours() > 12 ? p_out.getHours() - 12 : p_out.getHours()}:${p_out.getMinutes()} ${p_out.getHours() >= 12 ? 'PM' : 'AM'}` : '-'
-        delete logs[i].isOut
-        delete logs[i].id
+    toLogs({ commit }, logs) {
+      const res = []
+      for (let date in logs) {
+        for (let employee in logs[ date ]) {
+          const d = logs[ date ][ employee ]
+          const row = [
+            date,
+            d.name,
+            d.office,
+            d.unit,
+            d.position,
+            d.am.in,
+            d.am.out,
+            d.pm.in,
+            d.pm.out,
+          ]
+          res.push(row)
+        }
       }
-     commit('setLogs', logs)
+      console.log('\n>>> processed data', res)
+      commit('setLogs', res)
     }
   }
 })

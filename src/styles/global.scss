@@ -315,41 +315,5 @@ $max-width: 1200px;
 			}
 		}
 	}
-	.logs-wrapper {
-		@apply w-full;
-		.actions {
-			@apply flex flex-row justify-between items-center py-4;
-			input {
-				@apply mr-2 py-2 px-3 border outline-none rounded-md w-full border-gray-400;
-				flex: 1;
-			}
-			button {
-				@apply px-4 py-2 text-white bg-blue-500 hover:bg-blue-700 rounded-md transition duration-300 ease-in-out;
-			}
-		}
-		.logs-container {
-			@apply w-full;
 	
-			table {
-				@apply w-full text-sm;
-				border-collapse: collapse;
-	
-				tr {
-	
-					th {
-						@apply capitalize;
-					}
-	
-					td,
-					th {
-						@apply p-2;
-					}
-				}
-			}
-	
-			table, th, td {
-				border: .5px solid #ccc;
-			}
-		}
-	}
 }
