@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const dt = require('../lib/datetime')
+const Logs = require('../lib/logs')
 
 module.exports = function (app, base_url) {
   app.post(`${base_url}/log`, async (req, res) => {
@@ -78,12 +79,13 @@ module.exports = function (app, base_url) {
 
   app.post(`${base_url}/logs`, async (req, res) => {
     if (!req.user) return res.code(401).send({ error: 'Unauthorized' })
-    const { from, to, id, unit, office, position, name } = req.body
+    const { from, to, id, unit, office, position, name , filter} = req.body
     if (!from || !to) return res.code(500).send({ error: "requires 'from' and 'to' fields" })
     from.second = from?.second || 0
     from.ms = from?.ms || 0
     to.second = to?.second || 59
     to.ms = to?.ms || 999
+    const opts = filter || {}
 
     const query = {
       where: {
@@ -101,5 +103,13 @@ module.exports = function (app, base_url) {
     if (name) query.where.name = name
 
     return await app.prisma.logs.findMany(query)
+      .then(logs => {
+        const record = new Logs(logs)
+        const result = record.transform(opts)
+        return res.code(200).send(result)
+      })
+      .catch(err => {
+        return res.code(500).send({ error: 'Failed to get logs' })
+      })
   })
 }
