@@ -158,6 +158,7 @@ const minutes = (() => {
       @apply flex flex-row items-start justify-center mb-4;
 
       & > label {
+        @apply text-sm font-bold;
         min-width: 70px;
       }
 
@@ -169,7 +170,7 @@ const minutes = (() => {
         }
 
         select {
-          @apply border border-gray-400;
+          @apply border border-gray-400 text-sm;
         }
       }
     }
@@ -178,7 +179,7 @@ const minutes = (() => {
       @apply w-full flex flex-row items-center justify-end my-4;
 
       button {
-        @apply px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg;
+        @apply px-4 py-1 text-sm text-white bg-blue-500 rounded-full;
       }
     }
   }
