@@ -97,38 +97,6 @@ $max-width: 1200px;
 		}
 	}
 
-	.scanner-container {
-		@apply w-full flex flex-col items-center justify-center mt-4;
-		max-width: 500px;
-		.employee-name {
-			@apply text-sm text-white bg-gray-700 px-2;
-		}
-		
-		.message-container {
-			@apply w-full flex flex-row items-center justify-start;
-	
-			.message {
-				@apply text-sm text-white bg-gray-700 px-2;
-			}
-		}
-	
-		.actions {
-			@apply w-full mt-4 flex flex-row items-center justify-end;
-	
-			button {
-				@apply m-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded;
-			}
-		}
-	
-		.legends {
-			@apply w-full text-sm;
-	
-			div {
-				@apply flex flex-row items-center justify-start;
-			}
-		}
-	}
-
 	.indicator {
 		@apply w-2 h-2 rounded-full m-2;
 	
