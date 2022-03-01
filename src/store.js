@@ -367,7 +367,6 @@ const store = createStore({
           res.push(row)
         }
       }
-      console.log('\n>>> processed data', res)
       commit('setLogs', res)
     }
   }

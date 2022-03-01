@@ -36,9 +36,6 @@ export default {
       required: true
     }
   },
-  created() {
-    console.log(this.logs)
-  },
   data() {
     return {
       result: [],
@@ -57,7 +54,6 @@ export default {
         this.sortFieldsAsc = !this.sortFieldsAsc
       }
 
-      console.log('\n>>> Sort', this.lastFieldBy, this.sortFieldsBy, this.sortFieldsAsc)
       this.sortBy(this.sortFieldsBy, this.sortFieldsAsc)
     },
     transform(logs) {
