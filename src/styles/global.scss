@@ -97,30 +97,6 @@ $max-width: 1200px;
 		}
 	}
 
-	.indicator {
-		@apply w-2 h-2 rounded-full m-2;
-	
-		&.ready {
-			background-color: #00ff00;
-		}
-	
-		&.error {
-			background-color: #ff0000;
-		}
-	
-		&.in {
-			background-color: #0080ff;
-		}
-	
-		&.out {
-			background-color: #1b1b1b;
-		}
-	
-		&.loading {
-			background-color: #dd8533;
-		}
-	}
-
 	.search-result-container {
 		@apply w-full;
 	
