@@ -1,29 +1,34 @@
 <template>
+  <audio ref="in" :src="SoundIn"></audio>
+  <audio ref="out" :src="SoundOut"></audio>
+  <audio ref="err" :src="SoundError"></audio>
   <div class="scanner-wrapper">
-    <audio ref="in" :src="SoundIn"></audio>
-    <audio ref="out" :src="SoundOut"></audio>
-    <audio ref="err" :src="SoundError"></audio>
-    <div v-if="false">
-      <div class="message-container">
-        <Indicator :state="state" />
-        <span v-if="error" class="message error">{{ error }}</span>
-        <span v-if="success" class="message success">{{ success }}</span>
-      </div>
-      <div>
-        <span v-if="employee" class="employee-name">Employee: {{ employee }}</span>
-      </div>
-    </div>
     <div class="camera">
       <qrcode-stream :camera="camera" :torch="torch" @detect="onDetect" @init="onInit">
         <div class="camera-overlay">
-          <div class="top">
-            <Indicator :state="state" />
+          <div class="top" v-if="state != 'loading'">
+            <Indicator :state="state" large />
+            <div class="message" v-if="error">{{ error }}</div>
+            <div class="message" v-if="success">{{ success }}</div>
           </div>
-          <div class="bottom">
-            <div class="camera-info">
-              <span>{{activeCamera+1}}/{{cameras.length}}</span>
-              <span>{{cameras[activeCamera]?.toUpperCase()}}</span>
+          <div class="loading-wrapper" v-if="state == 'loading'">
+            <div class="loading-top">
+              <div class="flex">
+                <Indicator :state="state" large />
+              </div>
             </div>
+            <div class="loading">
+              <icon icon="spinner" />
+            </div>
+          </div>
+          <div class="bottom" v-if="state == 'ready'">
+            <div class="camera-info">
+              <span>{{ activeCamera + 1 }}/{{ cameras.length }}</span>
+            </div>
+            <div class="camera-info">
+              <span>{{ cameras[ activeCamera ]?.toUpperCase() }}</span>
+            </div>
+
             <div class="actions">
               <button v-if="hasTorch" @click="toggleFlash">
                 <icon icon="lightbulb" />
@@ -50,8 +55,12 @@ export default {
     Indicator
   },
   data: () => ({
-    cameras: [  'rear', 'front' ],
+    perLogDelay: 5000,
+    idleDelay: 15000,
+    isIdle: false,
+    cameras: [ 'auto', 'rear', 'front' ],
     activeCamera: 0,
+    tempCamera: 0,
     camera: 'auto',
     hasTorch: false,
     torch: false,
@@ -59,9 +68,8 @@ export default {
     success: '',
     employee: '',
     state: 'loading',
-    lastDecode: Date.now() * 1000,
-    idle: null,
-    idle2: null,
+    idle: setTimeout(() => null, 0),
+    perLogTimeout: setTimeout(() => null, 0),
     sndIn: null,
     sndOut: null,
     sndError: null,
@@ -91,48 +99,45 @@ export default {
       this.employee = ''
       this.$refs.err.play()
     },
+    setOnReady() {
+      this.perLogTimeout = setTimeout(() => {
+        if (this.state !== 'ready' && this.state !== 'loading') {
+          this.state = 'ready'
+          this.error = ''
+          this.success = ''
+          this.employee = ''
+        }
+      }, this.perLogDelay)
+    },
+    setOnIdle() {
+      this.idle = setTimeout(() => {
+        if (this.state === 'ready') {
+          this.state = 'loading'
+          this.tempCamera = this.activeCamera
+          this.isIdle = true
+          this.toggleCamera()
+        }
+      }, this.idleDelay)
+    },
     async log(id) {
       this.state = 'loading'
       const res = await this.$store.dispatch('log', id)
-      if (res.error) this.onStateError(res);
+      if (res?.error) this.onStateError(res);
       else if (res?.isOut) this.onStateOut(res);
       else if (res?.id) this.onStateIn(res);
       else this.onStateError(null);
     },
     async onDetect(promise) {
-      try {
-        clearTimeout(this.idle)
-        clearTimeout(this.idle2)
-      } catch {
-        //
-      }
+      clearTimeout(this.idle)
+      clearTimeout(this.idle2)
 
       try {
         const { content } = await promise
         await this.log(content)
           .then(() => {
             this.loading = false
-            this.idle2 = setTimeout(() => {
-              if (this.state !== 'ready' && this.state !== 'loading') {
-                this.state = 'ready'
-                this.error = ''
-                this.success = ''
-                this.employee = ''
-              }
-            }, 3000)
-
-            this.idle = setTimeout(() => {
-              if (this.state === 'ready') {
-                let tmp = this.camera
-                this.toggleCamera()
-                setTimeout(() => {
-                  this.camera = tmp
-                }, 2000)
-              }
-            }, 15000)
-          })
-          .finally(() => {
-            this.lastDecode = Date.now() * 1000
+            this.setOnReady()
+            this.setOnIdle()
           })
       } catch (error) {
         this.state = 'error'
@@ -145,7 +150,6 @@ export default {
         const { capabilities } = await p
         this.hasTorch = !!capabilities.torch
       } catch (error) {
-        console.log(error)
         if (error.name === 'NotAllowedError') {
           // user denied camera access permisson
         } else if (error.name === 'NotFoundError') {
@@ -162,12 +166,20 @@ export default {
       } finally {
         // hide loading indicator
       }
-
-      this.state = 'ready'
-      this.error = ''
-      this.success = ''
+      if(this.isIdle) {
+        if(this.activeCamera !== this.tempCamera) {
+          this.isIdle = false
+          this.activeCamera = this.tempCamera == 0 ? this.cameras.length: this.tempCamera - 1
+          this.toggleCamera()
+        } 
+      } else {
+        this.state = 'ready'
+        this.error = ''
+        this.success = ''
+      }
     },
     toggleCamera() {
+      this.state = 'loading'
       this.activeCamera = (this.activeCamera + 1)
       if (this.activeCamera >= this.cameras.length) this.activeCamera = 0
       this.camera = this.cameras[ this.activeCamera ]
@@ -190,7 +202,39 @@ export default {
 
   .camera-overlay {
     @apply w-full h-full flex flex-col items-start justify-between border;
-    .top,
+    .top {
+      @apply w-full flex flex-row items-start justify-between;
+
+      .message {
+        @apply text-white text-lg px-2;
+        background: rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    .loading-wrapper {
+      @apply w-full h-full relative;
+      background: rgba(0, 0, 0, 0.5);
+      .loading-top {
+        @apply absolute;
+      }
+      .loading {
+        @apply w-full h-full flex flex-col items-center justify-center;
+        svg {
+          @apply text-white text-4xl px-2;
+          animation: spin infinite 1s linear;
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      }
+    }
+
     .bottom {
       @apply w-full flex flex-row items-center justify-between;
     }
@@ -206,9 +250,11 @@ export default {
     }
 
     .actions {
-      button, .action {
-        @apply  my-2 mx-2;
-        svg, .icon {
+      button,
+      .action {
+        @apply my-2 mx-2;
+        svg,
+        .icon {
           @apply w-4 h-4 bg-white text-gray-600 hover:text-gray-900 active:bg-gray-700 active:text-white p-3 rounded-full transition duration-200 ease-in-out;
         }
       }
