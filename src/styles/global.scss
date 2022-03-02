@@ -1,8 +1,7 @@
+@import '@/styles/variables.scss';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-$max-width: 1200px;
 
 @layer base {
 	#app {
@@ -21,26 +20,7 @@ $max-width: 1200px;
 		box-sizing: border-box;
 	}
 
-	.navbar-container {
-		@apply w-full flex flex-col items-center justify-center shadow sticky top-0 bg-white;
-
-		.navbar {
-			@apply px-2 py-0 w-full flex flex-row items-center justify-start;
-			max-width: $max-width;
-
-			.brand {
-				@apply font-bold sm:text-2xl text-xl sm:py-3;
-			}
-
-			.link {
-				@apply p-2 sm:px-4 sm:py-4 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out;
-			}
-
-			.spacer {
-				flex: 1;
-			}
-		}
-	}
+	
 
 	.main-container {
 		@apply w-full flex flex-col items-center justify-center;
