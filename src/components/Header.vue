@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import DataExport from '@/components/DataExport.vue'
+import DataImport from '@/components/DataImport.vue'
 const store = useStore()
 
 const fields = [ 'user', 'unit', 'position', 'office', 'logs', 'employee' ]
@@ -12,6 +13,7 @@ const dataReset = ref(null)
 </script>
 <template>
   <DataExport :fields="fields" :open="dataExport" @close="dataExport = false" />
+  <DataImport :open="dataImport" @close="dataImport = false" />
   <div v-if="!store.state.token" class="navbar-container">
     <div class="navbar">
       <router-link class="brand" to="/">{{ store.state.app.name || 'Logbook' }}</router-link>
