@@ -27,7 +27,7 @@ const store = useStore()
 @import '@/styles/variables.scss';
 
 .navbar-container {
-  @apply w-full flex flex-col items-center justify-center shadow sticky top-0 bg-white;
+  @apply w-full flex flex-col items-center justify-center shadow sticky top-0 bg-white z-10;
 
   .navbar {
     @apply px-1 py-0 w-full flex flex-row items-center justify-start;
