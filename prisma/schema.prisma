@@ -40,10 +40,10 @@ model Position {
 
 model Logs {
   id       Int      @id @unique @default(autoincrement())
-  in       Int    
+  in       Int
   out      Int      @default(0)
   isOut    Boolean  @default(false)
-  Employee Employee @relation(fields: employee, references: id)
+  Employee Employee @relation(fields: employee, references: id, onDelete: Cascade)
   employee String
   name     String
   office   String
@@ -52,13 +52,13 @@ model Logs {
 }
 
 model Employee {
-  id         String       @id @unique
-  name       String
-  Office     Office?      @relation(fields: [office], references: [name])
-  office     String?
-  Unit       Unit?        @relation(fields: [unit], references: [name])
-  unit       String?
-  Position   Position?    @relation(fields: [position], references: [name])
-  position   String?
-  Logs Logs[]
+  id       String    @id @unique
+  name     String
+  Office   Office?   @relation(fields: [office], references: [name], onDelete: SetNull)
+  office   String?
+  Unit     Unit?     @relation(fields: [unit], references: [name], onDelete: SetNull)
+  unit     String?
+  Position Position? @relation(fields: [position], references: [name], onDelete: SetNull)
+  position String?
+  Logs     Logs[]
 }
