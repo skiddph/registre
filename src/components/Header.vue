@@ -6,7 +6,7 @@ const store = useStore()
 
 const fields = [ 'user', 'unit', 'position', 'office', 'logs', 'employee' ]
 
-const dataExport = ref(true)
+const dataExport = ref(false)
 const dataImport = ref(false)
 const dataReset = ref(null)
 </script>
