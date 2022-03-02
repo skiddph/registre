@@ -53,5 +53,4 @@ module.exports = function (app, base_url) {
     if (deletedPosition) return res.send({ name: deletedPosition.name });
     else return res.code(500).send({ error: 'Failed to delete position' });
   })
-
 }
