@@ -60,7 +60,8 @@ module.exports = function (app, base_url) {
 
   app.post(`${base_url}/restore`, async (req, res) => {
     const { data } = req.body
-    await restore(app, encoded)
+    if(!data) return res.send({ error: 'No data' })
+    await restore(app, data)
       .then(e => {
         res.send({ ...data, success: true })
       })
