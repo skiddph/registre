@@ -72,22 +72,10 @@ module.exports = function (app, base_url) {
   })
 
   app.post(`${base_url}/reset`, async (req, res) => {
-    await reset(app)
+    const data = await reset(app)
+      .then(e => {
+        success: e
+      })
     return res.send(data)
-  })
-
-  app.post(`${base_url}/backuptest`, async (req, res) => {
-    const fields = [ 'user', 'unit', 'position', 'office', 'logs', 'employee' ]
-    // const encode = await backup(app, fields);
-    // fs.writeFile('data.txt', encode.data, function (err) {
-    //   if (err) throw err;
-    //   console.log('File is created successfully.');
-    // });
-    await fs.readFile('data.txt', 'utf8', async function (err, data) {
-      if (err) throw err
-      await restore(app, data)
-    });
-
-    return res.send([ true ])
   })
 }
