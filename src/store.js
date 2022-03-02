@@ -3,6 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL || "/api"
 
 const store = createStore({
   state: {
+    api_url: API_URL,
     app: {
       name: "QR Logbook"
     },
