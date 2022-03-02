@@ -54,6 +54,7 @@ export default {
   components: {
     Indicator
   },
+  emits: ['name'],
   data: () => ({
     perLogDelay: 5000,
     idleDelay: 15000,
@@ -96,7 +97,7 @@ export default {
       this.state = 'error'
       this.error = log ? log.error : 'Unknown error'
       this.success = ''
-      this.employee = ''
+      this.employee = log.name || ""
       this.$refs.err.play()
     },
     setOnReady() {
@@ -187,6 +188,15 @@ export default {
     toggleFlash() {
       this.flash = !this.flash
     },
+    employeeHandler(employee){
+      this.$emit('name', employee)
+    }
+  },
+  watch: {
+    'employee': {
+      handler: 'employeeHandler',
+      immediate: true
+    }
   }
 }
 </script>
@@ -269,12 +279,5 @@ export default {
     }
   }
 
-  .legends {
-    @apply w-full text-sm;
-
-    div {
-      @apply flex flex-row items-center justify-start;
-    }
-  }
 }
 </style>
