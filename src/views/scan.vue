@@ -5,7 +5,6 @@ import Legends from '@/components/Legends.vue'
 const name = ref('')
 const nameHandler = (employee) => {
   name.value = employee
-  console.log(name.value)
 }
 </script>
 <template>
