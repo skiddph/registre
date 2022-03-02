@@ -57,8 +57,8 @@ export default {
         })
       })
         .then(e => e.json())
-        .then((e) => {
-          console.log(e)
+        .then(() => {
+          alert('Data successfully restored')
         })
         .catch(e => ({ error: e.message || e.error }))
         .finally(() => {
