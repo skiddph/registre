@@ -70,7 +70,7 @@ module.exports = function (app, base_url) {
         })
     } else if (logs.length > 1 || (logs.length === 1 && logs[ 0 ].isOut === true)) {
       console.log('\n>>> multiple logs', logs)
-      return res.code(500).send({ error: `Duplicate employee ${range[2]} log` })
+      return res.code(500).send({ error: `Duplicate employee ${range[2]} log`, name: logs[0].name})
     } else {
       console.log('\n>>> no logs')
       return res.code(500).send({ error: 'Unknown Error Occur' });
