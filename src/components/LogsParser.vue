@@ -8,13 +8,19 @@
       <table v-if="result.length > 0">
         <thead>
           <tr class="w-full">
-            <th @click="toggleSort(0)">Date <span v-if="sortFieldsBy === 0"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(1)">Name <span v-if="sortFieldsBy === 1"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(2)">Office  <span v-if="sortFieldsBy === 2"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(3)">Unit  <span v-if="sortFieldsBy === 3"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(4)">Position  <span v-if="sortFieldsBy === 4"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(5)" colspan="2">AM  <span v-if="sortFieldsBy === 5"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
-            <th @click="toggleSort(7)" colspan="2">PM  <span v-if="sortFieldsBy === 7"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(0)" rowspan="2">Date <span v-if="sortFieldsBy === 0"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(1)" rowspan="2">Name <span v-if="sortFieldsBy === 1"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(2)" rowspan="2">Office  <span v-if="sortFieldsBy === 2"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(3)" rowspan="2">Unit  <span v-if="sortFieldsBy === 3"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(4)" rowspan="2">Position  <span v-if="sortFieldsBy === 4"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i> </span></th>
+            <th @click="toggleSort(5)" colspan="2">AM  </th>
+            <th @click="toggleSort(7)" colspan="2">PM  </th>
+          </tr>
+          <tr class="w-full">
+            <th @click="toggleSort(5)">In  <span v-if="sortFieldsBy === 5"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i></span></th>
+            <th @click="toggleSort(6)">Out  <span v-if="sortFieldsBy === 6"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i></span></th>
+            <th @click="toggleSort(7)">In  <span v-if="sortFieldsBy === 7"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i></span></th>
+            <th @click="toggleSort(8)">Out  <span v-if="sortFieldsBy === 8"> <i v-if="sortFieldsAsc">▲</i> <i v-if="!sortFieldsAsc">▼</i></span></th>
           </tr>
         </thead>
         <tbody>
