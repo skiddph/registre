@@ -3,21 +3,24 @@ import { ref } from 'vue'
 import { useStore } from 'vuex'
 import DataExport from '@/components/DataExport.vue'
 import DataImport from '@/components/DataImport.vue'
+import DataReset from '@/components/DataReset.vue'
 const store = useStore()
 
 const fields = [ 'user', 'unit', 'position', 'office', 'logs', 'employee' ]
 
 const dataExport = ref(false)
 const dataImport = ref(false)
-const dataReset = ref(null)
+const dataReset = ref(false)
 </script>
 <template>
   <DataExport :fields="fields" :open="dataExport" @close="dataExport = false" />
   <DataImport :open="dataImport" @close="dataImport = false" />
+  <DataReset :open="dataReset" @close="dataReset = false" />
   <div v-if="!store.state.token" class="navbar-container">
     <div class="navbar">
       <router-link class="brand" to="/">{{ store.state.app.name || 'Logbook' }}</router-link>
       <div class="spacer"></div>
+      <a v-if="store.state.superadmincount == 0" class="link" @click="dataImport = true">IMPORT</a>
       <router-link class="link" to="/scan">SCANNER</router-link>
       <router-link class="link" to="/login">LOGIN</router-link>
       <router-link v-if="store.state.superadmincount == 0" class="link" to="/register">REGISTER</router-link>
