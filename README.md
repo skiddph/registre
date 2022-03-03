@@ -17,7 +17,7 @@ Your OS must be one of following:
 ### Step 1: Install Required Application
  - Install necessary applications [nodejs v12+](https://nodejs.org/en/download/)
 ### Step 2: Prepare workspace
- - Extract `*.zip` file from the release file
+ - Extract the latest `*.zip` file from [release](https://github.com/skiddph/registre/releases)
  - Open Terminal/Shell/CMD and cd to the extracted folder
  ```cd path/to/extracted/folder/registre```
  - Install npm dependencies
