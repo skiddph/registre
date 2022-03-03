@@ -1,37 +1,39 @@
 # Registre
 Registre is a QRCode base logbook system that tracks the time-in and time-out of an employee
 
-# Project development setup
+## System Requirements
+### Operating System (OS)
+Your OS must be one of following:
+ - Windows 10 or higher version
+ - OpenBSD
+ - GNU Linux
+ - MacOS
+ - IoT device/Cloud/VM/VPS that is capable of running Nodejs not below version 12
+### Dependecies 
+ - build-tools
+ - nodejs
 
-### Requirements
- - [Node.js](https://nodejs.org/en/download/) version >= 14.x
-
-### Setup
- - Install latest nodejs app from [here](https://nodejs.org/en/download/)
- - Extract the zip file to a folder
- - go to the extracted folder
- - open the command prompt inside the folder
- - run the following command:
-```bash
-npm install
-npm run setup
-```
- - that's it! you can now run the app from the command line
-
-### Usage
- - Make sure you are in the extracted folder, and open the command prompt
- - run the following command:
-```bash
-npm start
-# or 
-npm run start
-```
-
-now you can access the app from the browser, if you are using a local server, use the link `https://127.0.0.1:3000`, or if you are trying to access the server from a different computer but still on the same network, use the link `https://<your-ip-address>:3000`.
-
-to get the ip address of your computer, you can use the following command, and look for `ipv4 address`, that's your ip address
-```bash
-ipconfig
-``` 
-
-Note: you might get a warning message from your browser that the connection is insecure, but you can ignore it (by pressing `proceed unsafe`), this is because the app is running on a local server with an ssl which is supposed to be done in production server.
+## Setup
+### Step 1: Install Required Application
+ - Install necessary applications [nodejs v12+](https://nodejs.org/en/download/)
+### Step 2: Prepare workspace
+ - Extract `*.zip` file from the release file
+ - Open Terminal/Shell/CMD and cd to the extracted folder
+ ```cd path/to/extracted/folder/registre```
+ - Install npm dependencies
+ ```npm install```
+ - Run the setup command to set up the database
+ ```npm run setup```
+## CLI Usage
+### Start the application
+ - Open Terminal/Shell/CMD and cd to the extracted folder
+ ```cd path/to/extracted/folder/registre```
+ - Run start command
+ ```npm run setup```
+ - Open the generated links in the browser
+ - **Note:** The `local` link can only be accessed in the server or local machine
+### Reset database manually
+ - Open Terminal/Shell/CMD and cd to the extracted folder
+ ```cd path/to/extracted/folder/registre```
+ - Run reset command
+ ```npm run reset```
