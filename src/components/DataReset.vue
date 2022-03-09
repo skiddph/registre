@@ -1,5 +1,5 @@
 <template>
-  <teleport to="body">
+  <teleport to="#app">
     <div v-if="open" class="wrapper">
       <div class="container">
         <div v-if="loading" class="loading">
@@ -64,7 +64,7 @@ export default {
     user-select: none;
   }
 
-  @apply fixed top-0 left-0 right-0 bottom-0 z-20 flex flex-col items-center justify-center;
+  @apply fixed top-0 left-0 right-0 bottom-0 z-20 flex flex-col items-center justify-center px-4;
   background-color: rgba(0, 0, 0, 0.6);
 
   .container {
@@ -108,6 +108,40 @@ export default {
 
         &.red {
           @apply bg-red-500 hover:bg-red-700;
+        }
+      }
+    }
+  }
+}
+
+.dark {
+  .wrapper {
+    .container {
+      @apply bg-gray-900 shadow-none;
+      .loading {
+        .loader,
+        svg {
+          @apply text-gray-400;
+        }
+      }
+
+      h3 {
+        @apply text-gray-300;
+      }
+
+      p {
+        @apply text-gray-400;
+      }
+
+      .actions {
+        @apply flex flex-row justify-end;
+
+        button {
+          @apply bg-gray-900 hover:bg-blue-400 text-blue-400 hover:text-gray-900 border border-blue-400;
+
+          &.red {
+            @apply bg-gray-900 hover:bg-red-500 text-red-500 hover:text-gray-900 border border-red-500;
+          }
         }
       }
     }
