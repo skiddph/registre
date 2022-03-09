@@ -1,22 +1,24 @@
 <template>
-  <div v-if="open" class="wrapper">
-    <div class="container">
-      <div v-if="loading" class="loading">
-        <icon icon="spinner" />
-      </div>
-      <h3>Select Data to backup</h3>
-      <div class="checkboxes">
-        <div v-for="(     field, i     ) in fields" class="checkbox" :key="i">
-          <input type="checkbox" :ref="field" :id="field" />
-          <label :for="field">{{ field }}</label>
+  <teleport to="body">
+    <div v-if="open" class="wrapper">
+      <div class="container">
+        <div v-if="loading" class="loading">
+          <icon icon="spinner" />
+        </div>
+        <h3>Select Data to backup</h3>
+        <div class="checkboxes">
+          <div v-for="(      field, i      ) in fields" class="checkbox" :key="i">
+            <input type="checkbox" :ref="field" :id="field" />
+            <label :for="field">{{ field }}</label>
+          </div>
+        </div>
+        <div class="actions">
+          <button @click="close">Cancel</button>
+          <button @click="backup">Backup</button>
         </div>
       </div>
-      <div class="actions">
-        <button @click="close">Cancel</button>
-        <button @click="backup">Backup</button>
-      </div>
     </div>
-  </div>
+  </teleport>
 </template>
 <script>
 import { format } from 'date-fns'
@@ -42,7 +44,7 @@ export default {
     },
     download(data) {
       let j = document.createElement("a")
-      j.download = "logbook-" + format(Date.now(),'yyyyMMddHHmmss') + ".json"
+      j.download = "logbook-" + format(Date.now(), 'yyyyMMddHHmmss') + ".json"
       j.href = URL.createObjectURL(new Blob([ JSON.stringify(data, null, 2) ]))
       j.click()
     },
@@ -84,7 +86,7 @@ export default {
     user-select: none;
   }
 
-  @apply fixed top-0 left-0 right-0 bottom-0 z-20 flex flex-col items-center justify-center;
+  @apply fixed top-0 left-0 right-0 bottom-0 z-50 flex flex-col items-center justify-center;
   background-color: rgba(0, 0, 0, 0.6);
 
   .container {
