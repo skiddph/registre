@@ -202,16 +202,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .scanner-wrapper {
-  @apply w-full flex flex-col items-center justify-center mt-4;
+  @apply w-full flex flex-col items-center justify-center md:mt-4;
   .employee-name {
     @apply text-sm text-white bg-gray-700 px-2;
   }
   .camera {
-    @apply w-full h-full bg-gray-900;
+    @apply w-full h-full bg-gray-900 md:rounded-lg overflow-hidden;
   }
 
   .camera-overlay {
-    @apply w-full h-full flex flex-col items-start justify-between border;
+    @apply w-full h-full flex flex-col items-start justify-between md:rounded-lg overflow-hidden;
     .top {
       @apply w-full flex flex-row items-start justify-between;
 
