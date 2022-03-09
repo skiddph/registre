@@ -8,7 +8,7 @@ import Indicator from '@/components/Indicator.vue'
       <Indicator state="ready" />Ready
     </div>
     <div>
-      <Indicator state="loading" />Detected
+      <Indicator state="loading" />Loading
     </div>
     <div>
       <Indicator state="in" />Employee In
@@ -23,12 +23,25 @@ import Indicator from '@/components/Indicator.vue'
 </template>
 <style lang="scss" scoped>
 .legends {
-  @apply w-full text-sm mt-6 mb-6;
+  * {
+    user-select: none;
+  }
+  @apply w-full text-sm md:text-base my-3 md:my-6;
   h3 {
-    @apply font-bold pl-2;
+    @apply font-bold pl-2 md:text-lg md:mb-2;
   }
   div {
     @apply flex flex-row items-center justify-start;
+  }
+}
+.dark {
+  .legends {
+    h3 {
+      @apply text-gray-300;
+    }
+    div {
+      @apply text-gray-400;
+    }
   }
 }
 </style>
