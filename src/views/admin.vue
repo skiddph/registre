@@ -12,7 +12,7 @@ watchEffect(() => {
     router.push('/')
   }
 })
-
+document.title = "Dashboard | Admin"
 </script>
 <template>
     <AdminDashboard />
