@@ -16,66 +16,120 @@ const dataReset = ref(false)
   <DataExport :fields="fields" :open="dataExport" @close="dataExport = false" />
   <DataImport :open="dataImport" @close="dataImport = false" />
   <DataReset :open="dataReset" @close="dataReset = false" />
-  <div v-if="!store.state.token" class="navbar-container">
-    <div class="navbar">
-      <router-link class="brand" to="/">{{ store.state.app.name || 'Logbook' }}</router-link>
+  <div v-if="!store.state.token" class="wrapper">
+    <div class="container">
+      <router-link class="brand" to="/">
+        <img src="/favicon.ico" alt="logo" class="logo" />
+        <span class="title">{{ store.state.app.name || 'Logbook' }}</span>
+      </router-link>
       <div class="spacer"></div>
-      <a v-if="store.state.superadmincount == 0" class="link" @click="dataImport = true">IMPORT</a>
-      <router-link class="link" to="/scan">SCANNER</router-link>
-      <router-link class="link" to="/login">LOGIN</router-link>
-      <router-link v-if="store.state.superadmincount == 0" class="link" to="/register">REGISTER</router-link>
+      <a
+        v-if="store.state.superadmincount == 0"
+        class="link"
+        @click="dataImport = true"
+        title="Data Import"
+      >
+        <icon icon="file-import" />
+      </a>
+      <router-link class="link" to="/scan" title="QR Code Scanner">
+        <icon icon="qrcode" />
+      </router-link>
+      <router-link class="link" to="/login" title="Sign in">
+        <icon icon="sign-in" />
+      </router-link>
+      <router-link
+        v-if="store.state.superadmincount == 0"
+        class="link"
+        to="/register"
+        title="Register"
+      >
+        <icon icon="tasks" />
+      </router-link>
     </div>
   </div>
-  <div v-if="store.state.token" class="navbar-container">
-    <div class="navbar">
-      <router-link class="brand" to="/">{{ store.state.app.name || 'Logbook' }}</router-link>
+  <div v-if="store.state.token" class="wrapper">
+    <div class="container">
+      <router-link class="brand" to="/">
+        <img src="/favicon.ico" alt="logo" class="logo" />
+        <span class="title">{{ store.state.app.name || 'Logbook' }}</span>
+      </router-link>
       <div class="spacer"></div>
       <button class="link">
-        <span>Data</span>
+        <icon icon="file" />
         <div class="items">
           <button @click="dataExport = true">
-            <icon icon="file-export" />Backup
+            <div class="icon">
+              <icon icon="file-export" />
+            </div>Backup
           </button>
           <button @click="dataImport = true">
-            <icon icon="file-import" />Restore
+            <div class="icon">
+              <icon icon="file-import" />
+            </div>Restore
           </button>
           <button @click="dataReset = true">
-            <icon icon="trash" />Reset
+            <div class="icon">
+              <icon icon="trash" />
+            </div>Reset
           </button>
         </div>
       </button>
-      <router-link v-if="store.state.role == 1" class="link" to="/superadmin">DASHBOARD</router-link>
-      <router-link v-if="store.state.role != 1" class="link" to="/admin">DASHBOARD</router-link>
-      <router-link class="link" to="/logs">LOGS</router-link>
-      <router-link class="link" to="/logout">LOGOUT</router-link>
+      <router-link v-if="store.state.role == 1" class="link" to="/superadmin" title="Dashboard">
+        <icon icon="dashboard" />
+      </router-link>
+      <router-link v-if="store.state.role != 1" class="link" to="/admin" title="Dashboard">
+        <icon icon="dashboard" />
+      </router-link>
+      <router-link class="link" to="/logs" title="Logs">
+        <icon icon="list" />
+      </router-link>
+      <router-link class="link" to="/logout" title="Sign out">
+        <icon icon="sign-out" />
+      </router-link>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
 
-.navbar-container {
-  @apply w-full flex flex-col items-center justify-center shadow sticky top-0 bg-white z-10;
+.wrapper {
+  @apply w-full flex flex-row border-b sticky top-0 z-10 items-center justify-center;
+  @apply bg-white;
 
-  .navbar {
-    @apply px-1 py-0 w-full flex flex-row items-center justify-start;
+  .container {
+    @apply px-4 py-0 w-full flex flex-row items-center justify-start;
     max-width: $max-width;
 
     .brand {
-      @apply font-bold sm:text-2xl text-xl sm:py-3;
+      @apply font-bold text-xl py-3;
+      @apply flex flex-row items-center;
+      .logo {
+        @apply h-8 mr-2;
+      }
+      .title {
+        @apply hidden sm:block font-normal text-gray-700;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
     }
 
     .link {
-      @apply px-2 py-1 sm:mr-4 text-sm font-semibold text-gray-500 border-b-2 border-white hover:border-gray-900 hover:text-gray-900 transition-colors duration-300 ease-in-out uppercase;
+      @apply px-2 py-1 sm:mr-4 text-sm font-semibold;
+      @apply text-gray-400 border-b-2 border-white hover:border-gray-700 hover:text-gray-700;
+      @apply transition-colors duration-300 ease-in-out uppercase;
       font-family: Arial, Helvetica, sans-serif;
       &.router-link-active {
-        @apply hidden;
+        @apply border-gray-700 text-gray-700;
       }
 
       .items {
         @apply absolute bg-white border rounded flex-col justify-center shadow-lg z-10 hidden;
+        transform: translateX(-80%);
 
         button {
+          @apply flex flex-row items-center;
+          .icon {
+            @apply w-6;
+          }
           svg {
             @apply mr-2;
           }
