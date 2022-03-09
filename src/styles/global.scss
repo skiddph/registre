@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@import "@/styles/variables.scss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,236 +12,280 @@
 		color: #2c3e50;
 		min-height: 100vh;
 
-		&.dark {
-			@apply bg-gray-900;
-		}
-	}
-	
-	html, body {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		box-sizing: border-box;
-	}
+		.main-container {
+			@apply w-full flex flex-col items-center justify-center;
 
-	
-
-	.main-container {
-		@apply w-full flex flex-col items-center justify-center;
-
-		.main {
-			@apply py-2 px-4 w-full flex flex-col items-center justify-center;
-			max-width: $max-width;
-		}
-	}
-
-	.auth-form-container {
-		@apply w-full flex justify-center items-start px-4 mt-12;
-
-		.auth-form {
-			@apply w-full flex flex-col items-center justify-center p-6 rounded-lg;
-			max-width: 400px;
-			background-color: #f1f1f1;
-
-			h1 {
-				@apply text-3xl text-center mt-0 mb-6;
-			}
-
-			label {
-				@apply mt-4 mr-auto ml-1 text-sm;
-			}
-
-			input {
-				@apply w-full border border-gray-300 rounded-lg py-2 px-4 mb-4 outline-none;
-			}
-
-			button {
-				@apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 my-4 rounded-full transition-colors duration-200 ease-in-out;
-			}
-
-			.message {
-				@apply text-center text-sm py-2 px-6 rounded transition-colors duration-200 ease-in-out;
-
-				&.error {
-					@apply bg-red-500 text-white;
-				}
-
-				&.success {
-					@apply bg-green-500 text-white;
-				}
-
-				&.info {
-					@apply bg-blue-500 text-white;
-				}
-
-				&:hover {
-					@apply cursor-pointer bg-gray-400 text-white;
-				}
+			.main {
+				@apply md:py-2 md:px-4 w-full flex flex-col items-center justify-center;
+				max-width: $max-width;
 			}
 		}
-	}
+		.auth-form-container {
+			@apply w-full flex justify-center items-start px-4;
 
-	.search-result-container {
-		@apply w-full;
-	
-		.result-for {
-			@apply py-2  text-gray-600 text-sm;
-	
-			.result-for-text {
-				@apply font-bold;
-			}
-	
-			.query {
-				@apply font-normal;
-			}
-		}
-	
-		.table-container {
-			overflow-x: auto;
-	
-			table {
-				@apply w-full border-b;
-	
-				th {
-					@apply capitalize;
+			.auth-form {
+				@apply w-full flex flex-col items-center justify-center p-6 bg-inherit;
+				max-width: 400px;
+
+				h1 {
+					@apply text-2xl text-center mt-0 mb-6;
+					font-family: Consolas;
+					user-select: none;
 				}
-	
-				tr:first-child {
-					@apply bg-gray-100;
-				}
-	
-				tr:not(:last-child) {
-					@apply border-b;
-				}
-	
-				tr {
-					td:last-child,
-					th:last-child {
-						@apply text-right;
+
+				label {
+					@apply mt-2 mr-auto px-1 bg-white font-bold text-gray-400;
+					transform: translateY(50%) translateX(0.8rem);
+					font-size: 0.75rem;
+					user-select: none;
+
+					svg {
+						@apply mr-1;
 					}
-	
-					th,
-					td {
-						@apply px-2 py-2 sm:py-3;
+				}
+
+				input {
+					@apply w-full border border-gray-400 rounded-lg py-2 px-4 mb-2 outline-none text-gray-700 focus:border-gray-700;
+				}
+
+				button {
+					@apply bg-blue-500 hover:bg-blue-700 focus:bg-blue-700 text-white font-normal py-2 px-8 mt-10 rounded-lg transition-colors duration-200 ease-in-out self-end;
+					user-select: none;
+				}
+
+				.message {
+					@apply text-center text-sm py-2 px-6 rounded transition-colors duration-200 ease-in-out;
+
+					&.error {
+						@apply bg-red-500 text-white;
 					}
-	
-					td {
-						@apply text-gray-700;
-						button {
-							@apply py-1 px-2 ml-2 rounded;
-	
-							&.edit {
-								@apply bg-teal-600 text-white;
-							}
-	
-							&.delete {
-								@apply bg-red-600 text-white hover:bg-red-700;
+
+					&.success {
+						@apply bg-green-500 text-white;
+					}
+
+					&.info {
+						@apply bg-blue-500 text-white;
+					}
+
+					&:hover {
+						@apply cursor-pointer bg-gray-400 text-white;
+					}
+				}
+			}
+		}
+		.search-result-container {
+			@apply w-full;
+
+			.result-for {
+				@apply py-2  text-gray-600 text-sm;
+
+				.result-for-text {
+					@apply font-bold;
+				}
+
+				.query {
+					@apply font-normal;
+				}
+			}
+
+			.table-container {
+				overflow-x: auto;
+
+				table {
+					@apply w-full border-b;
+
+					th {
+						@apply capitalize;
+					}
+
+					tr:first-child {
+						@apply bg-gray-100;
+					}
+
+					tr:not(:last-child) {
+						@apply border-b;
+					}
+
+					tr {
+						td:last-child,
+						th:last-child {
+							@apply text-right;
+						}
+
+						th,
+						td {
+							@apply px-2 py-2 sm:py-3;
+						}
+
+						td {
+							@apply text-gray-700;
+							button {
+								@apply py-1 px-2 ml-2 rounded;
+
+								&.edit {
+									@apply bg-teal-600 text-white;
+								}
+
+								&.delete {
+									@apply bg-red-600 text-white hover:bg-red-700;
+								}
 							}
 						}
 					}
 				}
 			}
+
+			.no-result {
+				@apply text-center py-12 text-gray-500 font-bold;
+			}
 		}
-	
-		.no-result {
-			@apply text-center py-12 text-gray-500 font-bold;
+		.add-form-container {
+			@apply p-2 fixed top-0 left-0 right-0 bottom-0 w-screen h-screen z-10 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden;
+			background-color: rgba(0, 0, 0, 0.5);
+
+			.add-form {
+				@apply bg-white w-full rounded p-4;
+				max-width: 500px;
+
+				.form-title {
+					@apply text-2xl font-bold mb-4;
+				}
+
+				.message {
+					@apply text-center mb-4 text-sm;
+
+					.error {
+						@apply text-red-500;
+						cursor: pointer;
+					}
+				}
+
+				label {
+					@apply text-gray-500 font-bold block text-sm pl-1;
+				}
+
+				input,
+				select {
+					@apply block border p-2 mb-2 sm:mb-4 w-full rounded-lg outline-none;
+				}
+
+				.add-form-actions {
+					@apply flex flex-row items-center justify-end pt-4;
+
+					button {
+						@apply bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out ml-4;
+					}
+				}
+			}
+		}
+		.dashboard-container {
+			@apply p-0 w-full;
+		}
+		.actions-container {
+			@apply w-full flex flex-row items-center justify-center p-2 mb-2;
+
+			.search-container {
+				@apply flex flex-row items-center justify-center bg-gray-200 px-4 py-2 rounded-md transition duration-300 ease-in-out;
+				flex: 1;
+
+				label {
+					@apply text-gray-600 font-bold;
+				}
+
+				input {
+					@apply pl-4 bg-transparent outline-none border-0 w-full;
+					flex: 1;
+				}
+
+				&:focus-within {
+					@apply bg-gray-300;
+				}
+			}
+
+			button {
+				@apply bg-blue-600 text-white py-2 px-4 ml-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out;
+			}
+		}
+		.tabbed-menu {
+			@apply w-full flex flex-wrap items-end justify-start mb-4;
+
+			.item {
+				@apply sm:py-2 sm:px-4 p-2;
+
+				&.pointer {
+					@apply cursor-pointer;
+				}
+
+				&.active {
+					@apply border-x border-t border-gray-300;
+				}
+
+				&.inactive {
+					border-bottom: 1px solid #e6e6e6;
+				}
+
+				&.spacer {
+					flex: 1;
+				}
+
+				.count {
+					@apply text-xs text-gray-600;
+				}
+			}
+		}
+
+		&.dark {
+			@apply bg-gray-900;
+			.auth-form-container {
+				.auth-form {
+					h1 {
+						@apply text-gray-300;
+					}
+
+					label {
+						@apply bg-gray-900 text-gray-400;
+					}
+
+					input {
+						@apply bg-inherit border-gray-400 text-gray-200 focus:border-gray-200;
+					}
+
+					button {
+						@apply border border-blue-400 bg-gray-900 text-blue-400;
+						@apply hover:bg-blue-400 hover:text-gray-900;
+						@apply focus:bg-blue-400 focus:text-gray-900;
+					}
+
+					.message {
+						@apply text-center text-sm py-2 px-6 rounded transition-colors duration-200 ease-in-out;
+
+						&.error {
+							@apply bg-red-500 text-white;
+						}
+
+						&.success {
+							@apply bg-green-500 text-white;
+						}
+
+						&.info {
+							@apply bg-blue-500 text-white;
+						}
+
+						&:hover {
+							@apply bg-gray-400 text-gray-900;
+						}
+					}
+				}
+			}
 		}
 	}
 
-	.add-form-container {
-		@apply p-2 fixed top-0 left-0 right-0 bottom-0 w-screen h-screen z-10 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden;
-		background-color: rgba(0, 0, 0, 0.5);
-	
-		.add-form {
-			@apply bg-white w-full rounded p-4;
-			max-width: 500px;
-	
-			.form-title {
-				@apply text-2xl font-bold mb-4;
-			}
-	
-			.message {
-				@apply  text-center mb-4 text-sm;
-	
-				.error {
-					@apply text-red-500;
-					cursor: pointer;
-				}
-			}
-	
-			label {
-				@apply text-gray-500 font-bold block text-sm pl-1;
-			}
-	
-			input,
-			select {
-				@apply block border p-2 mb-2 sm:mb-4 w-full rounded-lg outline-none;
-			}
-	
-			.add-form-actions {
-				@apply flex flex-row items-center justify-end pt-4;
-	
-				button {
-					@apply bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out ml-4;
-				}
-			}
-		}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		box-sizing: border-box;
 	}
-	.dashboard-container {
-		@apply p-0 w-full;
-	}
-	.actions-container {
-		@apply w-full flex flex-row items-center justify-center p-2 mb-2;
-	
-		.search-container {
-			@apply flex flex-row items-center justify-center bg-gray-200 px-4 py-2 rounded-md transition duration-300 ease-in-out;
-			flex: 1;
-	
-			label {
-				@apply text-gray-600 font-bold;
-			}
-	
-			input {
-				@apply pl-4 bg-transparent outline-none border-0 w-full;
-				flex: 1;
-			}
-	
-			&:focus-within {
-				@apply bg-gray-300;
-			}
-		}
-	
-		button {
-			@apply bg-blue-600 text-white py-2 px-4 ml-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out;
-		}
-	}
-
-	.tabbed-menu {
-		@apply w-full flex flex-wrap items-end justify-start mb-4;
-	
-		.item {
-			@apply sm:py-2 sm:px-4 p-2;
-	
-			&.pointer {
-				@apply cursor-pointer;
-			}
-	
-			&.active {
-				@apply border-x border-t border-gray-300;
-			}
-	
-			&.inactive {
-				border-bottom: 1px solid #e6e6e6;
-			}
-	
-			&.spacer {
-				flex: 1;
-			}
-	
-			.count {
-				@apply text-xs text-gray-600;
-			}
-		}
-	}
-	
 }
