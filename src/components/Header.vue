@@ -147,4 +147,33 @@ const dataReset = ref(false)
     }
   }
 }
+.dark {
+  .wrapper {
+    @apply bg-gray-900 border-gray-600;
+
+    .container {
+      .brand {
+        .title {
+          @apply text-blue-200;
+        }
+      }
+
+      .link {
+        @apply text-blue-100 border-blue-100;
+        @apply hover:border-blue-300 hover:text-blue-300;
+        &.router-link-active {
+          @apply border-blue-400 text-blue-400;
+        }
+
+        .items {
+          @apply bg-gray-900 shadow-none border-blue-200;
+
+          button {
+            @apply hover:bg-blue-200 text-blue-200 bg-gray-900 hover:text-gray-900;
+          }
+        }
+      }
+    }
+  }
+}
 </style>
