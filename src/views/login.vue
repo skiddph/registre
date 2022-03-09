@@ -11,7 +11,7 @@ const pass = ref('')
 const error = ref('')
 
 const login = async () => {
-	if(user.value.trim() === '' || pass.value.trim() === '') {
+	if (user.value.trim() === '' || pass.value.trim() === '') {
 		error.value = 'Username or password cannot be empty'
 		return
 	}
@@ -32,9 +32,13 @@ document.title = "Sign In | Registre"
 		<div class="auth-form">
 			<h1>Login</h1>
 			<span v-if="error" @click="error = ''" class="error message">{{ error }}</span>
-			<label for="user">Username</label>
+			<label for="user">
+				<icon icon="user" />Username
+			</label>
 			<input type="text" name="user" v-model="user" placeholder="Username" />
-			<label for="pass">Password</label>
+			<label for="pass">
+				<icon icon="key" />Password
+			</label>
 			<input type="password" name="pass" v-model="pass" placeholder="Password" />
 			<button @click="login">Login</button>
 		</div>
