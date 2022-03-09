@@ -6,6 +6,7 @@ const name = ref('')
 const nameHandler = (employee) => {
   name.value = employee
 }
+document.title = "Scanner | Registre" 
 </script>
 <template>
   <div class="scan-wrapper">
