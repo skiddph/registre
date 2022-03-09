@@ -7,7 +7,22 @@ import VueQrcodeReader from "qrcode-reader-vue3";
 import '@/styles/global.scss'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCamera, faCameraRotate, faLightbulb, faSpinner, faFileImport, faFileExport,faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCamera,
+  faCameraRotate,
+  faLightbulb,
+  faSpinner,
+  faFileImport,
+  faFileExport,
+  faTrash,
+  faSignOut,
+  faSignIn,
+  faQrcode,
+  faTasks,
+  faDashboard,
+  faList,
+  faFile
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faCamera)
 library.add(faCameraRotate)
@@ -16,6 +31,13 @@ library.add(faSpinner)
 library.add(faFileImport)
 library.add(faFileExport)
 library.add(faTrash)
+library.add(faSignOut)
+library.add(faSignIn)
+library.add(faTasks)
+library.add(faDashboard)
+library.add(faQrcode)
+library.add(faList)
+library.add(faFile)
 
 const app = createApp(App)
 app.use(router)
