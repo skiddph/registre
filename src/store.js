@@ -5,7 +5,7 @@ const store = createStore({
   state: {
     api_url: API_URL,
     app: {
-      name: "QR Logbook"
+      name: "Registre"
     },
     token: '',
     role: 0,
