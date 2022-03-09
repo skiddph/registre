@@ -1,21 +1,23 @@
 <template>
-  <div v-if="open" class="wrapper">
-    <div class="container">
-      <div v-if="loading" class="loading">
-        <icon icon="spinner" />
+  <teleport to="body">
+    <div v-if="open" class="wrapper">
+      <div class="container">
+        <div v-if="loading" class="loading">
+          <icon icon="spinner" />
+        </div>
+        <h3>
+          <span>Select File to Restore</span>
+          <div class="upload">
+            <input type="file" @change="fileHandler" accept=".json" />
+          </div>
+          <div class="actions">
+            <button @click="close">Cancel</button>
+            <button @click="restore">Restore</button>
+          </div>
+        </h3>
       </div>
-      <h3>
-        <span>Select File to Restore</span>
-        <div class="upload">
-          <input type="file" @change="fileHandler" accept=".json" />
-        </div>
-        <div class="actions">
-          <button @click="close">Cancel</button>
-          <button @click="restore">Restore</button>
-        </div>
-      </h3>
     </div>
-  </div>
+  </teleport>
 </template>
 <script>
 export default {
