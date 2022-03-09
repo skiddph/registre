@@ -25,7 +25,7 @@ watchEffect(() => {
 		router.push('/')
 	}
 })
-
+document.title = "Sign In | Registre"
 </script>
 <template>
 	<div class="auth-form-container">
