@@ -17,7 +17,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .indicator {
-  @apply p-1 rounded-full m-4 border inline-block;
+  @apply p-1 rounded-full my-2 mx-4 border inline-block;
   border-color: rgba(255,255,255,0);
 
   &.large {
