@@ -1,19 +1,19 @@
 <template>
-  <div v-if="open" class="wrapper">
-    <div class="container">
-      <div v-if="loading" class="loading">
-        <icon icon="spinner" />
-      </div>
-      <h3>Are you sure?</h3>
-      <p>
-        By clicking the 'reset' button below, all of your data will be deleted. Do you want to continue?
-      </p>
-      <div class="actions">
-        <button @click="close">Cancel</button>
-        <button class="red" @click="reset">Reset</button>
+  <teleport to="body">
+    <div v-if="open" class="wrapper">
+      <div class="container">
+        <div v-if="loading" class="loading">
+          <icon icon="spinner" />
+        </div>
+        <h3>Are you sure?</h3>
+        <p>By clicking the 'reset' button below, all of your data will be deleted. Do you want to continue?</p>
+        <div class="actions">
+          <button @click="close">Cancel</button>
+          <button class="red" @click="reset">Reset</button>
+        </div>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script>
@@ -105,7 +105,7 @@ export default {
 
       button {
         @apply bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 ml-4 rounded transition-colors duration-300 ease-in-out;
-      
+
         &.red {
           @apply bg-red-500 hover:bg-red-700;
         }
