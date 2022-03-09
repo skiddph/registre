@@ -113,7 +113,7 @@ const dataReset = ref(false)
     }
 
     .link {
-      @apply px-2 py-1 sm:mr-4 text-sm font-semibold;
+      @apply px-5 md:px-2 py-2 sm:mr-4 text-sm font-semibold;
       @apply text-gray-400 border-b-2 border-white hover:border-gray-700 hover:text-gray-700;
       @apply transition-colors duration-300 ease-in-out uppercase;
       font-family: Arial, Helvetica, sans-serif;
