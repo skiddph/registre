@@ -39,7 +39,7 @@ const minutes = (() => {
   }
   return minutes
 })()
-
+document.title = "Logs | Registre"
 </script>
 <template>
   <div class="logs-filter">
