@@ -31,6 +31,7 @@ watchEffect(() => {
     router.push('/')
   }
 })
+document.title = "Sign Up | Registre"
 
 </script>
 <template>
