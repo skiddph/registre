@@ -1,5 +1,5 @@
 <template>
-  <teleport to="body">
+  <teleport to="#app">
     <div v-if="open" class="wrapper">
       <div class="container">
         <div v-if="loading" class="loading">
@@ -7,7 +7,7 @@
         </div>
         <h3>Select Data to backup</h3>
         <div class="checkboxes">
-          <div v-for="(      field, i      ) in fields" class="checkbox" :key="i">
+          <div v-for="(        field, i        ) in fields" class="checkbox" :key="i">
             <input type="checkbox" :ref="field" :id="field" />
             <label :for="field">{{ field }}</label>
           </div>
@@ -86,7 +86,7 @@ export default {
     user-select: none;
   }
 
-  @apply fixed top-0 left-0 right-0 bottom-0 z-50 flex flex-col items-center justify-center;
+  @apply fixed top-0 left-0 right-0 bottom-0 z-50 flex flex-col items-center justify-center px-4;
   background-color: rgba(0, 0, 0, 0.6);
 
   .container {
@@ -140,6 +140,40 @@ export default {
 
       button {
         @apply bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 ml-4 rounded transition-colors duration-300 ease-in-out;
+      }
+    }
+  }
+}
+.dark {
+  .wrapper {
+    .container {
+      @apply bg-gray-900 shadow-none ;
+
+      .loading {
+        .loader,
+        svg {
+          @apply text-gray-400;
+        }
+      }
+
+      h3 {
+        @apply text-gray-300;
+      }
+
+      .checkboxes {
+        .checkbox {
+          label {
+            @apply text-gray-400;
+          }
+        }
+      }
+
+      .actions {
+
+        button {
+          @apply border border-blue-300 bg-gray-900 text-blue-300 ;
+          @apply hover:bg-blue-300 hover:text-gray-900;
+        }
       }
     }
   }
