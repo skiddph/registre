@@ -13,6 +13,7 @@ watchEffect(() => {
   }
 })
 
+document.title = "Dashboard | Superadmin"
 </script>
 <template>
   <AdminDashboard />
