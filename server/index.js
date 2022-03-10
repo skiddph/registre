@@ -608,8 +608,8 @@ async function start(opts = {}) {
 		fastifyOpts.http2 = true;
 		fastifyOpts.https = {
 			allowHTTP1: true,
-			key: fs.readFileSync(path.resolve(__dirname, './cert/server.key')),
-			cert: fs.readFileSync(path.resolve(__dirname, './cert/server.crt')),
+			key: fs.readFileSync(path.resolve(__dirname, './lib/server.key')),
+			cert: fs.readFileSync(path.resolve(__dirname, './lib/server.crt')),
 		}
 	} else {
 		fastifyOpts.logger = true
@@ -626,7 +626,7 @@ async function start(opts = {}) {
 	if (process.env.NODE_ENV === 'development')  await app.register(require('fastify-cors'), {})
 	await app.register(require('fastify-jwt'), { secret: process.env.JWT_SECRET || usid.rand(24) })
 	await app.register(api, { prefix: '/api' })
-	await app.register(require('fastify-static'), { root: path.join(__dirname, 'dist') })
+	await app.register(require('fastify-static'), { root: path.join(__dirname, 'public') })
 
 	app.get('*', async (req, res) => { res.redirect('/') })
 

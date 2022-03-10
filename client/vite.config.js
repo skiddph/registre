@@ -29,6 +29,7 @@ export default defineConfig({
     base: '',
     build: {
         extractCSS: true,
-        minify: 'terser'
+        minify: 'terser',
+        outDir: '../server/public'
     }
 })
