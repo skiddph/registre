@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id   Int    @id @unique @default(autoincrement())
+  user String @unique
+  name String
+  // role 1 - superadmin
+  // role 2 - admin (default)
+  role Int    @default(2)
+  hash String
+}
+
+model Office {
+  id       Int        @id @unique @default(autoincrement())
+  name     String     @unique
+  Employee Employee[]
+}
+
+model Unit {
+  id       Int        @id @unique @default(autoincrement())
+  name     String     @unique
+  Employee Employee[]
+}
+
+model Position {
+  id       Int        @id @unique @default(autoincrement())
+  name     String     @unique
+  Employee Employee[]
+}
+
+model Logs {
+  id       Int      @id @unique @default(autoincrement())
+  in       Int
+  out      Int      @default(0)
+  isOut    Boolean  @default(false)
+  Employee Employee @relation(fields: employee, references: id, onDelete: Cascade)
+  employee String
+  name     String
+  office   String
+  unit     String
+  position String
+}
+
+model Employee {
+  id       String    @id @unique
+  name     String
+  Office   Office?   @relation(fields: [office], references: [name], onDelete: SetNull)
+  office   String?
+  Unit     Unit?     @relation(fields: [unit], references: [name], onDelete: SetNull)
+  unit     String?
+  Position Position? @relation(fields: [position], references: [name], onDelete: SetNull)
+  position String?
+  Logs     Logs[]
+}
