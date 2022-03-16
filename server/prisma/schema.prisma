@@ -7,58 +7,37 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE2_URL")
+}
+
+model System {
+  key   String @id @unique
+  value String
+  role  Int    @default(0)
 }
 
 model User {
-  id   Int    @id @unique @default(autoincrement())
-  user String @unique
-  name String
-  // role 1 - superadmin
-  // role 2 - admin (default)
-  role Int    @default(2)
-  hash String
-}
-
-model Office {
   id       Int        @id @unique @default(autoincrement())
-  name     String     @unique
-  Employee Employee[]
-}
-
-model Unit {
-  id       Int        @id @unique @default(autoincrement())
-  name     String     @unique
-  Employee Employee[]
-}
-
-model Position {
-  id       Int        @id @unique @default(autoincrement())
-  name     String     @unique
+  user     String     @unique
+  name     String
+  role     Int        @default(2)
+  hash     String
   Employee Employee[]
 }
 
 model Logs {
-  id       Int      @id @unique @default(autoincrement())
-  in       Int
-  out      Int      @default(0)
-  isOut    Boolean  @default(false)
-  Employee Employee @relation(fields: employee, references: id, onDelete: Cascade)
-  employee String
-  name     String
-  office   String
-  unit     String
-  position String
+  id        Int      @id @unique @default(autoincrement())
+  timestamp DateTime @default(now())
+  Employee  Employee @relation(fields: employee, references: id, onDelete: Cascade)
+  employee  String
+  data      String
 }
 
 model Employee {
-  id       String    @id @unique
-  name     String
-  Office   Office?   @relation(fields: [office], references: [name], onDelete: SetNull)
-  office   String?
-  Unit     Unit?     @relation(fields: [unit], references: [name], onDelete: SetNull)
-  unit     String?
-  Position Position? @relation(fields: [position], references: [name], onDelete: SetNull)
-  position String?
-  Logs     Logs[]
+  id      String @id @unique
+  name    String
+  data    String
+  Logs    Logs[]
+  AddedBy User   @relation(fields: addedBy, references: id, onDelete: SetNull)
+  addedBy Int
 }
