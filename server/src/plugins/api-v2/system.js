@@ -111,6 +111,16 @@ const plugin = fp(async (app, opts, done) => {
         key: key
       }
     })
+      .then((e) => {
+        return res.code(200).send({
+          ...SUCCESS_CODE[ 'SS003' ],
+          data: e
+        })
+      })
+      .catch((e) => {
+        console.log(e)
+        return res.code(500).send(ERROR_CODE[ 'SE003' ])
+      })
   })
 
   const createUpdateHandler = async (req, res) => {
