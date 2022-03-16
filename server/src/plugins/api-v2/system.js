@@ -13,12 +13,12 @@ const plugin = fp(async (app, opts, done) => {
     'SE002': {
       status: 'error',
       code: 'SE002',
-      message: 'Failed to create or update settings'
+      message: 'Failed to create or update setting'
     },
     'SE003': {
       status: 'error',
       code: 'SE003',
-      message: 'Failed to delete settings'
+      message: 'Failed to delete system setting'
     },
     'SE004': {
       status: 'error',
@@ -34,6 +34,11 @@ const plugin = fp(async (app, opts, done) => {
       status: 'error',
       code: 'SE006',
       message: "'key' must be provided"
+    },
+    'SE007': {
+      status: 'error',
+      code: 'SE007',
+      message: "System setting not found"
     },
   }
 
@@ -91,18 +96,18 @@ const plugin = fp(async (app, opts, done) => {
       })
   })
 
-  app.delete(`${base_url}/system`, async (req, res) => {
-    // reject if user role is less than 1
-    if (!req.user || req.user.role < 1) {
-      return res.code(401).send(ERROR_CODE[ 'SE004' ])
-    }
-
-    // get key from req.body
-    const { key } = req.body
+  const deleteHandler = async (req, res) => {
+    // get key from params or body
+    const { key } = req.params?.key ? req.params : req.body
 
     // reject if key is empty
     if (!key) {
       return res.code(400).send(ERROR_CODE[ 'SE006' ])
+    }
+
+    // reject if user role is less than 1
+    if (!req.user || req.user.role < 1) {
+      return res.code(401).send(ERROR_CODE[ 'SE004' ])
     }
 
     // delete data in System
@@ -118,10 +123,12 @@ const plugin = fp(async (app, opts, done) => {
         })
       })
       .catch((e) => {
-        console.log(e)
+        if (e.code === 'P2025') {
+          return res.code(404).send(ERROR_CODE[ 'SE007' ])
+        }
         return res.code(500).send(ERROR_CODE[ 'SE003' ])
       })
-  })
+  }
 
   const createUpdateHandler = async (req, res) => {
     // reject if user role is less than 1
@@ -129,8 +136,9 @@ const plugin = fp(async (app, opts, done) => {
       return res.code(401).send(ERROR_CODE[ 'SE004' ])
     }
 
-    // get key and value from req.body
-    const { key, value, role } = req.body
+    // get key, value and role
+    const { key } = (req.params || req.body)
+    const { value, role } = req.body
 
     // reject if keys or values are empty
     if (!key || !value) {
@@ -167,6 +175,8 @@ const plugin = fp(async (app, opts, done) => {
       })
   }
 
+  app.delete(`${base_url}/system`, deleteHandler)
+  app.delete(`${base_url}/system/:key`, deleteHandler)
   app.post(`${base_url}/system`, createUpdateHandler)
   app.put(`${base_url}/system`, createUpdateHandler)
 
