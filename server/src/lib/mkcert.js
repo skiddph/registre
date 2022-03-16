@@ -2,7 +2,7 @@ const { createCA, createCert } = require('mkcert')
 const fs = require('node:fs')
 const path = require('node:path')
 
-function mkcert({ caOpts, certOpts, dir, key, cert }) {
+function mkcert({ caOpts = {}, certOpts = {}, dir = "", key = "", cert = "" }) {
   // check if dir is a string and a valid directory
   if (typeof dir !== 'string' || !fs.existsSync(dir)) {
     // create a default directory
