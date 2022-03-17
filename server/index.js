@@ -1,12 +1,16 @@
 const Fastify = require('fastify');
-const { PrismaClient } = require('@prisma/client');
-const _ = require("lodash");
-const USID = require('usid');
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 const net = require('./lib/net');
-const api = require('./src/plugins/api-v1')
-const { createOptions } = require('./src/lib/utils')
+const httpsRedirect = require('fastify-https-redirect')
+const cors = require('fastify-cors')
+const api2 = require('./src/plugins/api-v2')
+const prisma = require('./src/plugins/prisma.js')
+const hooks = require('./src/plugins/hooks.js')
+const static = require('./src/plugins/static.js')
+const usid = require('./src/plugins/usid.js')
+const jwt = require('./src/plugins/jwt.js')
+const { createOptions, onProd } = require('./src/lib/utils')
 const mkcert = require('./src/lib/mkcert')
 require('dotenv').config();
 
@@ -21,67 +25,41 @@ async function start(opts = {}) {
     dir: path.join(process.cwd(), TLS_CRD_DIR),
     key: TLS_KEY_FILE,
     cert: TLS_CERT_FILE
-  }).create()
+  }).createIfNotExists()
 
   const fastifyOpts = createOptions(
     {
       // server default options 
     }, {
+    // dev: {
+    //   options: {
+    //     logger: true
+    //   }
+    // },
     dev: {
       options: {
-        logger: true
-      }
-    },
-    prod: {
-      options: {
-        logger: false,
+        logger: true,
         https: {
           allowHTTP1: true,
-          key: fs.readFileSync(path.resolve(__dirname, `${TLS_CRD_DIR}/${TLS_KEY_FILE}`)),
-          cert: fs.readFileSync(path.resolve(__dirname, `${TLS_CRD_DIR}/${TLS_CERT_FILE}`))
+          key: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_KEY_FILE)),
+          cert: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_CERT_FILE))
         }
       }
     }
   });
 
-  const usid = new USID();
   const app = Fastify(fastifyOpts);
 
-  if (process.env.NODE_ENV === 'production') app.register(require('fastify-https-redirect'));
-
-  const prisma = new PrismaClient({});
-
-  app.decorate('prisma', prisma);
-  if (process.env.NODE_ENV === 'development') await app.register(require('fastify-cors'), {})
-  await app.register(require('fastify-jwt'), { secret: process.env.JWT_SECRET || usid.rand(24) })
-  await app.register(api, { prefix: '/api' })
-  await app.register(require('fastify-static'), { root: path.join(__dirname, 'public') })
+  await onProd(async () => await app.register(cors))
+  await app.register(httpsRedirect)
+  await app.register(usid)
+  await app.register(prisma)
+  await app.register(jwt)
+  await app.register(api2)
+  await app.register(static)
+  await app.register(hooks)
 
   app.get('*', async (req, res) => { res.redirect('/') })
-
-  await app.addHook('preValidation', async (req, res) => {
-    req.user = null;
-    try {
-      if (!req.headers.authorization) {
-        return
-      }
-      const token = req.headers.authorization.split(' ')[ 1 ];
-
-      let decoded;
-
-      try {
-        decoded = await app.jwt.verify(token);
-      } catch (err) {
-        return
-      }
-
-      req.user = await app.prisma.user.findUnique({ where: { id: decoded.user } })
-      req.user = _.omit(req.user, [ 'hash' ])
-    } catch (e) {
-      console.log(e)
-      req.user = null;
-    }
-  })
 
   const handler = (err, address) => {
     if (err) {

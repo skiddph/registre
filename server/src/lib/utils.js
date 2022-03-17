@@ -7,7 +7,7 @@ const createOptions = (serverOpts, opts) => {
   serverOpts = serverOpts && typeof serverOpts === 'object' ? serverOpts : {}
   opts = opts && typeof opts === 'object' ? opts : {}
 
-  serverOpts = {...serverOpts, ...(opts?.options || {})}
+  serverOpts = { ...serverOpts, ...(opts?.options || {}) }
   opts.options = {}
 
   opts.recursiveCall = opts.recursiveCall || true
@@ -41,6 +41,16 @@ const createOptions = (serverOpts, opts) => {
   return serverOpts
 }
 
+const onProd = (cb) => {
+  return process.env.NODE_ENV === 'production' ? cb() : null
+}
+
+const onDev = (cb) => {
+  return process.env.NODE_ENV === 'development' ? cb() : null
+}
+
 module.exports = {
-  createOptions
+  createOptions,
+  onProd,
+  onDev
 }
