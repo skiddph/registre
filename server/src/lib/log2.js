@@ -22,8 +22,13 @@ const transformEmployeeData = async (app, data) => {
     data[ field ] = data.data[ field ] || null
   }
 
+  // if schedule field is empty, set it to fallback schedule
+  if (!data.schedule) {
+    data.schedule = data.data.schedule
+  }
+
   delete data.data
-  console.log(data)
+  console.log('log2data',data)
   return data
 }
 
