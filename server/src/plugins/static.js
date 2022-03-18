@@ -3,9 +3,9 @@ const path = require('node:path')
 const fStatic = require('fastify-static')
 
 const plugin = fp(async (app, opts = {}, done) => {
-  const { public = "public" } = opts
+  const { public = path.join(process.cwd(), 'public') } = opts
 
-  await app.register(fStatic, { root: path.join(process.cwd(), public)})
+  await app.register(fStatic, { root: public})
 
   done()
 }, {
