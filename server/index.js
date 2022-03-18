@@ -30,34 +30,39 @@ async function start(opts = {}) {
   const fastifyOpts = createOptions(
     {
       // server default options 
+      https: {
+        allowHTTP1: true,
+        key: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_KEY_FILE)),
+        cert: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_CERT_FILE))
+      }
     }, {
-    // dev: {
-    //   options: {
-    //     logger: true
-    //   }
-    // },
+    prod: {
+      options: {
+        logger: false
+      }
+    },
     dev: {
       options: {
         logger: true,
-        https: {
-          allowHTTP1: true,
-          key: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_KEY_FILE)),
-          cert: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_CERT_FILE))
-        }
       }
     }
   });
 
   const app = Fastify(fastifyOpts);
 
+  const pluginOpts = {
+    public: path.join(process.cwd(), 'public'),
+    tmp: path.join(process.cwd(), 'tmp'),
+  }
+
   await onProd(async () => await app.register(cors))
   await app.register(httpsRedirect)
   await app.register(usid)
   await app.register(prisma)
-  await app.register(jwt)
-  await app.register(api2)
-  await app.register(static)
-  await app.register(hooks)
+  await app.register(jwt, pluginOpts)
+  await app.register(api2, pluginOpts)
+  await app.register(static, pluginOpts)
+  await app.register(hooks, pluginOpts)
 
   app.get('*', async (req, res) => { res.redirect('/') })
 
