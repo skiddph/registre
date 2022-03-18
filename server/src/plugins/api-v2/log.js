@@ -17,7 +17,7 @@ const plugin = fp(async (app, opts, done) => {
     'LE002': {
       status: 'error',
       code: 'LE002',
-      message: 'Failed to get log'
+      message: 'Failed to get logs'
     },
     'LE003': {
       status: 'error',
@@ -42,7 +42,7 @@ const plugin = fp(async (app, opts, done) => {
     'LE007': {
       status: 'error',
       code: 'LE007',
-      message: 'Missing parameter'
+      message: 'Missing or Invalid parameter'
     },
     'LE008': {
       status: 'error',
@@ -105,11 +105,15 @@ const plugin = fp(async (app, opts, done) => {
     }
     return await middie(app, req, res, ERROR_CODE, SUCCESS_CODE).create(employee)
   })
-  // TODO: read log
-  // TODO: read logs
-  // TODO: update log
-  // TODO: delete log
 
+  app.get(`${base_url}/logs`, async (req, res) =>
+    await middie(app, req, res, ERROR_CODE, SUCCESS_CODE)
+      .reads()
+      .catch(() =>
+        res.code(500).send(ERROR_CODE[ 'LE002' ])
+      )
+  )
+  
   done()
 })
 
