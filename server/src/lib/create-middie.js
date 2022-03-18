@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const { set, format } = require('date-fns')
+const { transformLogData, transformReportData} = require('./log2.js')
 
 const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
   const create = async (employee) => {
@@ -151,12 +152,15 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     // get all possible logs filter
     const { from, to, date } = req.body
 
+    console.log('body >> ', req.body)
+
     const range = [ null, null ]
 
     // easy way to get range
     if (date) {
-      range[ 0 ] = new Date(date).setHours(0, 0, 0, 0)
-      range[ 1 ] = new Date(date).setHours(23, 59, 59, 999)
+      range[ 0 ] = new Date(new Date(date).setHours(0, 0, 0, 0))
+      range[ 1 ] = new Date(new Date(date).setHours(23, 59, 59, 999))
+      console.log('range from date', range)
     }
 
     // advanced way to get range
@@ -179,17 +183,54 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
         }
       }
     })
-      .then(e => {
-        const data = []
-        for (let log of e) {
-          data.push({
-            ..._.omit(log, [ 'data' ]),
-            ...(typeof log.data === 'string' ? JSON.parse(log.data) : log.data)
-          })
-        }
-        return data
-      })
+      .then(e => transformLogData(e))
 
+    console.log(logs)
+
+    return res.code(200).send({
+      ...SUCCESS_CODE[ 'LS002' ],
+      data: logs
+    })
+  }
+
+  const reports = async () => {
+    // get all possible logs filter
+    const { from, to, date } = req.body
+
+    console.log('body >> ', req.body)
+
+    const range = [ null, null ]
+
+    // easy way to get range
+    if (date) {
+      range[ 0 ] = new Date(new Date(date).setHours(0, 0, 0, 0))
+      range[ 1 ] = new Date(new Date(date).setHours(23, 59, 59, 999))
+      console.log('range from date', range)
+    }
+
+    // advanced way to get range
+    if (from && to) {
+      range[ 0 ] = new Date(from)
+      range[ 1 ] = new Date(to)
+    }
+
+    // check range values if are all valid date
+    if (!range[ 0 ] || !range[ 1 ] || range[ 0 ].getTime() > range[ 1 ].getTime()) {
+      return res.code(403).send(ERROR_CODE[ 'LE007' ])
+    }
+
+    // get all logs from range
+    const logs = await app.prisma.logs.findMany({
+      where: {
+        timestamp: {
+          gte: range[ 0 ],
+          lte: range[ 1 ]
+        }
+      }
+    })
+      .then(e => transformReportData(e))
+
+    console.log(logs)
 
     return res.code(200).send({
       ...SUCCESS_CODE[ 'LS002' ],
@@ -199,7 +240,8 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
 
   return {
     create,
-    reads
+    reads,
+    reports
   }
 }
 
