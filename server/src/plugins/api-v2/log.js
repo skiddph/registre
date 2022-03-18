@@ -44,6 +44,11 @@ const plugin = fp(async (app, opts, done) => {
       code: 'LE007',
       message: 'Missing parameter'
     },
+    'LE008': {
+      status: 'error',
+      code: 'LE008',
+      message: 'Duplicate logs'
+    },
   }
 
   const SUCCESS_CODE = {
