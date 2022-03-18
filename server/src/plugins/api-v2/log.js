@@ -106,9 +106,16 @@ const plugin = fp(async (app, opts, done) => {
     return await middie(app, req, res, ERROR_CODE, SUCCESS_CODE).create(employee)
   })
 
-  app.get(`${base_url}/logs`, async (req, res) =>
+  app.post(`${base_url}/logs`, async (req, res) =>
     await middie(app, req, res, ERROR_CODE, SUCCESS_CODE)
       .reads()
+      .catch(() =>
+        res.code(500).send(ERROR_CODE[ 'LE002' ])
+      )
+  )
+  app.post(`${base_url}/logs/report`, async (req, res) =>
+    await middie(app, req, res, ERROR_CODE, SUCCESS_CODE)
+      .reports()
       .catch(() =>
         res.code(500).send(ERROR_CODE[ 'LE002' ])
       )
