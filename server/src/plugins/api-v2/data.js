@@ -13,35 +13,38 @@ const plugins = fp(async (app, opts, done) => {
   const dowload = path.join(public, 'download')
   const upload = path.join(tmp, 'upload')
 
-  // if public dir not exists, create it
-  if (!fs.existsSync(public)) {
-    fs.mkdirSync(public)
+  // Create folders
+  {
+    // if public dir not exists, create it
+    if (!fs.existsSync(public)) {
+      fs.mkdirSync(public)
+    }
+
+    // if dowload dir not exists, create it
+    if (!fs.existsSync(dowload)) {
+      fs.mkdirSync(dowload)
+    }
+
+    // delete old dowload files
+    fs.readdirSync(dowload).forEach(file => {
+      fs.unlinkSync(path.join(dowload, file))
+    })
+
+    // if tmp dir not exists, create it
+    if (!fs.existsSync(tmp)) {
+      fs.mkdirSync(tmp)
+    }
+
+    // if upload dir not exists, create it
+    if (!fs.existsSync(upload)) {
+      fs.mkdirSync(upload)
+    }
+
+    // delete old upload files
+    fs.readdirSync(upload).forEach(file => {
+      fs.unlinkSync(path.join(upload, file))
+    })
   }
-
-  // if dowload dir not exists, create it
-  if (!fs.existsSync(dowload)) {
-    fs.mkdirSync(dowload)
-  }
-
-  // delete old dowload files
-  fs.readdirSync(dowload).forEach(file => {
-    fs.unlinkSync(path.join(dowload, file))
-  })
-
-  // if tmp dir not exists, create it
-  if (!fs.existsSync(tmp)) {
-    fs.mkdirSync(tmp)
-  }
-
-  // if upload dir not exists, create it
-  if (!fs.existsSync(upload)) {
-    fs.mkdirSync(upload)
-  }
-
-  // delete old upload files
-  fs.readdirSync(upload).forEach(file => {
-    fs.unlinkSync(path.join(upload, file))
-  })
 
   const ERROR_CODE = {
     'DE001': {
@@ -132,7 +135,7 @@ const plugins = fp(async (app, opts, done) => {
       return res.code(403).send(ERROR_CODE[ 'DE001' ])
     }
 
-    const overwrite = req.body?.overwrite || true
+    const overwrite = req.body?.overwrite || false
 
     // check if a valid json
     let data;
@@ -187,10 +190,13 @@ const plugins = fp(async (app, opts, done) => {
         } else throw 'Invalid data version'
       } else throw 'Invalid data'
     } catch (e) {
-      console.log(e)
       return res.code(403).send(ERROR_CODE[ 'DE003' ])
     }
 
+
+  })
+
+  app.post(`${base_url}/data/reset`, async (req, res) => {
 
   })
 
