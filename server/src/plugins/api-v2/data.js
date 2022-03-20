@@ -4,7 +4,6 @@ const fs = require('node:fs')
 
 const plugins = fp(async (app, opts, done) => {
 
-  console.log(opts)
   let { base_url, public = path.join(process.cwd(), 'public'), tmp = path.join(process.cwd(), 'tmp') } = opts
 
   const dowload = path.join(public, 'download')
@@ -125,7 +124,7 @@ const plugins = fp(async (app, opts, done) => {
 
     // check if data is valid
     if (!data){
-      
+
     }
     
   })
