@@ -140,7 +140,6 @@ const plugin = fp(async (app, opts, done) => {
 
 
     if (!isSuperAdmin && (req.user?.role !== 1)) {
-      console.log('urole', req.user?.role)
       return res.code(401).send(ERROR_CODE[ 'UE006' ])
     }
 
@@ -290,7 +289,6 @@ const plugin = fp(async (app, opts, done) => {
         if (e.code === 'P2002') {
           return res.code(400).send(ERROR_CODE[ 'UE008' ])
         }
-        console.log(e)
         return res.code(500).send(ERROR_CODE[ 'UE003' ])
       })
   })
