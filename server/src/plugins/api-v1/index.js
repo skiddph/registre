@@ -551,16 +551,13 @@ const restore = async (app, data) => {
           rows++
           await app.prisma[ field ].create({ data: decode[ field ][ row ] })
         } catch (e) {
-          console.log(e)
           fail++
         }
       }
     }
   } catch (e) {
-    console.log(e)
     return false
   }
-  console.log('\n>>> ROWS', rows, '\n>>> FAIL', fail)
   return true;
 }
 
