@@ -414,7 +414,6 @@ const plugin = fp(async (app, opts, done) => {
       }
     })
       .catch(e => {
-        console.log(e)
         failedPromise = true
         if (e.code === 'P2025') {
           return res.code(404).send(ERROR_CODE[ 'EE009' ])
