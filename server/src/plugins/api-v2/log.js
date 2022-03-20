@@ -6,7 +6,6 @@ const plugin = fp(async (app, opts, done) => {
   const { base_url, middleware } = opts
 
   const middie = createMiddie(middleware)
-  console.log(middie)
 
   const ERROR_CODE = {
     'LE001': {
@@ -93,7 +92,6 @@ const plugin = fp(async (app, opts, done) => {
     })
       .then(async (e) => await transformEmployeeData(app, e))
       .catch(e => {
-        console.log(e)
         failedPromise = true
         return res.code(500).send(ERROR_CODE[ 'LE005' ])
       })
