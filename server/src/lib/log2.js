@@ -35,7 +35,6 @@ const transformEmployeeData = async (app, data) => {
   }
 
   delete data.data
-  console.log('log2data', data)
   return data
 }
 
@@ -97,10 +96,8 @@ const transformLogData = (data) => {
 const transformReportData = (data) => {
   logs = transformLogData(data)
   const result = Object.create(null)
-  console.log('logs', logs)
   logs.forEach(e => {
     const remarks = e.remarks || false
-    console.log('log2result', result)
     result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule' ])
     if(!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {}
     if(remarks) {
