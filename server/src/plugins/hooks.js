@@ -16,7 +16,6 @@ const plugin = fp(async (app, opts = {}, done) => {
     tempFileDir: path.join(tmp, 'upload')
   }))
   app.addHook('preValidation', async (req, res) => {
-    console.log('hook prevaL >>', Boolean(app.jwt))
     req.user = null;
     opts = opts || {}
 
