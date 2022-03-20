@@ -91,7 +91,6 @@ const plugin = fp(async (app, opts, done) => {
         })
       })
       .catch((e) => {
-        console.log(e)
         return res.code(500).send(ERROR_CODE[ 'SE001' ])
       })
   })
@@ -170,7 +169,6 @@ const plugin = fp(async (app, opts, done) => {
         })
       })
       .catch((e) => {
-        console.log(e)
         return res.code(500).send(ERROR_CODE[ 'SE002' ])
       })
   }
