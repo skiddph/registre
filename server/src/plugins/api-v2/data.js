@@ -167,11 +167,7 @@ const plugins = fp(async (app, opts, done) => {
                 }
 
                 await app.prisma[ table ][ overwrite ? 'upsert' : 'create' ](query)
-                  .catch((e) => {
-                    console.log(table, row.id, e.code)
-                    if (table == 'logs') {
-                      console.log(e)
-                    }
+                  .catch(() => {
                     fail[ table ] = fail[ table ] ? fail[ table ] + 1 : 1
                   })
               }
