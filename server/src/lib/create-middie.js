@@ -81,7 +81,6 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     let UAML = 0 // User AM Logs
     let UPML = 0 // User PM Logs
     for (let log of userTodayLogs) {
-      console.log(log)
       // get log time
       if (log.time_code === 'AM') {
         UAML++
@@ -95,9 +94,6 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     } else if (employee.time_code === 'PM') {
       UPML++
     }
-
-    console.log('UAML', UAML)
-    console.log('UPML', UPML)
 
     // if AM
     if (employee.time_code === 'AM') {
@@ -139,8 +135,6 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
       ...Object.create(JSON.parse(log.data))
     }
 
-    console.log(ress)
-
     return res.code(200).send({
       ...SUCCESS_CODE[ 'LS001' ],
       data: ress
@@ -152,15 +146,12 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     // get all possible logs filter
     const { from, to, date } = req.body
 
-    console.log('body >> ', req.body)
-
     const range = [ null, null ]
 
     // easy way to get range
     if (date) {
       range[ 0 ] = new Date(new Date(date).setHours(0, 0, 0, 0))
       range[ 1 ] = new Date(new Date(date).setHours(23, 59, 59, 999))
-      console.log('range from date', range)
     }
 
     // advanced way to get range
@@ -185,8 +176,6 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     })
       .then(e => transformLogData(e))
 
-    console.log(logs)
-
     return res.code(200).send({
       ...SUCCESS_CODE[ 'LS002' ],
       data: logs
@@ -197,15 +186,12 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     // get all possible logs filter
     const { from, to, date } = req.body
 
-    console.log('body >> ', req.body)
-
     const range = [ null, null ]
 
     // easy way to get range
     if (date) {
       range[ 0 ] = new Date(new Date(date).setHours(0, 0, 0, 0))
       range[ 1 ] = new Date(new Date(date).setHours(23, 59, 59, 999))
-      console.log('range from date', range)
     }
 
     // advanced way to get range
@@ -229,8 +215,6 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
       }
     })
       .then(e => transformReportData(e))
-
-    console.log(logs)
 
     return res.code(200).send({
       ...SUCCESS_CODE[ 'LS002' ],
