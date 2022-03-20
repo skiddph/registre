@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const net = require('./lib/net');
 const httpsRedirect = require('fastify-https-redirect')
 const cors = require('fastify-cors')
+const express = require('fastify-express')
 const api2 = require('./src/plugins/api-v2')
 const prisma = require('./src/plugins/prisma.js')
 const hooks = require('./src/plugins/hooks.js')
@@ -55,6 +56,7 @@ async function start(opts = {}) {
     tmp: path.join(process.cwd(), 'tmp'),
   }
 
+  await app.register(express)
   await onProd(async () => await app.register(cors))
   await app.register(httpsRedirect)
   await app.register(usid)
@@ -68,14 +70,14 @@ async function start(opts = {}) {
 
   const handler = (err, address) => {
     if (err) {
-      console.log('Failed to start server')
-      throw err
+      console.log('[Server] Failed to start')
+      return
     }
 
     const protocol = address.includes('https') ? 'https' : 'http'
     const port = app.server.address().port
 
-    console.log('Server started\n\nLinks:')
+    console.log('[Server] Started\n\nLinks:')
     console.log(`\tLocal - ${protocol}://127.0.0.1:${port}/`)
 
     for (let key in net) {
@@ -85,9 +87,9 @@ async function start(opts = {}) {
     }
   }
 
-  const PORT = process.env.PORT || opts?.port || 3000
-  const HOST = process.env.HOST || opts?.host || false
+  const PORT = process.env.PORT || opts.port || 0
+  const HOST = process.env.HOST || opts.host || '0.0.0.0'
   return HOST ? app.listen(PORT, HOST, handler) : app.listen(PORT, handler)
 }
-
-start({ host: '0.0.0.0', port: '3000' })
+console.log('[Server] Starting...')
+start({ port: '3000' })
