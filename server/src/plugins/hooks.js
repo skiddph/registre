@@ -1,9 +1,26 @@
 const fp = require('fastify-plugin')
 const _ = require("lodash");
+const kMultipart = Symbol('multipart')
+const path = require('node:path')
+
+function setMultipart(request, payload, done) {
+  request[ kMultipart ] = true
+  done()
+}
+
 const plugin = fp(async (app, opts = {}, done) => {
-  await app.addHook('preValidation', async (req, res) => {
+  app.addContentTypeParser('multipart', setMultipart)
+  const { tmp = path.join(process.cwd(), 'tmp') } = opts
+  app.use(require('express-fileupload')({
+    useTempFiles: true,
+    tempFileDir: path.join(tmp, 'upload')
+  }))
+  app.addHook('preValidation', async (req, res) => {
     console.log('hook prevaL >>', Boolean(app.jwt))
     req.user = null;
+    opts = opts || {}
+
+    // credentials
     try {
       if (!req.headers.authorization) {
         return
@@ -25,6 +42,18 @@ const plugin = fp(async (app, opts = {}, done) => {
     } catch (e) {
       console.log('e', e)
       req.user = null;
+    }
+
+    
+  })
+
+  app.addHook('preValidation', async (req, res) => {
+    // File upload
+    if (req.raw?.files) {
+      if(!req.body) req.body = {}
+      Object.keys(req.raw.files).forEach((key) => {
+        req.body[ key ] = req.raw.files[ key ]
+      })
     }
   })
   done()
