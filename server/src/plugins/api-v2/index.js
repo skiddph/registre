@@ -1,5 +1,4 @@
 const fp = require('fastify-plugin')
-
 const system = require('./system')
 const user = require('./user')
 const employee = require('./employee')
