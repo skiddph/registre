@@ -1,12 +1,14 @@
 const fp = require('fastify-plugin')
 const path = require('node:path')
 const fs = require('node:fs')
+
 const plugins = fp(async (app, opts, done) => {
+
   console.log(opts)
   let { base_url, public = path.join(process.cwd(), 'public'), tmp = path.join(process.cwd(), 'tmp') } = opts
 
   const dowload = path.join(public, 'download')
-  const upload = path.join(public, 'upload')
+  const upload = path.join(tmp, 'upload')
 
   // if public dir not exists, create it
   if (!fs.existsSync(public)) {
@@ -105,11 +107,26 @@ const plugins = fp(async (app, opts, done) => {
   // data restore where they upload the file
   app.post(`${base_url}/data/restore`, async (req, res) => {
     // get file
-    const file = req.files.file
-    // get file name
-    const filename = file.name
-    // get file path
+    if(!req.body?.file?.tempFilePath){
+      return res.code(403).send(ERROR_CODE[ 'DE001' ])
+    }
 
+    // get file
+    const file = req.body?.file?.tempFilePath
+
+    // check if a valid json
+    let data;
+    try {
+      let data = fs.readFileSync(file)
+      data = JSON.parse(data)
+    } catch (error) {
+      return res.code(403).send(ERROR_CODE[ 'DE001' ])
+    }
+
+    // check if data is valid
+    if (!data){
+      
+    }
     
   })
 
