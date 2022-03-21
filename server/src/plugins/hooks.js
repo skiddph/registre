@@ -31,15 +31,12 @@ const plugin = fp(async (app, opts = {}, done) => {
       try {
         decoded = await app.jwt.verify(token);
       } catch (err) {
-        console.log('err', err)
         return
       }
 
       req.user = await app.prisma.user.findUnique({ where: { id: decoded.user } })
       req.user = _.omit(req.user, [ 'hash' ])
-      console.log('user >>', req.user)
     } catch (e) {
-      console.log('e', e)
       req.user = null;
     }
 
