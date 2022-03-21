@@ -207,33 +207,7 @@
 				@apply bg-blue-600 text-white py-2 px-4 ml-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out;
 			}
 		}
-		.tabbed-menu {
-			@apply w-full flex flex-wrap items-end justify-start mb-4;
-
-			.item {
-				@apply sm:py-2 sm:px-4 p-2;
-
-				&.pointer {
-					@apply cursor-pointer;
-				}
-
-				&.active {
-					@apply border-x border-t border-gray-300;
-				}
-
-				&.inactive {
-					border-bottom: 1px solid #e6e6e6;
-				}
-
-				&.spacer {
-					flex: 1;
-				}
-
-				.count {
-					@apply text-xs text-gray-600;
-				}
-			}
-		}
+		
 
 		&.dark {
 			@apply bg-gray-900;
