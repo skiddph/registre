@@ -8,7 +8,7 @@ const store = useStore()
 const router = useRouter()
 
 watchEffect(() => {
-  if (!(store.state.token && store.state.role === 1)) {
+  if (!(store.state.user.token && store.state.user.role === 1)) {
     router.push('/')
   }
 })
