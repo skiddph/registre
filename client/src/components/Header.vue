@@ -16,7 +16,7 @@ const dataReset = ref(false)
   <DataExport :fields="fields" :open="dataExport" @close="dataExport = false" />
   <DataImport :open="dataImport" @close="dataImport = false" />
   <DataReset :open="dataReset" @close="dataReset = false" />
-  <div v-if="!store.state.token" class="wrapper">
+  <div v-if="!store.state.user.token" class="wrapper">
     <div class="container">
       <router-link class="brand" to="/">
         <img src="/favicon.ico" alt="logo" class="logo" />
@@ -24,7 +24,7 @@ const dataReset = ref(false)
       </router-link>
       <div class="spacer"></div>
       <a
-        v-if="store.state.superadmincount == 0"
+        v-if="store.state.user.sac == 0"
         class="link"
         @click="dataImport = true"
         title="Data Import"
@@ -38,7 +38,7 @@ const dataReset = ref(false)
         <icon icon="sign-in" />
       </router-link>
       <router-link
-        v-if="store.state.superadmincount == 0"
+        v-if="store.state.user.sac == 0"
         class="link"
         to="/register"
         title="Register"
@@ -47,7 +47,7 @@ const dataReset = ref(false)
       </router-link>
     </div>
   </div>
-  <div v-if="store.state.token" class="wrapper">
+  <div v-if="store.state.user.token" class="wrapper">
     <div class="container">
       <router-link class="brand" to="/">
         <img src="/favicon.ico" alt="logo" class="logo" />
@@ -74,10 +74,10 @@ const dataReset = ref(false)
           </button>
         </div>
       </button>
-      <router-link v-if="store.state.role == 1" class="link" to="/superadmin" title="Dashboard">
+      <router-link v-if="store.state.user.role == 1" class="link" to="/superadmin" title="Dashboard">
         <icon icon="dashboard" />
       </router-link>
-      <router-link v-if="store.state.role != 1" class="link" to="/admin" title="Dashboard">
+      <router-link v-if="store.state.user.role != 1" class="link" to="/admin" title="Dashboard">
         <icon icon="dashboard" />
       </router-link>
       <router-link class="link" to="/logs" title="Logs">
