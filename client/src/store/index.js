@@ -1,12 +1,13 @@
 import { createStore } from 'vuex';
 import system from './system'
-
+import user from './user'
 const SERVER_URL = import.meta.env.VITE_API_URL || ""
 const API_URL = SERVER_URL + "/api/v2"
 
 const store = createStore({
   modules: {
-    system
+    system,
+    user
   },
   state: {
     server_url: SERVER_URL,
@@ -17,9 +18,6 @@ const store = createStore({
     token: '',
     role: 0,
     name: '',
-    user: {
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjo4LCJpYXQiOjE2NDc0MDkwODF9.8MsgflWsKiLteotLWtNHF0wtsFQEVxpWJiLUa1e9Tuo'
-    },
     usercount: 0,
     admincount: 0,
     superadmincount: 0,
