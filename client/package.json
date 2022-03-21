@@ -4,14 +4,9 @@
     "version": "3.0.0",
     "entry": "index.js",
     "scripts": {
-        "start": "cross-env NODE_ENV=production node index.js",
-        "dev": "cross-env NODE_ENV=development VITE_API_URL=http://127.0.0.1:3000/api vite --port 80 --host --https",
+        "dev": "cross-env NODE_ENV=development VITE_API_URL=https://127.0.0.1:3000 vite --port 80 --host --https",
         "build": "vite build",
-        "preview": "vite preview --host",
-        "api": "cross-env PORT=3000 NODE_ENV=development nodemon index.js",
-        "serve": "cross-env NODE_ENV=production vite build && node index.js",
-        "setup": "cross-env NODE_ENV=production && npx prisma migrate dev -n init && npx prisma migrate deploy && npx prisma db push",
-        "reset": "npx prisma migrate reset --force"
+        "preview": "vite preview --host"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.3.0",
