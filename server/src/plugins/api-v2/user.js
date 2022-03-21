@@ -178,10 +178,6 @@ const plugin = fp(async (app, opts, done) => {
   })
 
   app.get(`${base_url}/users`, async (req, res) => {
-    if (!req.user || req.user?.role !== 1) {
-      return res.code(401).send(ERROR_CODE[ 'UE006' ])
-    }
-
     const users = await app.prisma.user.findMany({})
 
     if (!users) {
@@ -190,7 +186,7 @@ const plugin = fp(async (app, opts, done) => {
 
     return res.code(200).send({
       ...SUCCESS_CODE[ 'US002' ],
-      data: users
+      data: _.map(users, (user) => _.omit(user, [ 'hash' ]))
     })
   })
 
@@ -323,7 +319,7 @@ const plugin = fp(async (app, opts, done) => {
         })
       })
       .catch(async (e) => {
-        if(e.code === 'P2025') {
+        if (e.code === 'P2025') {
           return res.code(404).send(ERROR_CODE[ 'UE009' ])
         }
         return res.code(500).send(ERROR_CODE[ 'UE005' ])
