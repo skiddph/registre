@@ -16,12 +16,12 @@ const login = async () => {
 		return
 	}
 	error.value = ''
-	const submit = await store.dispatch('login', { user: user.value, pass: pass.value })
+	const submit = await store.dispatch('user/login', { user: user.value, pass: pass.value })
 	error.value = submit.error || ""
 }
 
 watchEffect(() => {
-	if (store.state.token) {
+	if (store.state.user.token) {
 		router.push('/')
 	}
 })
