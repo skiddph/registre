@@ -3,6 +3,7 @@ import _ from 'lodash'
 const DEFAULT_STATE = {
   users: [],
   token: "",
+  sac: 0, // super admin count
 }
 
 const module = {
@@ -14,7 +15,12 @@ const module = {
   },
   actions: {
     reset: createResetAction(DEFAULT_STATE),
-    async create({ commit, rootState, state }, { user, name, role, pass }) {
+    async sac({ commit, state }) {
+      const { users } = state
+      const sac = _.filter(users, { role: 1 }).length
+      commit('sac', sac)
+    },
+    async create({ commit, rootState, state, dispatch }, { user, name, role, pass }) {
       return await fetch(`${rootState.api_url}/user`, {
         method: 'POST',
         headers: {
@@ -27,6 +33,7 @@ const module = {
         .then(e => {
           if (!state.token) commit('token', e.token || "")
           if (e.data) commit('users', [ ...state.users, _.omit(e.data, [ 'hash' ]) ])
+          dispatch('sac')
           return e
         })
     },
@@ -45,7 +52,7 @@ const module = {
           return e
         })
     },
-    async update({ commit, rootState, state }, { id, user, name, role, pass }) {
+    async update({ commit, rootState, state, dispatch }, { id, user, name, role, pass }) {
       return await fetch(`${rootState.api_url}/user/${id}`, {
         method: 'PUT',
         headers: {
@@ -58,10 +65,11 @@ const module = {
         .then(e => {
           if (e.token) commit('token', e.token || "")
           if (e.data) commit('users', _.map(state.users, (e) => e.id == id ? _.omit(e, [ 'hash' ]) : e))
+          dispatch('sac')
           return e
         })
     },
-    async delete({ commit, rootState, state }, id) {
+    async delete({ commit, rootState, state, dispatch }, id) {
       return await fetch(`${rootState.api_url}/user/${id}`, {
         method: 'DELETE',
         headers: {
@@ -73,10 +81,11 @@ const module = {
         .then(e => {
           if (e.token) commit('token', e.token || "")
           if (e.data) commit('users', _.filter(state.users, (e) => e.id != id))
+          dispatch('sac')
           return e
         })
     },
-    async get({ commit, rootState, state }) {
+    async get({ commit, rootState, state, dispatch }) {
       return await fetch(`${rootState.api_url}/users`, {
         method: 'GET',
         headers: {
@@ -87,6 +96,7 @@ const module = {
         .then(e => e.json())
         .then(e => {
           if (e.data) commit('users', e.data)
+          dispatch('sac')
           return e
         })
     }
