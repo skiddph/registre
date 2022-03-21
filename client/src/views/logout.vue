@@ -2,7 +2,7 @@
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
-useStore().dispatch('logout')
+useStore().dispatch('user/reset')
 useRouter().push('/')
 
 </script>
