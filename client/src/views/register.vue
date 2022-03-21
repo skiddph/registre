@@ -22,12 +22,12 @@ const register = async () => {
     return
   }
 
-  const lr = await store.dispatch('register', { user: user.value, pass: pass.value, name: name.value })
-  error.value = lr.error || ""
+  const submit = await store.dispatch('user/create', { user: user.value, pass: pass.value, name: name.value })
+  error.value = submit.status == 'error' ? submit.message || "Unkown error occur" : ""
 }
 
 watchEffect(() => {
-  if (store.state.token) {
+  if (store.state.user.token) {
     router.push('/')
   }
 })
