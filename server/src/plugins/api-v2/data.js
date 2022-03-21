@@ -62,6 +62,11 @@ const plugins = fp(async (app, opts, done) => {
       code: 'DE003',
       message: 'Restore file not found'
     },
+    'DE004': {
+      status: 'error',
+      code: 'DE004',
+      message: 'Failed to backup file'
+    },
   }
 
   const SUCCESS_CODE = {
@@ -75,14 +80,48 @@ const plugins = fp(async (app, opts, done) => {
       code: 'DS002',
       message: 'Restore created successfully'
     },
+    'DS003': {
+      status: 'success',
+      code: 'DS003',
+      message: 'Data deleted successfully'
+    },
   }
 
   const VALID_BACKUP_FIELDS = [
-    'system',
     'user',
-    'logs',
-    'employee'
+    'system',
+    'employee',
+    'logs'
   ]
+
+  const createBackup = async (backup, emergency = false) => {
+    try {
+      let data = {}
+
+      for (let item of backup) {
+        if (VALID_BACKUP_FIELDS.includes(item)) {
+          data[ item ] = await app.prisma[ item ].findMany()
+        }
+      }
+
+      // to JSON
+      data = JSON.stringify(data)
+      // to base64
+      data = Buffer.from(data).toString('base64')
+      data = JSON.stringify({
+        version: 2,
+        data
+      }, null, 2)
+
+      // write data to file
+      const filename = `backup-${Date.now()}.json`
+      const filepath = emergency ? path.join(process.cwd(), 'emergency-' + filename) : path.join(dowload, filename)
+      fs.writeFileSync(filepath, data)
+      return filename
+    } catch (e) {
+      return null
+    }
+  }
 
   app.post(`${base_url}/data/backup`, async (req, res) => {
     let { backup } = req.body
@@ -92,35 +131,17 @@ const plugins = fp(async (app, opts, done) => {
       return res.code(403).send(ERROR_CODE[ 'DE001' ])
     }
 
-    // filter backup array
-    backup = backup.filter(item => {
-      return VALID_BACKUP_FIELDS.includes(item)
-    })
-
     // check if backup is valid array
     if (backup.length === 0) {
       return res.code(403).send(ERROR_CODE[ 'DE002' ])
     }
 
-    let data = {}
+    const filename = await createBackup(backup)
 
-    for (let item of backup) {
-      data[ item ] = await app.prisma[ item ].findMany()
+    if (!filename) {
+      return res.code(403).send(ERROR_CODE[ 'DE002' ])
     }
 
-    // to JSON
-    data = JSON.stringify(data)
-    // to base64
-    data = Buffer.from(data).toString('base64')
-    data = JSON.stringify({
-      version: 2,
-      data
-    }, null, 2)
-
-    // write data to file
-    const filename = `backup-${Date.now()}.json`
-    const filepath = path.join(dowload, filename)
-    fs.writeFileSync(filepath, data)
     return res.code(200).send({
       ...SUCCESS_CODE[ 'DS001' ],
       link: '/download/' + filename
@@ -192,12 +213,36 @@ const plugins = fp(async (app, opts, done) => {
     } catch (e) {
       return res.code(403).send(ERROR_CODE[ 'DE003' ])
     }
-
-
   })
 
   app.post(`${base_url}/data/reset`, async (req, res) => {
+    try {
+      // create emergency backup
+      const backup = await createBackup(VALID_BACKUP_FIELDS, true)
+      if (!backup) throw 'Failed to create backup'
+    } catch (e) {
+      return res.code(403).send(ERROR_CODE[ 'DE004' ])
+    }
 
+    // delete all data
+    try {
+      const data = {}
+      for (let table of VALID_BACKUP_FIELDS) {
+        if (table != 'user') {
+          data[ table ] = await app.prisma[ table ].deleteMany()
+            .catch(e => null)
+        }
+      }
+      data[ 'user' ] = await app.prisma[ 'user' ].deleteMany()
+        .catch(e => null)
+
+      return res.code(200).send({
+        ...SUCCESS_CODE[ 'DS003' ],
+        data
+      })
+    } catch (e) {
+      return res.code(403).send(ERROR_CODE[ 'DE004' ])
+    }
   })
 
   done()
