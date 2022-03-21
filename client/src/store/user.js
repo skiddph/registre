@@ -2,7 +2,7 @@ import { createMutations, createResetAction } from './lib'
 import _ from 'lodash'
 const DEFAULT_STATE = {
   users: [],
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxNCwiaWF0IjoxNjQ3ODM3MTUxfQ.5fHBtfly0slieNefANrcdUUIIgjOMAB2Vs8djHexmGs",
+  token: "",
 }
 
 const module = {
@@ -73,6 +73,20 @@ const module = {
         .then(e => {
           if (e.token) commit('token', e.token || "")
           if (e.data) commit('users', _.filter(state.users, (e) => e.id != id))
+          return e
+        })
+    },
+    async get({ commit, rootState, state }) {
+      return await fetch(`${rootState.api_url}/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${state.token}`
+        },
+      })
+        .then(e => e.json())
+        .then(e => {
+          if (e.data) commit('users', e.data)
           return e
         })
     }
