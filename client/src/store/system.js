@@ -1,18 +1,17 @@
 import { createMutations, createResetAction } from './lib'
 const DEFAULT_STATE = {
   dropdown_fields: [],
-  foo: {}
 }
 const module = {
   namespaced: true,
-  state: () => DEFAULT_STATE,
+  state: () => Object.assign({}, DEFAULT_STATE),
   mutations: {
     ...createMutations(DEFAULT_STATE),
     // addtional mutations here
   },
   actions: {
     reset: createResetAction(DEFAULT_STATE),
-    async get({ commit, rootState }, useCredentials = false) {
+    async get({ commit, rootState, state }, useCredentials = false) {
       return await fetch(`${rootState.api_url}/system`, {
         method: 'GET',
         headers: {
@@ -26,11 +25,14 @@ const module = {
               res.data[ key ] = res.data[ key ]
               if (DEFAULT_STATE[ key ]) {
                 commit(key, res.data[ key ])
+              } else {
+                commit('set', {key, value: res.data[ key ]})
               }
             } catch (e) {
               console.log(`[System] Failed to add ${key} to state.`)
             }
           }
+          commit('dashboard/tabs', state.dropdown_fields, { root: true })
           return res
         })
     },
