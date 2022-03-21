@@ -32,7 +32,7 @@ const module = {
       })
         .then(e => e.json())
         .then(e => {
-          if (!state.token) {
+          if (!state.token && e.token) {
             commit('token', e.token || "")
             commit('role', e.data.role || 0)
           }
