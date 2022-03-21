@@ -51,9 +51,10 @@ const module = {
       })
         .then(e => e.json())
         .then(e => {
-          commit('token', e.token || "")
-          commit('role', e.data.role || 0)
-          console.log(state.token)
+          if (e.token) {
+            commit('token', e.token || "")
+            commit('role', e.data.role || 0)
+          }
           return e
         })
     },
