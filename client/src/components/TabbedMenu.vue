@@ -4,34 +4,37 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 
-const tabs = ref([ 'Employees', 'Office', 'Unit', 'Position' ]);
-store.commit('setTabs', tabs.value)
-
-const active = ref(store.state.dash.active);
-
-watchEffect(() => {
-  if (store.state.role == 1) {
-    tabs.value = [ 'Employees', 'Office', 'Unit', 'Position', 'Admin' ]
-  } else {
-    tabs.value = [ 'Employees', 'Office', 'Unit', 'Position' ]
-  }
-  store.commit('setTabs', tabs.value)
+watchEffect(async () => {
+  await store.dispatch('system/get', false)
+  await store.dispatch('system/get', true)
+  store.state.dashboard.tabs.forEach(async (tab) => {
+    await store.dispatch('dashboard/data', tab)
+  })
+  await store.dispatch('dashboard/data', 'employees')
+  if (store.state.user.role == 1) await store.dispatch('dashboard/data', 'admins')
+  console.log(store.state)
 })
 
-const setActive = (index) => {
-  active.value = index
-  store.dispatch('setActive', index)
-}
+const setActive = (key) => store.dispatch('dashboard/active', key)
 
 </script>
 <template>
   <div class="tabbed-menu">
     <div
-      v-for="(   v, k   ) in tabs"
-      :class="`item pointer ${active == k ? 'active' : 'inactive'}`"
-      :key="`${v}-${k}`"
-      @click="setActive(k)"
-    >{{ v }}</div>
+      :class="`item ${store.state.dashboard.active == 'employees' ? 'active' : 'inactive'}`"
+      @click="setActive('employees')"
+    >employees</div>
+    <div
+      v-for="   tab    in store.state.dashboard.tabs"
+      :class="`item ${store.state.dashboard.active == tab ? 'active' : 'inactive'}`"
+      :key="tab"
+      @click="setActive(tab)"
+    >{{ tab }}</div>
+    <div
+      v-if="store.state.user.role == 1"
+      :class="`item ${store.state.dashboard.active == 'admins' ? 'active' : 'inactive'}`"
+      @click="setActive('admins')"
+    >admins</div>
   </div>
 </template>
 <style lang='scss' scoped>
@@ -39,14 +42,15 @@ const setActive = (index) => {
   @apply w-full flex flex-wrap items-end justify-start mb-4 m-2;
 
   .item {
-    @apply py-1 px-2 rounded border border-gray-600 md:text-sm mr-2 cursor-pointer;
+    @apply py-1 px-2 rounded border border-gray-600 md:text-sm mr-2 cursor-pointer capitalize;
+    user-select: none;
 
     &.active {
       @apply bg-gray-600 text-gray-100;
     }
 
     &.inactive {
-      @apply text-gray-600; 
+      @apply text-gray-600 hover:bg-gray-200;
     }
 
     &.spacer {
