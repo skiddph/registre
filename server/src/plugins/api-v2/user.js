@@ -83,7 +83,7 @@ const plugin = fp(async (app, opts, done) => {
     'US005': {
       status: 'success',
       code: 'US005',
-      message: 'Successfully delete user'
+      message: 'Successfully login user'
     }
   }
 
