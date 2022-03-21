@@ -184,9 +184,10 @@ const plugin = fp(async (app, opts, done) => {
       return res.code(404).send(ERROR_CODE[ 'UE002' ])
     }
 
+    const data = _.map(users, (user) => _.omit(user, [ 'hash' ]))
     return res.code(200).send({
       ...SUCCESS_CODE[ 'US002' ],
-      data: _.map(users, (user) => _.omit(user, [ 'hash' ]))
+      data
     })
   })
 
