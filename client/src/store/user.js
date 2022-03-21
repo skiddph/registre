@@ -9,7 +9,7 @@ const DEFAULT_STATE = {
 
 const module = {
   namespaced: true,
-  state: () => DEFAULT_STATE,
+  state: () => Object.assign({}, DEFAULT_STATE),
   mutations: {
     ...createMutations(DEFAULT_STATE),
     // addtional mutations here
