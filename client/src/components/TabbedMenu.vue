@@ -39,18 +39,14 @@ const setActive = (index) => {
   @apply w-full flex flex-wrap items-end justify-start mb-4 m-2;
 
   .item {
-    @apply py-1 px-2 rounded border border-gray-700 md:text-sm mr-2 cursor-pointer;
-
-    &.pointer {
-      @apply cursor-pointer;
-    }
+    @apply py-1 px-2 rounded border border-gray-600 md:text-sm mr-2 cursor-pointer;
 
     &.active {
-      @apply bg-gray-700 text-gray-100;
+      @apply bg-gray-600 text-gray-100;
     }
 
     &.inactive {
-      @apply text-gray-700; 
+      @apply text-gray-600; 
     }
 
     &.spacer {
