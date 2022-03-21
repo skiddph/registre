@@ -7,19 +7,22 @@ const store = useStore()
 const router = useRouter()
 
 watchEffect(async () => {
-  await store.dispatch('usercount')
+  await store.dispatch('user/get')
 
-  if (store.state.token) {
-    if (store.state.role === 1) {
+  console.log(store.state.user.sac)
+
+  if (store.state.user.token) {
+    if (store.state.user.role === 1) {
       router.push('/superadmin')
-    } else if (store.state.role === 2) {
+    } else if (store.state.user.role === 2) {
       router.push('/admin')
     } else {
       router.push('/logout')
     }
-  } else if (store.state.usercount > 0) {
+  } else if (store.state.user.sac > 0) {
     router.push('/scan')
   } else {
+    console.log(store.state.user.toke)
     router.push('/register')
   }
 })
