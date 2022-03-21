@@ -57,7 +57,7 @@ async function start(opts = {}) {
   }
 
   await app.register(express)
-  await onProd(async () => await app.register(cors))
+  await app.register(cors)
   await app.register(httpsRedirect)
   await app.register(usid)
   await app.register(prisma)
