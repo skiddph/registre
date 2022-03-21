@@ -3,6 +3,7 @@ import _ from 'lodash'
 const DEFAULT_STATE = {
   users: [],
   token: "",
+  role: 0,
   sac: 0, // super admin count
 }
 
@@ -31,7 +32,10 @@ const module = {
       })
         .then(e => e.json())
         .then(e => {
-          if (!state.token) commit('token', e.token || "")
+          if (!state.token) {
+            commit('token', e.token || "")
+            commit('role', e.data.role || 0)
+          }
           if (e.data) commit('users', [ ...state.users, _.omit(e.data, [ 'hash' ]) ])
           dispatch('sac')
           return e
@@ -48,6 +52,7 @@ const module = {
         .then(e => e.json())
         .then(e => {
           commit('token', e.token || "")
+          commit('role', e.data.role || 0)
           console.log(state.token)
           return e
         })
@@ -63,7 +68,11 @@ const module = {
       })
         .then(e => e.json())
         .then(e => {
-          if (e.token) commit('token', e.token || "")
+          if (e.token) {
+            commit('token', e.token || "")
+            commit('role', e.data.role || 0)
+          }
+
           if (e.data) commit('users', _.map(state.users, (e) => e.id == id ? _.omit(e, [ 'hash' ]) : e))
           dispatch('sac')
           return e
@@ -79,7 +88,7 @@ const module = {
       })
         .then(e => e.json())
         .then(e => {
-          if (e.token) commit('token', e.token || "")
+          if (e.data.id == id) dispatch('reset')
           if (e.data) commit('users', _.filter(state.users, (e) => e.id != id))
           dispatch('sac')
           return e
