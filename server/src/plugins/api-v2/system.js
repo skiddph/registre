@@ -136,7 +136,7 @@ const plugin = fp(async (app, opts, done) => {
     }
 
     // get key, value and role
-    const { key } = (req.params || req.body)
+    const key = (req.params?.key || req.body?.key || null)
     const { value, role } = req.body
 
     // reject if keys or values are empty
