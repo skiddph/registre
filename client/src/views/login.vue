@@ -17,7 +17,8 @@ const login = async () => {
 	}
 	error.value = ''
 	const submit = await store.dispatch('user/login', { user: user.value, pass: pass.value })
-	error.value = submit.error || ""
+		.then(e => e)
+	error.value = submit.status == 'error' ? submit.message || "Unkown error occur" : ""
 }
 
 watchEffect(() => {
