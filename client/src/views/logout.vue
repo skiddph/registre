@@ -2,7 +2,10 @@
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
-useStore().dispatch('user/reset')
+const store = useStore()
+store.dispatch('dashboard/reset')
+store.dispatch('user/reset')
+store.dispatch('system/reset')
 useRouter().push('/')
 
 </script>
