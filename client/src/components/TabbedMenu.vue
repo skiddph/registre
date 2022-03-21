@@ -26,13 +26,40 @@ const setActive = (index) => {
 </script>
 <template>
   <div class="tabbed-menu">
-    <div class="item inactive"></div>
     <div
-      v-for="(  v, k  ) in tabs"
+      v-for="(   v, k   ) in tabs"
       :class="`item pointer ${active == k ? 'active' : 'inactive'}`"
       :key="`${v}-${k}`"
       @click="setActive(k)"
     >{{ v }}</div>
-    <div class="item spacer inactive"></div>
   </div>
 </template>
+<style lang='scss' scoped>
+.tabbed-menu {
+  @apply w-full flex flex-wrap items-end justify-start mb-4 m-2;
+
+  .item {
+    @apply py-1 px-2 rounded border border-gray-700 md:text-sm mr-2 cursor-pointer;
+
+    &.pointer {
+      @apply cursor-pointer;
+    }
+
+    &.active {
+      @apply bg-gray-700 text-gray-100;
+    }
+
+    &.inactive {
+      @apply text-gray-700; 
+    }
+
+    &.spacer {
+      flex: 1;
+    }
+
+    .count {
+      @apply text-xs text-gray-600;
+    }
+  }
+}
+</style>
