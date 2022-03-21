@@ -2,3 +2,4 @@ node_modules/
 release/
 server/prisma/*.db
 server/tmp/
+server/emergency-backup-*.json
