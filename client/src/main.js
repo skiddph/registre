@@ -51,4 +51,7 @@ app.use(router)
 app.use(store)
 app.use(VueQrcodeReader)
 app.component('icon', FontAwesomeIcon)
-app.mount('#app')
+
+router.isReady().then(() => {
+  app.mount('#app')
+})
