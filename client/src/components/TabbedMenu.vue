@@ -39,10 +39,10 @@ const setActive = (key) => store.dispatch('dashboard/active', key)
 </template>
 <style lang='scss' scoped>
 .tabbed-menu {
-  @apply w-full flex flex-wrap items-end justify-start mb-4 m-2;
+  @apply w-full flex flex-wrap items-end justify-start px-2 pt-4;
 
   .item {
-    @apply py-1 px-2 rounded border border-gray-600 md:text-sm mr-2 cursor-pointer capitalize;
+    @apply py-1 px-2 rounded border border-gray-600 md:text-sm mr-2 cursor-pointer capitalize mb-2;
     user-select: none;
 
     &.active {
