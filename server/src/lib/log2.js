@@ -1,7 +1,7 @@
 const _ = require('lodash')
 
 const transformEmployeeData = async (app, data) => {
-  if(!data) return 
+  if (!data) return
 
   data.data = typeof data.data === 'string' ? JSON.parse(data.data) : data.data
 
@@ -86,6 +86,7 @@ const transformLogData = (data) => {
       })
 
       log_f.timestamps = log_code
+
       result.push(log_f)
     }
   }
@@ -99,10 +100,18 @@ const transformReportData = (data) => {
   logs.forEach(e => {
     const remarks = e.remarks || false
     result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule' ])
-    if(!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {}
-    if(remarks) {
+    if (!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {}
+
+    if(
+      (e.timestamps.AM_IN && e.timestamps.AM_OUT && !e.timestamps.PM_IN && !e.timestamps.PM_OUT) ||
+      (!e.timestamps.AM_IN && !e.timestamps.AM_OUT && e.timestamps.PM_IN && e.timestamps.PM_OUT)
+    ) {
+      result[ e.employee ].remarks.undertime = result[ e.employee ].remarks.undertime ? result[ e.employee ].remarks.undertime + 1 : 1
+    }
+
+    if (remarks) {
       // increment remarks
-      result[ e.employee ].remarks[remarks] = result[ e.employee ].remarks[remarks] ? result[ e.employee ].remarks[remarks] + 1 : 1
+      result[ e.employee ].remarks[ remarks ] = result[ e.employee ].remarks[ remarks ] ? result[ e.employee ].remarks[ remarks ] + 1 : 1
     }
   })
 
