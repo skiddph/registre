@@ -239,7 +239,6 @@ const plugin = fp(async (app, opts, done) => {
     const employee_data = {
       id: employee.id,
       name: employee.name,
-      addedBy: employee.addedBy,
       ...mergeDropdownFields(sys_dropdown_fields, JSON.parse(employee.data))
     }
 
@@ -292,7 +291,6 @@ const plugin = fp(async (app, opts, done) => {
       return {
         id: employee.id,
         name: employee.name,
-        addedBy: employee.addedBy,
         ...mergeDropdownFields(sys_dropdown_fields, JSON.parse(employee.data))
       }
     })
