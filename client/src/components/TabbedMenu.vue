@@ -7,12 +7,6 @@ const store = useStore()
 watchEffect(async () => {
   await store.dispatch('system/get', false)
   await store.dispatch('system/get', true)
-  store.state.dashboard.tabs.forEach(async (tab) => {
-    await store.dispatch('dashboard/data', tab)
-  })
-  await store.dispatch('dashboard/data', 'employees')
-  if (store.state.user.role == 1) await store.dispatch('dashboard/data', 'admins')
-  console.log(store.state)
 })
 
 const setActive = (key) => store.dispatch('dashboard/active', key)
@@ -20,6 +14,10 @@ const setActive = (key) => store.dispatch('dashboard/active', key)
 </script>
 <template>
   <div class="tabbed-menu">
+    <div
+      :class="`item ${store.state.dashboard.active == 'overview' ? 'active' : 'inactive'}`"
+      @click="setActive('overview')"
+    >overview</div>
     <div
       :class="`item ${store.state.dashboard.active == 'employees' ? 'active' : 'inactive'}`"
       @click="setActive('employees')"
