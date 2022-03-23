@@ -111,14 +111,16 @@ const plugin = fp(async (app, opts, done) => {
         res.code(500).send(ERROR_CODE[ 'LE002' ])
       )
   )
-  app.post(`${base_url}/logs/report`, async (req, res) =>
+  app.post(`${base_url}/logs/report`, async (req, res) => {
+    console.log('body', req.body)
     await middie(app, req, res, ERROR_CODE, SUCCESS_CODE)
       .reports()
-      .catch(() =>
+      .catch((e) => {
+        console.log(e)
         res.code(500).send(ERROR_CODE[ 'LE002' ])
-      )
-  )
-  
+      })
+  })
+
   done()
 })
 
