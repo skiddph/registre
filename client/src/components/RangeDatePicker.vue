@@ -25,10 +25,15 @@ const dateHandler = () => {
   console.log(new Date(from.value), new Date(to.value))
 }
 
-mydate.value.value = format(new Date(), 'yyyy-MM-dd')
+
 dateHandler()
 
 const emits = defineEmits([ 'cancel', 'submit' ])
+
+onMounted(() => {
+  mydate.value.value = format(new Date(), 'yyyy-MM-dd')
+  
+})
 </script>
 <template>
   <div class="wrapper">
