@@ -1,6 +1,7 @@
 import { createMutations, createResetAction } from './lib'
 const DEFAULT_STATE = {
   dropdown_fields: [],
+  servertime: ""
 }
 const module = {
   namespaced: true,
@@ -60,6 +61,14 @@ const module = {
           if (DEFAULT_STATE[ key ]) {
             commit(res.data.key, JSON.parse(res.data.value))
           }
+          return res
+        })
+    },
+    async servertime({ commit, rootState }) {
+      return await fetch(`${rootState.api_url}/getservertime`)
+        .then(res => res.json())
+        .then(res => {
+          commit('servertime', res.data || "")
           return res
         })
     },
