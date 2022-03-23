@@ -23,11 +23,9 @@
           </div>
           <div class="bottom" v-if="state == 'ready'">
             <div class="camera-info">
-              <span>{{ activeCamera + 1 }}/{{ cameras.length }}</span>
+              <span>{{ activeCamera + 1 }}/{{ cameras.length }} - {{ cameras[ activeCamera ]?.toUpperCase() }}</span>
             </div>
-            <div class="camera-info">
-              <span>{{ cameras[ activeCamera ]?.toUpperCase() }}</span>
-            </div>
+            <div class="server-time">{{ time }}</div>
 
             <div class="actions">
               <button v-if="hasTorch" @click="toggleFlash">
@@ -54,7 +52,7 @@ export default {
   components: {
     Indicator
   },
-  emits: ['name'],
+  emits: [ 'name' ],
   data: () => ({
     perLogDelay: 5000,
     idleDelay: 15000,
@@ -76,8 +74,17 @@ export default {
     sndError: null,
     SoundIn: SoundIn,
     SoundOut: SoundOut,
-    SoundError: SoundError
+    SoundError: SoundError,
   }),
+  created() {
+    this.$store.dispatch('system/servertime')
+    setInterval(() => this.$store.dispatch('system/servertime'), 60000)
+  },
+  computed: {
+    time() {
+      return this.$store.state.system.servertime
+    }
+  },
   methods: {
     onStateIn(log) {
       this.state = 'in'
@@ -167,12 +174,12 @@ export default {
       } finally {
         // hide loading indicator
       }
-      if(this.isIdle) {
-        if(this.activeCamera !== this.tempCamera) {
+      if (this.isIdle) {
+        if (this.activeCamera !== this.tempCamera) {
           this.isIdle = false
-          this.activeCamera = this.tempCamera == 0 ? this.cameras.length: this.tempCamera - 1
+          this.activeCamera = this.tempCamera == 0 ? this.cameras.length : this.tempCamera - 1
           this.toggleCamera()
-        } 
+        }
       } else {
         this.state = 'ready'
         this.error = ''
@@ -188,7 +195,7 @@ export default {
     toggleFlash() {
       this.flash = !this.flash
     },
-    employeeHandler(employee){
+    employeeHandler(employee) {
       this.$emit('name', employee)
     }
   },
@@ -259,6 +266,10 @@ export default {
       }
     }
 
+    .server-time {
+      @apply px-2 text-white text-lg;
+    }
+
     .actions {
       button,
       .action {
@@ -278,6 +289,5 @@ export default {
       @apply text-sm text-white bg-gray-700 px-2;
     }
   }
-
 }
 </style>
