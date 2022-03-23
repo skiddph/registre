@@ -3,7 +3,7 @@ import system from './system'
 import user from './user'
 import dashboard from './dashboard'
 import employee from './employee'
-
+import logs from './logs'
 const SERVER_URL = import.meta.env.VITE_API_URL || ""
 const API_URL = SERVER_URL + "/api/v2"
 
@@ -12,7 +12,8 @@ const store = createStore({
     system,
     user,
     dashboard,
-    employee
+    employee,
+    logs
   },
   state: {
     server_url: SERVER_URL,
@@ -38,7 +39,7 @@ const store = createStore({
       id: 0,
       search: ""
     },
-    logs: [],
+    // logs: [],
     logsFilter: {
       from: {
         year: new Date().getFullYear(),
