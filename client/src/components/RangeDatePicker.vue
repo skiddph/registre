@@ -6,34 +6,29 @@ const from = ref(0)
 const to = ref(0)
 const advance = ref(false)
 const mydate = ref(null)
-const fromdate = ref(format(new Date(), 'yyyy-MM-dd'))
-const todate = ref(format(new Date(), 'yyyy-MM-dd'))
-const fromtime = ref(format((new Date()).setHours(0, 0, 0, 0), 'HH:mm'))
-const totime = ref(format((new Date()).setHours(23, 59, 59, 999), 'HH:mm'))
+const fromdate = ref(null)
+const todate = ref(null)
+const fromtime = ref(null)
+const totime = ref(null)
 
 const dateHandler = () => {
+  if (mydate.value && !mydate.value?.value) mydate.value.value = format(new Date(), 'yyyy-MM-dd')
+  if (fromdate.value && !fromdate.value?.value) fromdate.value.value = format(new Date(), 'yyyy-MM-dd')
+  if (todate.value && !todate.value?.value) todate.value.value = format(new Date(), 'yyyy-MM-dd')
+  if (fromtime.value && !fromtime.value?.value) fromtime.value.value = format(new Date().setHours(0, 0, 0, 0), 'HH:mm')
+  if (totime.value && !totime.value?.value) totime.value.value = format(new Date().setHours(23, 59, 59, 999), 'HH:mm')
+
   if (!advance.value) {
     from.value = new Date(mydate.value?.value + ' 00:00:00').getTime()
     to.value = new Date(mydate.value?.value + ' 23:59:59').getTime()
-    console.log('non-advance handler called', from.value, to.value)
   } else {
-    from.value = new Date(fromdate.value + ' ' + fromtime.value).getTime()
-    to.value = new Date(todate.value + ' ' + totime.value).getTime()
-    console.log('advanced handler called', from.value, to.value)
+    from.value = new Date(fromdate.value?.value + ' ' + fromtime.value?.value).getTime()
+    to.value = new Date(todate.value?.value + ' ' + totime.value?.value).getTime()
   }
-
-  console.log(new Date(from.value), new Date(to.value))
 }
 
-
-dateHandler()
-
+onMounted(() => dateHandler())
 const emits = defineEmits([ 'cancel', 'submit' ])
-
-onMounted(() => {
-  mydate.value.value = format(new Date(), 'yyyy-MM-dd')
-  
-})
 </script>
 <template>
   <div class="wrapper">
@@ -47,31 +42,31 @@ onMounted(() => {
         <input type="checkbox" v-model="advance" id="advance" />
         <label for="advance">Advanced</label>
       </div>
-      <div class="date-container" v-if="advance">
+      <div class="date-container" v-show="advance">
         <div class="from">
           <h3>From</h3>
           <div class="group">
             <label for="date-from">Date</label>
-            <input type="date" id="date-from" ref="datefrom" />
+            <input type="date" id="date-from" @change="dateHandler" ref="fromdate" />
           </div>
           <div class="group">
             <label for="date-from">Time</label>
-            <input type="time" id="tme-from" ref="timefrom" />
+            <input type="time" id="tme-from" @change="dateHandler" ref="fromtime" />
           </div>
         </div>
         <div class="to">
           <h3>To</h3>
           <div class="group">
             <label for="date-to">Date</label>
-            <input type="date" id="date-to" v-model="todate" />
+            <input type="date" id="date-to" @change="dateHandler" ref="todate" />
           </div>
           <div class="group">
             <label for="date-to">Time</label>
-            <input type="time" id="tme-to" v-model="totime" />
+            <input type="time" id="tme-to" @change="dateHandler" ref="totime" />
           </div>
         </div>
       </div>
-      <div class="date-container" v-if="!advance">
+      <div class="date-container" v-show="!advance">
         <div class="date-only">
           <h3>Select Date</h3>
           <div class="group">
