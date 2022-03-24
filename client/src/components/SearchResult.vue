@@ -11,11 +11,11 @@ const store = useStore();
     <div class="table-container">
       <table v-if="store.state.dashboard.result.length > 0">
         <tr class="w-full">
-          <th v-for="(v, k) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
+          <th v-for="( v, k ) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
           <th v-if="store.state.dashboard.active != 'overview'" class="actions">Actions</th>
         </tr>
-        <tr v-for="(item, i)  in store.state.dashboard.result">
-          <td v-for="h in store.state.dashboard.result_headers" :key="h">
+        <tr v-for="( item, i )  in store.state.dashboard.result">
+          <td v-for=" h  in store.state.dashboard.result_headers" :key="h">
             {{
               (h == 'value' ? item : item[ h ]) || '-'
             }}
@@ -24,7 +24,7 @@ const store = useStore();
             <button
               v-if="store.state.dashboard.result_headers.length > 1"
               class="edit"
-              @click="action.edit(item.id)"
+              @click="store.dispatch('dashboard/editform', item)"
             >Edit</button>
             <button
               v-if="store.state.dashboard.tabs.includes(store.state.dashboard.active)"
