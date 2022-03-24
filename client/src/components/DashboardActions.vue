@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import html2canvas from 'html2canvas';
 import RangeDatePicker from '@/components/RangeDatePicker.vue'
 
 const search = ref('')
@@ -33,6 +34,15 @@ const overviewFilterHandler = async (e) => {
   overviewFilterOn.value = false
 }
 
+const print = async () => {
+  const sr = document.querySelector('.search-result-container')
+  const tableCanvas = await html2canvas(sr)
+  const w = window.open('', '', 'left=0,top=0,width=3508,height=3508,toolbar=0,scrollbars=0,status=0')
+  w.document.body.appendChild(tableCanvas)
+  w.print()
+  w.close()
+}
+
 </script>
 <template>
   <RangeDatePicker
@@ -55,10 +65,7 @@ const overviewFilterHandler = async (e) => {
         v-if="store.state.dashboard.active == 'overview'"
         @click="overviewFilterOn = true"
       >Filter</button>
-      <button
-        v-if="store.state.dashboard.active == 'overview'"
-        @click="store.dispatch('dashboard/printOverview')"
-      >Print</button>
+      <button v-if="store.state.dashboard.active == 'overview'" @click="print">Print</button>
     </div>
   </div>
 </template>
