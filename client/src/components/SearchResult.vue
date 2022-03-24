@@ -14,7 +14,7 @@ const store = useStore();
           <th v-for="(v, k) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
           <th v-if="store.state.dashboard.active != 'overview'" class="actions">Actions</th>
         </tr>
-        <tr v-for="item in store.state.dashboard.result">
+        <tr v-for="(item, i)  in store.state.dashboard.result">
           <td v-for="h in store.state.dashboard.result_headers" :key="h">
             {{
               (h == 'value' ? item : item[ h ]) || '-'
@@ -26,7 +26,16 @@ const store = useStore();
               class="edit"
               @click="action.edit(item.id)"
             >Edit</button>
-            <button class="delete" @click="action.delete(item.id)">Delete</button>
+            <button
+              v-if="store.state.dashboard.tabs.includes(store.state.dashboard.active)"
+              class="delete"
+              @click="store.dispatch('dashboard/deletefielddata', i)"
+            >Delete</button>
+            <button
+              v-if="!store.state.dashboard.tabs.includes(store.state.dashboard.active)"
+              class="delete"
+              @click="store.dispatch('dashboard/deletefielddata', item.id)"
+            >Delete</button>
           </td>
         </tr>
       </table>
@@ -53,6 +62,7 @@ const store = useStore();
   }
 
   .table-container {
+    @apply px-2;
     overflow-x: auto;
 
     table {
@@ -77,7 +87,7 @@ const store = useStore();
 
         th,
         td {
-          @apply p-2;
+          @apply px-2 py-1;
         }
 
         td {
