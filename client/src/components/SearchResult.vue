@@ -11,14 +11,15 @@ const store = useStore();
     <div class="table-container">
       <table v-if="store.state.dashboard.result.length > 0">
         <tr class="w-full">
-          <th v-for="(  v, k  ) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
+          <th v-for="(v, k) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
           <th v-if="store.state.dashboard.active != 'overview'" class="actions">Actions</th>
         </tr>
-        <tr v-for="  item   in store.state.dashboard.result">
-          <td
-            v-for="  h   in store.state.dashboard.result_headers"
-            :key="h"
-          >{{ (h == 'value' ? item : item[ h ]) || '-' }}</td>
+        <tr v-for="item in store.state.dashboard.result">
+          <td v-for="h in store.state.dashboard.result_headers" :key="h">
+            {{
+              (h == 'value' ? item : item[ h ]) || '-'
+            }}
+          </td>
           <td v-if="store.state.dashboard.active != 'overview'" class="actions">
             <button
               v-if="store.state.dashboard.result_headers.length > 1"
@@ -80,12 +81,12 @@ const store = useStore();
         }
 
         td {
-          @apply text-gray-700 ;
+          @apply text-gray-700;
           button {
             @apply hover:underline ml-4 md:ml-2 md:text-sm;
 
             &.edit {
-              @apply text-teal-600 ;
+              @apply text-teal-600;
             }
 
             &.delete {
