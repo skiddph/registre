@@ -22,7 +22,6 @@ model User {
   name     String
   role     Int        @default(2)
   hash     String
-  Employee Employee[]
 }
 
 model Logs {
@@ -36,6 +35,5 @@ model Employee {
   id      String @id @unique
   name    String
   data    String
-  AddedBy User   @relation(fields: addedBy, references: id, onDelete: SetNull)
   addedBy Int
 }
