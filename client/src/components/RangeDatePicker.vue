@@ -86,6 +86,12 @@ const emits = defineEmits([ 'cancel', 'submit' ])
 .wrapper {
   @apply w-screen h-screen flex flex-row items-center justify-center fixed;
   z-index: 100;
+
+  * {
+    outline: none;
+    user-select: none;
+  }
+
   .bg {
     @apply w-screen h-screen fixed top-0 left-0;
     z-index: 101;
