@@ -3,6 +3,7 @@ import _ from 'lodash'
 const DEFAULT_STATE = {
   users: [],
   token: "",
+  id: null,
   role: 0,
   sac: 0, // super admin count
 }
@@ -17,7 +18,7 @@ const module = {
   actions: {
     reset: createResetAction(DEFAULT_STATE),
     async sac({ commit, state }) {
-      const { users } = state
+      const users = Object.assign({}, state.users)
       const sac = _.filter(users, { role: 1 }).length
       commit('sac', sac)
     },
@@ -54,6 +55,7 @@ const module = {
           if (e.token) {
             commit('token', e.token || "")
             commit('role', e.data.role || 0)
+            commit('id', e.data.id || null)
           }
           return e
         })
@@ -88,10 +90,15 @@ const module = {
         },
       })
         .then(e => e.json())
-        .then(e => {
-          if (e.data.id == id) dispatch('reset')
-          if (e.data) commit('users', _.filter(state.users, (e) => e.id != id))
-          dispatch('sac')
+        .then(async e => {
+          if (e.data?.id == state.id) {
+            dispatch('reset')
+          } else if (e.data) {
+            commit('users', _.filter(state.users, (e) => e.id != id))
+          } else if (e.status == "error") {
+            alert(e.message)
+          }
+          await dispatch('sac')
           return e
         })
     },
