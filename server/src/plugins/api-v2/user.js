@@ -143,7 +143,6 @@ const plugin = fp(async (app, opts, done) => {
       isSuperAdmin = true
     }
 
-
     if (!isSuperAdmin && (req.user?.role !== 1)) {
       return res.code(401).send(ERROR_CODE[ 'UE006' ])
     }
@@ -162,7 +161,7 @@ const plugin = fp(async (app, opts, done) => {
       data: {
         user,
         name,
-        role: isSuperAdmin ? 1 : role || 2,
+        role: parseInt(isSuperAdmin ? 1 : role || 2),
         hash,
       }
     })
