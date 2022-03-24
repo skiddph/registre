@@ -10,7 +10,7 @@ const DEFAULT_STATE = {
   result_headers: [],
   addform: false,
   editform: false,
-  edit_id: null,
+  formdata: {}
 }
 
 const module = {
@@ -72,14 +72,14 @@ const module = {
         commit('data', { ..._.omit(state.data, [ key ]), [ key ]: [] })
       }
     },
-    editform({ commit }, id) {
-      commit('edit_id', id)
+    editform({ commit }, item) {
       commit('editform', true)
+      commit('formdata', item)
     },
     cancelform({ commit }) {
       commit('addform', false)
       commit('editform', false)
-      commit('edit_id', null)
+      commit('formdata', {})
     },
     async addfielddata({ commit, state, dispatch }, field) {
       const fields = state.data[ state.active ]
