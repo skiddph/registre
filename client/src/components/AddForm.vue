@@ -8,8 +8,6 @@ const loading = ref(false);
 const error = ref("");
 
 const field = ref("");
-const fields = ref({});
-
 
 const submitAdd = async (data) => {
   if (store.state.dashboard.tabs.includes(store.state.dashboard.active)) {
@@ -26,11 +24,34 @@ const submitAdd = async (data) => {
         console.log(e)
         error.value = e.message
       })
+  } else {
+    loading.value = true;
+    error.value = "";
+    await store.dispatch('dashboard/adddata')
+      .then(e => { if (e == "error") error.value = e.message; })
+      .finally(() => {
+        loading.value = false
+        store.dispatch('dashboard/cancelform')
+      })
+      .catch(e => {
+        console.log(e)
+        error.value = e.message
+      })
   }
 }
 
 const submitEdit = async (data) => {
-
+  loading.value = true;
+  error.value = "";
+  await store.dispatch('dashboard/updatedata')
+    .finally(() => {
+      loading.value = false
+      store.dispatch('dashboard/cancelform')
+    })
+    .catch(e => {
+      console.log(e)
+      error.value = e.message
+    })
 }
 
 </script>
@@ -48,17 +69,64 @@ const submitEdit = async (data) => {
       <div v-if="store.state.dashboard.active == 'employees'" class="collection">
         <div class="group">
           <label for="id">Employee ID</label>
-          <input type="text" name="id" v-model="store.state.dashboard.formdata['id']" autocomplete="off" />
+          <input
+            type="text"
+            name="id"
+            v-model="store.state.dashboard.formdata[ 'id' ]"
+            autocomplete="off"
+          />
         </div>
         <div class="group">
           <label for="name">Name</label>
-          <input type="text" name="name" v-model="store.state.dashboard.formdata['name']" autocomplete="off" />
+          <input
+            type="text"
+            name="name"
+            v-model="store.state.dashboard.formdata[ 'name' ]"
+            autocomplete="off"
+          />
         </div>
-        <div class="group" v-for=" dd   in store.state.dashboard.tabs">
+        <div class="group" v-for="   dd     in store.state.dashboard.tabs">
           <label for="office">{{ String(dd) }}</label>
           <select name="office" v-model="store.state.dashboard.formdata[ dd ]">
-            <option v-for=" v  in store.state.dashboard.data[ dd ]" :key="v" :value="v">{{ v }}</option>
+            <option v-for="   v    in store.state.dashboard.data[ dd ]" :key="v" :value="v">{{ v }}</option>
           </select>
+        </div>
+      </div>
+
+      <div v-if="store.state.dashboard.active == 'admins'" class="collection">
+        <div class="group">
+          <label for="id">Username</label>
+          <input
+            type="text"
+            name="id"
+            v-model="store.state.dashboard.formdata[ 'user' ]"
+            autocomplete="off"
+          />
+        </div>
+        <div class="group">
+          <label for="name">Name</label>
+          <input
+            type="password"
+            name="name"
+            v-model="store.state.dashboard.formdata[ 'name' ]"
+            autocomplete="off"
+          />
+        </div>
+        <div class="group">
+          <label for="name">Role</label>
+          <select name="role" v-model="store.state.dashboard.formdata[ 'role' ]">
+            <option value="2">Admin</option>
+            <option value="1">Super Admin</option>
+          </select>
+        </div>
+        <div class="group">
+          <label for="name">Password</label>
+          <input
+            type="password"
+            name="name"
+            v-model="store.state.dashboard.formdata[ 'pass' ]"
+            autocomplete="off"
+          />
         </div>
       </div>
 
@@ -67,22 +135,10 @@ const submitEdit = async (data) => {
         <input type="text" name="name" v-model="field" autocomplete="off" />
       </div>
 
-      <!-- Admin -->
-      <!-- <div v-if="active == 4">
-        <label for="name">Name</label>
-        <input type="text" name="name" v-model="name" autocomplete="off" />
-        <label for="user">Username</label>
-        <input type="text" name="user" v-model="user" autocomplete="off" />
-        <label for="pass">Password</label>
-        <input type="password" name="pass" v-model="pass" autocomplete="off" />
-        <label for="cpass">Confirm Password</label>
-        <input type="password" name="cpass" v-model="cpass" autocomplete="off" />
-      </div>-->
-
       <div class="add-form-actions">
         <button @click="store.dispatch('dashboard/cancelform', false)">Cancel</button>
         <button v-if="store.state.dashboard.addform" @click="submitAdd">Add</button>
-        <!-- <button v-if="store.state.dash.edit" @click="update_a[ active ]">Update</button> -->
+        <button v-if="store.state.dashboard.editform" @click="submitEdit">Update</button>
       </div>
     </div>
   </div>
