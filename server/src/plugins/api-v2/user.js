@@ -84,7 +84,12 @@ const plugin = fp(async (app, opts, done) => {
       status: 'success',
       code: 'US005',
       message: 'Successfully login user'
-    }
+    },
+    'US006': {
+      status: 'success',
+      code: 'US006',
+      message: 'Successfully delete user'
+    },
   }
 
   app.get(`${base_url}/user/:id`, async (req, res) => {
@@ -290,7 +295,6 @@ const plugin = fp(async (app, opts, done) => {
       })
   })
 
-  // TODO: delete user
   app.delete(`${base_url}/user/:id`, async (req, res) => {
     if (!req.user || req.user.role !== 1) {
       return res.code(401).send(ERROR_CODE[ 'UE006' ])
@@ -315,7 +319,7 @@ const plugin = fp(async (app, opts, done) => {
     })
       .then(async (user) => {
         return res.code(201).send({
-          ...SUCCESS_CODE[ 'US005' ],
+          ...SUCCESS_CODE[ 'US006' ],
           data: _.omit(user, [ 'hash' ])
         })
       })
@@ -323,7 +327,7 @@ const plugin = fp(async (app, opts, done) => {
         if (e.code === 'P2025') {
           return res.code(404).send(ERROR_CODE[ 'UE009' ])
         }
-        return res.code(500).send(ERROR_CODE[ 'UE005' ])
+        return res.code(500).send(ERROR_CODE[ 'UE006' ])
       })
   })
 
