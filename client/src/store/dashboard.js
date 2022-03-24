@@ -74,12 +74,17 @@ const module = {
     },
     editform({ commit }, item) {
       commit('editform', true)
-      commit('formdata', item)
+      commit('formdata', Object.assign({}, item))
     },
     cancelform({ commit }) {
       commit('addform', false)
       commit('editform', false)
       commit('formdata', {})
+    },
+    async updatedata({ commit, state, dispatch }) {
+      if(state.active == 'employees') {
+        return await dispatch('employee/update', Object.assign({}, state.formdata), { root: true })
+      }
     },
     async addfielddata({ commit, state, dispatch }, field) {
       const fields = state.data[ state.active ]
