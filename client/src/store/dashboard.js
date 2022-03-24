@@ -81,15 +81,69 @@ const module = {
       commit('editform', false)
       commit('formdata', {})
     },
-    async updatedata({ commit, state, dispatch }) {
-      if(state.active == 'employees') {
-        return await dispatch('employee/update', Object.assign({}, state.formdata), { root: true })
+    async updatedata({ state, dispatch }) {
+      if (state.active == 'employees') {
+        console.log('update employees')
+        const data = _.pick(Object.assign({}, state.formdata), [ 'name', 'id' ])
+        data.dropdown_fields = _.omit(Object.assign({}, state.formdata), [ 'name', 'id' ])
+        return await dispatch('employee/update', data, { root: true })
+          .then(async e => {
+            if (e.status == "success") {
+              await dispatch('employee/get', null, { root: true })
+              await dispatch('data', state.active)
+              const search = String(state.search)
+              dispatch('search', '')
+              dispatch('search', search)
+            }
+            return e
+          })
+      } else if (state.active == 'admins') {
+        return await dispatch('user/update', Object.assign({}, state.formdata), { root: true })
+          .then(async e => {
+            if (e.status == "success") {
+              await dispatch('user/get', null, { root: true })
+              await dispatch('data', state.active)
+              const search = String(state.search)
+              dispatch('search', '')
+              dispatch('search', search)
+            }
+            return e
+          })
+      }
+    },
+    async adddata({ state, dispatch }) {
+      if (state.active == 'employees') {
+        const data = _.pick(Object.assign({}, state.formdata), [ 'name', 'id' ])
+        data.dropdown_fields = _.omit(Object.assign({}, state.formdata), [ 'name', 'id' ])
+        return await dispatch('employee/create', data, { root: true })
+          .then(async e => {
+            if (e.status == "success") {
+              await dispatch('employee/get', null, { root: true })
+              await dispatch('data', state.active)
+              const search = String(state.search)
+              dispatch('search', '')
+              dispatch('search', search)
+            }
+            return e
+          })
+      } else if (state.active == 'admins') {
+        return await dispatch('user/create', Object.assign({}, state.formdata), { root: true })
+          .then(async e => {
+            if (e.status == "success") {
+              await dispatch('user/get', null, { root: true })
+              await dispatch('data', state.active)
+              const search = String(state.search)
+              dispatch('search', '')
+              dispatch('search', search)
+            }
+            return e
+          })
       }
     },
     async addfielddata({ commit, state, dispatch }, field) {
       const fields = state.data[ state.active ]
       fields.push(field)
-      await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
+      return await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
         .then(async e => {
           if (e.status == "success") {
             commit('data', { ..._.omit(state.data, [ state.active ]), [ state.active ]: fields })
@@ -107,7 +161,7 @@ const module = {
       if (state.tabs.includes(state.active)) {
         const fields = state.data[ state.active ]
         fields.splice(id, 1)
-        await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
+        return await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
           .then(async e => {
             if (e.status == "success") {
               commit('data', { ..._.omit(state.data, [ state.active ]), [ state.active ]: fields })
@@ -121,8 +175,8 @@ const module = {
             return e
           })
       } else {
-        if(state.active == 'employees') {
-          await dispatch('employee/delete', id, { root: true })
+        if (state.active == 'employees') {
+          return await dispatch('employee/delete', id, { root: true })
             .then(async e => {
               if (e.status == "success") {
                 await dispatch('employee/get', null, { root: true })
@@ -133,8 +187,8 @@ const module = {
               }
               return e
             })
-        } else if(state.active == 'admins') {
-          await dispatch('user/delete', id, { root: true })
+        } else if (state.active == 'admins') {
+          return await dispatch('user/delete', id, { root: true })
             .then(async e => {
               if (e.status == "success") {
                 await dispatch('user/get', null, { root: true })
