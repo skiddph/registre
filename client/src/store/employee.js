@@ -24,6 +24,19 @@ const module = {
           if (e.data) commit('employees', e.data)
           return e
         })
+    },
+    delete({ commit, rootState, state}, id) {
+      return fetch(`${rootState.api_url}/employee/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${rootState.user.token}`
+        }
+      })
+        .then(e => e.json())
+        .then(e => {
+          if (e.data) commit('employees', _.filter(state.employees, { id: e.data.id }))
+          return e
+        })
     }
   }
 }
