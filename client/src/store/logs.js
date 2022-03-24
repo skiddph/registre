@@ -3,6 +3,8 @@ import _ from 'lodash'
 import {} from 'date-fns'
 const DEFAULT_STATE = {
   logs: [],
+  logs_range: [],
+  logs_result: [],
   report: [],
   report_range: [],
   report_result: []
