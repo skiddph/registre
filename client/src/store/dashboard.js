@@ -8,7 +8,9 @@ const DEFAULT_STATE = {
   result_loading: false,
   result: [],
   result_headers: [],
-  addform: false
+  addform: false,
+  editform: false,
+  edit_id: null,
 }
 
 const module = {
@@ -58,16 +60,92 @@ const module = {
         await dispatch('logs/report', null, { root: true })
         const data = _.map(rootState.logs.report, (item) => {
           return {
-            ..._.omit(item, ['remarks']),
+            ..._.omit(item, [ 'remarks' ]),
             undertime: item.remarks?.undertime || 0,
             late: item.remarks?.late || 0,
           }
         })
-        commit('data', { ..._.omit(state.data, [ key ]), overview: data})
+        commit('data', { ..._.omit(state.data, [ key ]), overview: data })
       } else if (rootState.system[ key ]) {
         commit('data', { ..._.omit(state.data, [ key ]), [ key ]: rootState.system[ key ] })
       } else {
         commit('data', { ..._.omit(state.data, [ key ]), [ key ]: [] })
+      }
+    },
+    editform({ commit }, id) {
+      commit('edit_id', id)
+      commit('editform', true)
+    },
+    cancelform({ commit }) {
+      commit('addform', false)
+      commit('editform', false)
+      commit('edit_id', null)
+    },
+    async addfielddata({ commit, state, dispatch }, field) {
+      const fields = state.data[ state.active ]
+      fields.push(field)
+      await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
+        .then(async e => {
+          if (e.status == "success") {
+            commit('data', { ..._.omit(state.data, [ state.active ]), [ state.active ]: fields })
+            await dispatch('system/get', false, { root: true })
+            await dispatch('system/get', true, { root: true })
+            await dispatch('data', state.active)
+            const search = String(state.search)
+            dispatch('search', '')
+            dispatch('search', search)
+          }
+          return e
+        })
+    },
+    async deletefielddata({ commit, state, dispatch }, id) {
+      if (state.tabs.includes(state.active)) {
+        const fields = state.data[ state.active ]
+        fields.splice(id, 1)
+        await dispatch('system/upsert', { key: state.active, value: fields }, { root: true })
+          .then(async e => {
+            if (e.status == "success") {
+              commit('data', { ..._.omit(state.data, [ state.active ]), [ state.active ]: fields })
+              await dispatch('system/get', false, { root: true })
+              await dispatch('system/get', true, { root: true })
+              await dispatch('data', state.active)
+              const search = String(state.search)
+              dispatch('search', '')
+              dispatch('search', search)
+            }
+            return e
+          })
+      } else {
+        if(state.active == 'employees') {
+          await dispatch('employee/delete', id, { root: true })
+            .then(async e => {
+              if (e.status == "success") {
+                await dispatch('employee/get', null, { root: true })
+                await dispatch('data', state.active)
+                const search = String(state.search)
+                dispatch('search', '')
+                dispatch('search', search)
+              }
+              return e
+            })
+        } else if(state.active == 'admins') {
+          await dispatch('user/delete', id, { root: true })
+            .then(async e => {
+              if (e.status == "success") {
+                await dispatch('user/get', null, { root: true })
+                await dispatch('data', state.active)
+                const search = String(state.search)
+                dispatch('search', '')
+                dispatch('search', search)
+              }
+              return e
+            })
+        } else {
+          return {
+            status: "error",
+            message: "Unknown error occured"
+          }
+        }
       }
     }
   }
