@@ -33,6 +33,10 @@ const setActive = (key) => store.dispatch('dashboard/active', key)
       :class="`item ${store.state.dashboard.active == 'admins' ? 'active' : 'inactive'}`"
       @click="setActive('admins')"
     >admins</div>
+    <div
+      :class="`item ${store.state.dashboard.active == 'logs' ? 'active' : 'inactive'}`"
+      @click="setActive('logs')"
+    >logs</div>
   </div>
 </template>
 <style lang='scss' scoped>
