@@ -75,7 +75,7 @@ const transformLogData = (data) => {
         PM_OUT: null,
       }
       let log_f = {}
-      const log_r = _.sortBy(groupedByEmployee[ date ][ employee ], 'id', 'asc').map(e => {
+      _.sortBy(groupedByEmployee[ date ][ employee ], 'id', 'asc').map(e => {
         e.data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
         log_code[ `${e.data.time_code}_${e.data.time_sigm}` ] = e.timestamp
         log_f = {
@@ -86,7 +86,6 @@ const transformLogData = (data) => {
       })
 
       log_f.timestamps = log_code
-
       result.push(log_f)
     }
   }
