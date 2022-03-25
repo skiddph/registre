@@ -28,10 +28,24 @@ watch(search, () => {
 })
 
 const overviewFilterHandler = async (e) => {
-  store.commit('logs/report_range', [ e.from, e.to ])
-  await store.dispatch('dashboard/data', 'overview')
-  await store.dispatch('dashboard/search', search.value)
-  overviewFilterOn.value = false
+  if (store.state.dashboard.active == "overview") {
+    store.commit('logs/report_range', [ e.from, e.to ])
+    await store.dispatch('dashboard/data', 'overview')
+    await store.dispatch('dashboard/search', search.value)
+    overviewFilterOn.value = false
+  } else if (store.state.dashboard.active == "logs") {
+    await store.commit('logs/get', e)
+      .then(async e => {
+        if (e.status == "success") {
+          await store.dispatch('dashboard/data', 'logs')
+          await store.dispatch('dashboard/search', search.value)
+          overviewFilterOn.value = false
+        } else throw e.message || e.error
+      })
+      .catch(e => {
+        alert(e.message || e.error)
+      })
+  }
 }
 
 const print = async () => {
@@ -43,6 +57,8 @@ const print = async () => {
   w.close()
 }
 
+
+store.dispatch('logs/get', {from: new Date("2022-01-01").getTime(), to: Date.now()})
 </script>
 <template>
   <RangeDatePicker
@@ -58,11 +74,11 @@ const print = async () => {
     <div class="buttons">
       <button @click="refresh">Refresh</button>
       <button
-        v-if="store.state.dashboard.active != 'overview'"
+        v-if="store.state.dashboard.active != 'overview' && store.state.dashboard.active != 'logs'"
         @click="store.commit('dashboard/addform', true)"
       >Add</button>
       <button
-        v-if="store.state.dashboard.active == 'overview'"
+        v-if="store.state.dashboard.active == 'overview' || store.state.dashboard.active == 'logs'"
         @click="overviewFilterOn = true"
       >Filter</button>
       <button v-if="store.state.dashboard.active == 'overview'" @click="print">Print</button>
