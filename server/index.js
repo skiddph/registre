@@ -31,15 +31,15 @@ async function start(opts = {}) {
   const fastifyOpts = createOptions(
     {
       // server default options 
-      https: {
-        allowHTTP1: true,
-        key: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_KEY_FILE)),
-        cert: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_CERT_FILE))
-      }
     }, {
     prod: {
       options: {
-        logger: false
+        logger: false,
+        https: {
+          allowHTTP1: true,
+          key: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_KEY_FILE)),
+          cert: fs.readFileSync(path.resolve(process.cwd(), TLS_CRD_DIR, TLS_CERT_FILE))
+        }
       }
     },
     dev: {
