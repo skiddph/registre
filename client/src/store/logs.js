@@ -50,6 +50,30 @@ const module = {
           if (e.data) commit('report', e.data)
           return e
         })
+    },
+    async get({ commit, rootState, state, dispatch}, {from, to, date}) {
+      await fetch(`${rootState.api_url}/logs`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${rootState.user.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({from, to, date})
+      }) 
+        .then(e => e.json())
+        .then(e => {
+          if (e.data) {
+            const data = []
+            e.data.forEach(item => {
+              data.push({
+                ..._.omit(item, [ 'timestamps' ]),
+                ...item.timestamps  
+              })
+            })
+            commit('logs', data)
+          }
+          return e
+        })
     }
   }
 }
