@@ -73,7 +73,6 @@ const plugin = fp(async (app, opts, done) => {
     }
   }
 
-  // TODO: create log
   app.post(`${base_url}/log`, async (req, res) => {
 
     // check if body is empty
