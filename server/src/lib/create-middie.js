@@ -1,6 +1,6 @@
 const _ = require('lodash')
 const { set, format } = require('date-fns')
-const { transformLogData, transformReportData} = require('./log2.js')
+const { transformLogData, transformReportData } = require('./log2.js')
 
 const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
   const create = async (employee) => {
@@ -132,7 +132,7 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
 
     const ress = {
       ..._.omit(log, [ 'data' ]),
-      ...Object.create(JSON.parse(log.data))
+      ...Object.assign({}, typeof log.data === 'string' ? JSON.parse(log.data) : log.data)
     }
 
     return res.code(200).send({
