@@ -4,11 +4,8 @@ Registre is a QRCode base logbook system that tracks the time-in and time-out of
 ## System Requirements
 ### Operating System (OS)
 Your OS must be one of following:
- - Windows 10 or higher version
- - OpenBSD
- - GNU Linux
- - MacOS
- - IoT device/Cloud/VM/VPS that is capable of running Nodejs not below version 12
+ - Capable of running nodejs 17+
+ 
 ### Dependecies 
  - build-tools
  - nodejs
