@@ -4,7 +4,7 @@
     "version": "3.0.0",
     "entry": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development VITE_API_URL=https://127.0.0.1:3000 vite --port 80 --host --https",
+        "dev": "cross-env NODE_ENV=development VITE_API_URL=http://127.0.0.1:3000 vite --port 80 --host --https",
         "build": "vite build",
         "preview": "vite preview --host"
     },
