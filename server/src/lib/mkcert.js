@@ -1,6 +1,6 @@
 const { createCA, createCert } = require('mkcert')
-const fs = require('node:fs')
-const path = require('node:path')
+const fs = require('fs')
+const path = require('path')
 
 function mkcert({ caOpts = {}, certOpts = {}, dir = "", key = "", cert = "" }) {
   // check if dir is a string and a valid directory
