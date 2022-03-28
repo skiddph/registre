@@ -1,7 +1,7 @@
 const fp = require('fastify-plugin')
 const _ = require("lodash");
 const kMultipart = Symbol('multipart')
-const path = require('node:path')
+const path = require('path')
 
 function setMultipart(request, payload, done) {
   request[ kMultipart ] = true
