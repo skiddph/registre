@@ -52,12 +52,15 @@ const module = {
     },
     async data({ commit, state, rootState, dispatch }, key) {
       if (key == 'admins') {
+        const admins = await dispatch('user/get', null, { root: true })
         commit('data', { ..._.omit(state.data, [ key ]), admins: rootState.user.users })
+        return admins
       } else if (key == 'employees') {
-        await dispatch('employee/get', null, { root: true })
+        const employees = await dispatch('employee/get', null, { root: true })
         commit('data', { ..._.omit(state.data, [ key ]), employees: rootState.employee.employees })
+        return employees
       } else if (key == 'overview') {
-        await dispatch('logs/report', null, { root: true })
+        const overview = await dispatch('logs/report', null, { root: true })
         const data = _.map(rootState.logs.report, (item) => {
           return {
             ..._.omit(item, [ 'remarks' ]),
@@ -66,8 +69,14 @@ const module = {
           }
         })
         commit('data', { ..._.omit(state.data, [ key ]), overview: data })
+        return overview
+      } else if (key == "logs") {
+        const logs = await dispatch('logs/get', { from: "", to: "" }, { root: true })
+        commit('data', { ..._.omit(state.data, [ key ]), logs: rootState.logs.logs })
+        return logs
       } else if (rootState.system[ key ]) {
         commit('data', { ..._.omit(state.data, [ key ]), [ key ]: rootState.system[ key ] })
+        return Object.assign({}, rootState.system[ key ])
       } else {
         commit('data', { ..._.omit(state.data, [ key ]), [ key ]: [] })
       }
