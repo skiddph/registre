@@ -38,15 +38,6 @@ const filterHandler = async (e) => {
     filter.value = false
   }
 }
-
-const print = async () => {
-  const sr = document.querySelector('.search-result-container')
-  const tableCanvas = await html2canvas(sr)
-  const w = window.open('', '', 'left=0,top=0,toolbar=0,scrollbars=0,status=0')
-  w.document.body.appendChild(tableCanvas)
-  w.print()
-  w.close()
-}
 </script>
 <template>
   <RangeDatePicker
