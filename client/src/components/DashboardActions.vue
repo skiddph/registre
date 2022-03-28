@@ -6,16 +6,15 @@ import RangeDatePicker from '@/components/RangeDatePicker.vue'
 
 const search = ref('')
 const store = useStore()
-const overviewFilterOn = ref(false)
+const filter = ref(false)
 const refresh = async () => {
   store.commit('dashboard/result_loading', true)
   await store.dispatch('system/get', false)
   await store.dispatch('system/get', true)
-  store.state.dashboard.tabs.forEach(async (tab) => {
-    await store.dispatch('dashboard/data', tab)
-  })
+  store.state.dashboard.tabs.forEach(async (tab) => await store.dispatch('dashboard/data', tab))
   await store.dispatch('dashboard/data', 'employees')
   await store.dispatch('dashboard/data', 'overview')
+  await store.dispatch('dashboard/data', 'logs')
   if (store.state.user.role == 1) await store.dispatch('dashboard/data', 'admins')
   store.commit('dashboard/result_loading', false)
   await store.dispatch('dashboard/search', search.value)
@@ -27,44 +26,34 @@ watch(search, () => {
   store.dispatch('dashboard/search', search.value)
 })
 
-const overviewFilterHandler = async (e) => {
+const filterHandler = async (e) => {
   if (store.state.dashboard.active == "overview") {
     store.commit('logs/report_range', [ e.from, e.to ])
     await store.dispatch('dashboard/data', 'overview')
     await store.dispatch('dashboard/search', search.value)
-    overviewFilterOn.value = false
+    filter.value = false
   } else if (store.state.dashboard.active == "logs") {
-    await store.commit('logs/get', e)
-      .then(async e => {
-        if (e.status == "success") {
-          await store.dispatch('dashboard/data', 'logs')
-          await store.dispatch('dashboard/search', search.value)
-          overviewFilterOn.value = false
-        } else throw e.message || e.error
-      })
-      .catch(e => {
-        alert(e.message || e.error)
-      })
+    store.commit('logs/logs_range', [ e.from, e.to ])
+    await store.dispatch('dashboard/data', 'logs')
+    await store.dispatch('dashboard/search', search.value)
+    filter.value = false
   }
 }
 
 const print = async () => {
   const sr = document.querySelector('.search-result-container')
   const tableCanvas = await html2canvas(sr)
-  const w = window.open('', '', 'left=0,top=0,width=3508,height=3508,toolbar=0,scrollbars=0,status=0')
+  const w = window.open('', '', 'left=0,top=0,toolbar=0,scrollbars=0,status=0')
   w.document.body.appendChild(tableCanvas)
   w.print()
   w.close()
 }
-
-
-store.dispatch('logs/get', {from: new Date("2022-01-01").getTime(), to: Date.now()})
 </script>
 <template>
   <RangeDatePicker
-    v-if="store.state.dashboard.active == 'overview' && overviewFilterOn"
-    @cancel="overviewFilterOn = false"
-    @submit="overviewFilterHandler"
+    v-if="(store.state.dashboard.active == 'overview' || store.state.dashboard.active == 'logs') && filter"
+    @cancel="filter = false"
+    @submit="filterHandler"
   />
   <div class="actions-container" v-if="!store.state.dashboard.result_loading">
     <div class="search-container">
@@ -79,9 +68,12 @@ store.dispatch('logs/get', {from: new Date("2022-01-01").getTime(), to: Date.now
       >Add</button>
       <button
         v-if="store.state.dashboard.active == 'overview' || store.state.dashboard.active == 'logs'"
-        @click="overviewFilterOn = true"
+        @click="filter = true"
       >Filter</button>
-      <button v-if="store.state.dashboard.active == 'overview'" @click="print">Print</button>
+      <button
+        v-if="store.state.dashboard.active == 'overview' || store.state.dashboard.active == 'logs'"
+        @click="store.dispatch('printTable')"
+      >Print</button>
     </div>
   </div>
 </template>
