@@ -9,7 +9,7 @@ const error = ref("");
 
 const field = ref("");
 
-const submitAdd = async (data) => {
+const submitAdd = async () => {
   if (store.state.dashboard.tabs.includes(store.state.dashboard.active)) {
     loading.value = true;
     error.value = "";
@@ -85,10 +85,14 @@ const submitEdit = async (data) => {
             autocomplete="off"
           />
         </div>
-        <div class="group" v-for="   dd     in store.state.dashboard.tabs">
+        <div class="group" v-for="     dd       in store.state.dashboard.tabs">
           <label for="office">{{ String(dd) }}</label>
           <select name="office" v-model="store.state.dashboard.formdata[ dd ]">
-            <option v-for="   v    in store.state.dashboard.data[ dd ]" :key="v" :value="v">{{ v }}</option>
+            <option
+              v-for="     v      in store.state.dashboard.data[ dd ]"
+              :key="v"
+              :value="v"
+            >{{ v }}</option>
           </select>
         </div>
       </div>
@@ -130,9 +134,25 @@ const submitEdit = async (data) => {
         </div>
       </div>
 
-      <div v-if="store.state.dashboard.tabs.includes(store.state.dashboard.active)">
+      <div
+        v-if="store.state.dashboard.tabs.includes(store.state.dashboard.active) && store.state.dashboard.active !== 'schedule'"
+      >
         <label for="name">{{ store.state.dashboard.active }} name</label>
         <input type="text" name="name" v-model="field" autocomplete="off" />
+      </div>
+
+      <div v-if="store.state.dashboard.active == 'schedule'" class="schedule-add">
+        <label for="name">{{ store.state.dashboard.active }} Time Range</label>
+        <div class="row">
+          <div class="group">
+            <label for>From</label>
+            <input type="time" />
+          </div>
+          <div class="group">
+            <label for>To</label>
+            <input type="time" />
+          </div>
+        </div>
       </div>
 
       <div class="add-form-actions">
@@ -179,6 +199,25 @@ const submitEdit = async (data) => {
 
       button {
         @apply bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out ml-4;
+      }
+    }
+
+    .schedule-add {
+      @apply w-full flex flex-col justify-end;
+
+      .row {
+        @apply w-full flex flex-row items-center justify-center my-4;
+        .group {
+          @apply flex-1 flex flex-row items-center border justify-center mx-2 rounded;
+
+          label {
+            @apply text-gray-700 font-normal block text-sm pr-2 capitalize;
+          }
+
+          input {
+            @apply p-0 m-0 border-0;
+          }
+        }
       }
     }
   }
