@@ -1,26 +1,44 @@
 <script setup>
+import { ref, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore();
+
+const logsH = ref([ "name", ...store.state.dashboard.tabs, "AM_IN", "AM_OUT", "PM_IN", "PM_OUT" ])
+const setTabs = (e) => logsH.value = [ "name", ...e, "AM_IN", "AM_OUT", "PM_IN", "PM_OUT" ]
+watchEffect(() => setTabs(store.state.dashboard.tabs))
 </script>
 <template>
   <div v-if="!store.state.dashboard.result_loading" class="search-result-container">
+    <!-- RESULTS OVERVIEW -->
     <div class="result-for" v-if="store.state.dashboard.search">
       <span class="result-for-text">{{ store.state.dashboard.result.length }} Results for:</span>
       <span class="query">{{ store.state.dashboard.search }}</span>
     </div>
-    <div class="table-container">
-      <table v-if="store.state.dashboard.result.length > 0">
+
+    <!-- TABLE CONTAINER -->
+    <div class="table-container" id="for-print">
+      <!-- OVERVIEW | EMPLOYEES | DROPDOWN_FIELDS | ADMINS -->
+      <table
+        v-if="store.state.dashboard.result.length > 0 && store.state.dashboard.active != 'logs'"
+        :class="store.state.dashboard.active == 'logs' || store.state.dashboard.active == 'overview' ? 'table-for-print' : ''"
+      >
         <tr class="w-full">
-          <th v-for="( v, k ) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
-          <th v-if="store.state.dashboard.active != 'overview'" class="actions">Actions</th>
+          <th v-for="(       v, k       ) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
+          <th
+            v-if="store.state.dashboard.active != 'overview' && store.state.dashboard.active != 'logs'"
+            class="actions"
+          >Actions</th>
         </tr>
-        <tr v-for="( item, i )  in store.state.dashboard.result">
-          <td v-for=" h  in store.state.dashboard.result_headers" :key="h">
+        <tr v-for="(       item, i       )  in store.state.dashboard.result">
+          <td v-for="       h        in store.state.dashboard.result_headers" :key="h">
             {{
               (h == 'value' ? item : item[ h ]) || '-'
             }}
           </td>
-          <td v-if="store.state.dashboard.active != 'overview'" class="actions">
+          <td
+            v-if="store.state.dashboard.active != 'overview' && store.state.dashboard.active != 'logs'"
+            class="actions"
+          >
             <button
               v-if="store.state.dashboard.result_headers.length > 1"
               class="edit"
@@ -39,7 +57,22 @@ const store = useStore();
           </td>
         </tr>
       </table>
+
+      <!-- LOGS -->
+      <table
+        v-if="store.state.dashboard.active == 'logs'"
+        :class="store.state.dashboard.active == 'logs' || store.state.dashboard.active == 'overview' ? 'table-for-print' : ''"
+      >
+        <tr class="w-full">
+          <th v-for=" v  in logsH" :key="v">{{ v.replaceAll('_', ' ') }}</th>
+        </tr>
+        <tr v-for=" item  in store.state.dashboard.result">
+          <td v-for=" h  in logsH" :key="h">{{ item[ h ] || '-' }}</td>
+        </tr>
+      </table>
     </div>
+
+    <!-- NO RESULT -->
     <div v-if="store.state.dashboard.result.length == 0" class="no-result">
       <span>No result found</span>
     </div>
@@ -103,6 +136,29 @@ const store = useStore();
               @apply text-red-600 hover:text-red-700;
             }
           }
+        }
+      }
+    }
+
+    .table-for-print {
+      @apply w-full border-b;
+
+      th {
+        @apply uppercase font-normal text-sm;
+      }
+
+      tr:first-child {
+        @apply bg-gray-100;
+      }
+
+      tr {
+        .actions {
+          @apply text-right;
+        }
+
+        th,
+        td {
+          @apply px-2 py-0;
         }
       }
     }
