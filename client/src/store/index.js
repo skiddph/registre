@@ -13,7 +13,9 @@ const DEFAULT_ROOT_STATE = {
   api_url: API_URL,
   app: {
     name: "Registre"
-  }
+  },
+  darkMode: false,
+  darkModeInit: false
 }
 
 const store = createStore({
@@ -28,7 +30,7 @@ const store = createStore({
   mutations: createMutations(DEFAULT_ROOT_STATE),
   actions: {
     reset: createResetAction(DEFAULT_ROOT_STATE),
-    printTable({rootState}){
+    printTable({ rootState }) {
       const el = document.getElementById('for-print')
       const w = window.open('', '', 'left=0,top=0,toolbar=0,scrollbars=0,status=0')
       const css = `
@@ -83,6 +85,28 @@ const store = createStore({
       w.document.title = String(rootState.dashboard.active)
       w.print()
       w.close()
+    },
+    darkModeInit({ commit, state }) {
+      if (state.darkModeInit) return
+      const darkMode = localStorage.getItem('darkMode') == 'true'
+      if (darkMode) {
+        document.body.classList.add('dark')
+      } else {
+        document.body.classList.remove('dark')
+      }
+      commit('darkMode', darkMode)
+      localStorage.setItem('darkMode', darkMode)
+      commit('darkModeInit', true)
+    },
+    toggleDarkMode({ commit, state, dispatch }) {
+      if (!state.darkModeInit) dispatch('darkModeInit');
+      commit('darkMode', !state.darkMode)
+      localStorage.setItem('darkMode', state.darkMode)
+      if (state.darkMode) {
+        document.body.classList.add('dark')
+      } else {
+        document.body.classList.remove('dark')
+      }
     }
   }
 })
