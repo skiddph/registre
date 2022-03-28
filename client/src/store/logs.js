@@ -1,6 +1,6 @@
 import { createMutations, createResetAction } from './lib'
 import _ from 'lodash'
-import {} from 'date-fns'
+import { format } from 'date-fns'
 const DEFAULT_STATE = {
   logs: [],
   logs_range: [],
@@ -19,7 +19,7 @@ const module = {
   },
   actions: {
     reset: createResetAction(DEFAULT_STATE),
-    set_default_range({ commit }) {
+    report_range({ commit }) {
       const m = new Date()
       m.setDate(m.getDate() - 30)
       m.setHours(0, 0, 0, 0)
@@ -27,13 +27,15 @@ const module = {
       t.setHours(23, 59, 59, 999)
       commit('report_range', [ m.getTime(), t.getTime() ])
     },
-    async report({ commit, rootState, state, dispatch}) {
-      console.log(state.report_range)
-      if(!state.report_range[0]) dispatch('set_default_range')
-      console.log(JSON.stringify({
-        from: state.report_range[0],
-        to: state.report_range[1]
-      }))
+    logs_range({ commit }) {
+      const m = new Date()
+      m.setHours(0, 0, 0, 0)
+      const t = new Date()
+      t.setHours(23, 59, 59, 999)
+      commit('logs_range', [ m.getTime(), t.getTime() ])
+    },
+    async report({ commit, rootState, state, dispatch }) {
+      if (!state.report_range[ 0 ]) dispatch('report_range')
       await fetch(`${rootState.api_url}/logs/report`, {
         method: 'POST',
         headers: {
@@ -41,25 +43,29 @@ const module = {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: state.report_range[0],
-          to: state.report_range[1]
+          from: state.report_range[ 0 ],
+          to: state.report_range[ 1 ]
         })
-      }) 
+      })
         .then(e => e.json())
         .then(e => {
           if (e.data) commit('report', e.data)
           return e
         })
     },
-    async get({ commit, rootState, state, dispatch}, {from, to, date}) {
+    async get({ commit, rootState, state, dispatch }) {
+      if (!state.logs_range[ 0 ]) dispatch('logs_range')
       await fetch(`${rootState.api_url}/logs`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${rootState.user.token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({from, to, date})
-      }) 
+        body: JSON.stringify({
+          from: state.logs_range[ 0 ],
+          to: state.logs_range[ 1 ]
+        })
+      })
         .then(e => e.json())
         .then(e => {
           if (e.data) {
@@ -67,7 +73,10 @@ const module = {
             e.data.forEach(item => {
               data.push({
                 ..._.omit(item, [ 'timestamps' ]),
-                ...item.timestamps  
+                AM_IN: item.timestamps.AM_IN ?  format(new Date(item.timestamps.AM_IN),"h:mm") : "-",
+                AM_OUT: item.timestamps.AM_OUT ?  format(new Date(item.timestamps.AM_OUT),"h:mm") : "-",
+                PM_IN: item.timestamps.PM_IN ?  format(new Date(item.timestamps.PM_IN),"h:mm") : "-",
+                PM_OUT: item.timestamps.PM_OUT ?  format(new Date(item.timestamps.PM_OUT),"h:mm") : "-",
               })
             })
             commit('logs', data)
