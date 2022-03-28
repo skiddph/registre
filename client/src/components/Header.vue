@@ -120,6 +120,7 @@ const dataReset = ref(false)
       .items {
         @apply absolute bg-white border rounded flex-col justify-center shadow-lg z-10 hidden;
         transform: translateX(-80%);
+        min-width: 200px;
 
         button, a {
           @apply flex flex-row items-center text-sm font-normal capitalize;
