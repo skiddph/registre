@@ -1,6 +1,6 @@
 const { exec } = require("child_process");
 const fs = require('fs-extra')
-const path = require('node:path');
+const path = require('path');
 
 const rootDir = process.cwd();
 
