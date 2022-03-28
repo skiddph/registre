@@ -24,7 +24,11 @@ import {
   faFile,
   faUser,
   faKey,
-  faAt
+  faAt,
+  faPowerOff,
+  faCog,
+  faListUl,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faCamera)
@@ -44,7 +48,10 @@ library.add(faFile)
 library.add(faUser)
 library.add(faKey)
 library.add(faAt)
-
+library.add(faPowerOff)
+library.add(faCog)
+library.add(faListUl)
+library.add(faPlus)
 
 const app = createApp(App)
 app.use(router)
