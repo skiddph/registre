@@ -5,7 +5,7 @@ const { transformLogData, transformReportData } = require('./log2.js')
 const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
   const create = async (employee) => {
     // get current date and time
-    const date = new Date(Date.now())
+    const date = new Date()
     const date_begin = new Date(date.setHours(0, 0, 0, 0))
     const date_end = new Date(date.setHours(23, 59, 59, 999))
     const time = date.getTime()
@@ -35,7 +35,7 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
       })
 
     // get time code from date (AM|PM)
-    employee.time_code = format(date, 'a')
+    employee.time_code = format(new Date(), 'a')
 
     if (employee.has_schedule && userTodayLogs.length === 0 && employee.time_code === 'AM') {
       // AM RANGE BASE ON EMPLOYEE SCHEDULE
