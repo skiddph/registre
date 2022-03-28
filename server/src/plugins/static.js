@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin')
-const path = require('node:path')
+const path = require('path')
 const fStatic = require('fastify-static')
 
 const plugin = fp(async (app, opts = {}, done) => {
