@@ -55,36 +55,32 @@ const dataReset = ref(false)
       </router-link>
       <div class="spacer"></div>
       <button class="link">
-        <icon icon="file" />
+        <icon icon="cog" />
         <div class="items">
           <button @click="dataExport = true">
             <div class="icon">
               <icon icon="file-export" />
-            </div>Backup
+            </div>Backup Data
           </button>
           <button @click="dataImport = true">
             <div class="icon">
               <icon icon="file-import" />
-            </div>Restore
+            </div>Restore Data
           </button>
           <button @click="dataReset = true">
             <div class="icon">
               <icon icon="trash" />
-            </div>Reset
+            </div>Reset Data
           </button>
+          <router-link to="/dropdown_fields">
+            <div class="icon">
+              <icon icon="list-ul" />
+            </div>Dropdown Fields
+          </router-link>
         </div>
       </button>
-      <router-link v-if="store.state.user.role == 1" class="link" to="/superadmin" title="Dashboard">
-        <icon icon="dashboard" />
-      </router-link>
-      <router-link v-if="store.state.user.role != 1" class="link" to="/admin" title="Dashboard">
-        <icon icon="dashboard" />
-      </router-link>
-      <router-link class="link" to="/logs" title="Logs">
-        <icon icon="list" />
-      </router-link>
       <router-link class="link" to="/logout" title="Sign out">
-        <icon icon="sign-out" />
+        <icon icon="power-off" />
       </router-link>
     </div>
   </div>
@@ -125,15 +121,15 @@ const dataReset = ref(false)
         @apply absolute bg-white border rounded flex-col justify-center shadow-lg z-10 hidden;
         transform: translateX(-80%);
 
-        button {
-          @apply flex flex-row items-center;
+        button, a {
+          @apply flex flex-row items-center text-sm font-normal capitalize;
+          @apply py-2 px-4 hover:bg-gray-200 text-gray-600 hover:text-gray-900 text-left;
           .icon {
             @apply w-6;
           }
           svg {
             @apply mr-2;
           }
-          @apply py-2 px-4 hover:bg-gray-200 text-gray-600 hover:text-gray-900 text-left;
         }
       }
 
