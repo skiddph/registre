@@ -72,10 +72,10 @@ const dataReset = ref(false)
               <icon icon="trash" />
             </div>Reset Data
           </button>
-          <router-link to="/dropdown_fields">
+          <router-link to="/settings">
             <div class="icon">
-              <icon icon="list-ul" />
-            </div>Dropdown Fields
+              <icon icon="cogs" />
+            </div>System Settings
           </router-link>
         </div>
       </button>
