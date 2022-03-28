@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import html2canvas from 'html2canvas';
 import RangeDatePicker from '@/components/RangeDatePicker.vue'
 
 const search = ref('')
