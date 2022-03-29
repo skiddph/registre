@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -53,6 +53,21 @@ const submitEdit = async (data) => {
       error.value = e.message
     })
 }
+
+// schedule time range
+const str_from = ref(null);
+const str_to = ref(null);
+
+const setDefaultTime = () => {
+  if (str_from.value?.value) str_from.value.value = "08:00";
+  if (str_to.value?.value) str_to.value.value = "17:00";
+}
+
+const scheduleTimeHandler = async () => {
+    
+}
+
+onMounted(() => setDefaultTime)
 
 </script>
 <template>
