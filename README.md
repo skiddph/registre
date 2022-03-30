@@ -3,6 +3,8 @@ Registre is a QRCode base logbook system that tracks the time-in and time-out of
 
 ## System Requirements
 ### Operating System (OS)
+
+
 Your OS must be one of following:
  - Capable of running nodejs 17+
  
