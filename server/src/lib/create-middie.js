@@ -10,8 +10,12 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     const date_end = new Date(date.setHours(23, 59, 59, 999))
     const time = date.getTime()
 
-    // get schedule from employee
-    const schedule = employee.schedule
+    // get schedule from employee and parse
+    // employee.schedule = "08:00 AM - 12:00 PM"
+    const schedule = employee.schedule.split('-').map(time => {
+      time = time.trim()
+      return new Date(new Date(time).setDate(new Date().getDate()))
+    })
 
     // get all user logs from with employee id and begin date and end date
     const userTodayLogs = await app.prisma.logs.findMany({
