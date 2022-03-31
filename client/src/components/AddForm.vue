@@ -1,6 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useStore } from 'vuex'
+import { format } from 'date-fns'
 
 const store = useStore()
 
@@ -9,11 +10,17 @@ const error = ref("");
 
 const field = ref("");
 
+const scheduleTimeHandler = async () => {
+  tr_from.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_from.value.value || "00:00"}:00`).getTime();
+  tr_to.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_to.value.value || "00:00"}:00`).getTime();
+  field.value = `${tr_from.value}-${tr_to.value}`;
+}
+
 const submitAdd = async () => {
   if (store.state.dashboard.tabs.includes(store.state.dashboard.active)) {
     loading.value = true;
     error.value = "";
-    await store.dispatch('dashboard/addfielddata', field.value)
+    return await store.dispatch('dashboard/addfielddata', field.value)
       .then(e => { if (e == "error") error.value = e.message; })
       .finally(() => {
         field.value = "";
@@ -27,7 +34,7 @@ const submitAdd = async () => {
   } else {
     loading.value = true;
     error.value = "";
-    await store.dispatch('dashboard/adddata')
+    return await store.dispatch('dashboard/adddata')
       .then(e => { if (e == "error") error.value = e.message; })
       .finally(() => {
         loading.value = false
@@ -57,18 +64,19 @@ const submitEdit = async (data) => {
 // schedule time range
 const str_from = ref(null);
 const str_to = ref(null);
+const tr_from = ref(null);
+const tr_to = ref(null);
 
 const setDefaultTime = () => {
-  if (str_from.value?.value) str_from.value.value = "08:00";
-  if (str_to.value?.value) str_to.value.value = "17:00";
+  if (str_from.value && !str_from.value?.value) str_from.value.value = format(new Date().setHours(8, 0, 0, 0), 'HH:mm');
+  if (str_to.value && !str_to.value?.value) str_to.value.value = format(new Date().setHours(17, 0, 0, 0), 'HH:mm');
 }
 
-const scheduleTimeHandler = async () => {
-    
+const parseSchedule = (e) => {
+  return String(e).split('-').map(e => format(new Date(parseInt(e)), 'h:mm a')).join(' - ')
 }
 
-onMounted(() => setDefaultTime)
-
+watchEffect(() => setDefaultTime())
 </script>
 <template>
   <div
@@ -100,14 +108,14 @@ onMounted(() => setDefaultTime)
             autocomplete="off"
           />
         </div>
-        <div class="group" v-for="     dd       in store.state.dashboard.tabs">
-          <label for="office">{{ String(dd) }}</label>
-          <select name="office" v-model="store.state.dashboard.formdata[ dd ]">
+        <div class="group" v-for="dd in store.state.dashboard.tabs">
+          <label :for="dd">{{ String(dd) }}</label>
+          <select :name="dd" v-model="store.state.dashboard.formdata[ dd ]">
             <option
-              v-for="     v      in store.state.dashboard.data[ dd ]"
+              v-for="v in store.state.dashboard.data[ dd ]"
               :key="v"
               :value="v"
-            >{{ v }}</option>
+            >{{ dd == "schedule" ? parseSchedule(v): v }}</option>
           </select>
         </div>
       </div>
@@ -161,11 +169,11 @@ onMounted(() => setDefaultTime)
         <div class="row">
           <div class="group">
             <label for>From</label>
-            <input type="time" />
+            <input type="time" ref="str_from" @change="scheduleTimeHandler" />
           </div>
           <div class="group">
             <label for>To</label>
-            <input type="time" />
+            <input type="time" ref="str_to" @change="scheduleTimeHandler" />
           </div>
         </div>
       </div>
