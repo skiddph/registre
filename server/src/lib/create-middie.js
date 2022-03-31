@@ -14,7 +14,7 @@ const defaultMiddie = (app, req, res, ERROR_CODE, SUCCESS_CODE) => {
     // employee.schedule = "08:00 AM - 12:00 PM"
     const schedule = employee.schedule.split('-').map(time => {
       time = time.trim()
-      return new Date(new Date(time).setDate(new Date().getDate()))
+      return new Date(new Date(parseInt(time)).setDate(new Date().getDate()))
     })
 
     // get all user logs from with employee id and begin date and end date
