@@ -90,21 +90,21 @@ export default {
       this.state = 'in'
       this.success = 'In'
       this.error = ''
-      this.employee = log.name
+      this.employee = log.data?.name
       this.$refs.in.play()
     },
     onStateOut(log) {
       this.state = 'out'
       this.success = 'Out'
       this.error = ''
-      this.employee = log.name
+      this.employee = log.data?.name
       this.$refs.out.play()
     },
     onStateError(log) {
       this.state = 'error'
-      this.error = log ? log.error : 'Unknown error'
+      this.error = log ? log.message || log.error || 'Unknown error' : 'Unknown error'
       this.success = ''
-      this.employee = log.name || ""
+      this.employee = log ? log.data?.name || "" : ""
       this.$refs.err.play()
     },
     setOnReady() {
@@ -129,11 +129,14 @@ export default {
     },
     async log(id) {
       this.state = 'loading'
-      const res = await this.$store.dispatch('log', id)
-      if (res?.error) this.onStateError(res);
-      else if (res?.isOut) this.onStateOut(res);
-      else if (res?.id) this.onStateIn(res);
-      else this.onStateError(null);
+      const res = await this.$store.dispatch('logs/create', id)
+        .catch(e => console.log('hh', e))
+      console.log(res)
+
+      if (res.status == "error" && res.status != "success") return this.onStateError(res);
+      if(res.data.time_sigm == "OUT") return this.onStateOut(res);
+      if(res.data.time_sigm == "IN") return this.onStateIn(res);
+      return this.onStateError(res);
     },
     async onDetect(promise) {
       clearTimeout(this.idle)
