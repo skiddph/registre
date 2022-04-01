@@ -73,16 +73,28 @@ const module = {
             e.data.forEach(item => {
               data.push({
                 ..._.omit(item, [ 'timestamps' ]),
-                AM_IN: item.timestamps.AM_IN ?  format(new Date(item.timestamps.AM_IN),"h:mm") : "-",
-                AM_OUT: item.timestamps.AM_OUT ?  format(new Date(item.timestamps.AM_OUT),"h:mm") : "-",
-                PM_IN: item.timestamps.PM_IN ?  format(new Date(item.timestamps.PM_IN),"h:mm") : "-",
-                PM_OUT: item.timestamps.PM_OUT ?  format(new Date(item.timestamps.PM_OUT),"h:mm") : "-",
+                AM_IN: item.timestamps.AM_IN ? format(new Date(item.timestamps.AM_IN), "h:mm") : "-",
+                AM_OUT: item.timestamps.AM_OUT ? format(new Date(item.timestamps.AM_OUT), "h:mm") : "-",
+                PM_IN: item.timestamps.PM_IN ? format(new Date(item.timestamps.PM_IN), "h:mm") : "-",
+                PM_OUT: item.timestamps.PM_OUT ? format(new Date(item.timestamps.PM_OUT), "h:mm") : "-",
+                date: format(new Date(item.timestamps.AM_IN || item.timestamps.AM_OUT || item.timestamps.PM_IN || item.timestamps.PM_OUT), "MMM dd, yyyy")
               })
             })
             commit('logs', data)
           }
           return e
         })
+    },
+    async create({ rootState }, id) {
+      return await fetch(`${rootState.api_url}/log`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${rootState.user.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      })
+        .then(e => e.json())
     }
   }
 }
