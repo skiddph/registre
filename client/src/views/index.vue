@@ -9,8 +9,6 @@ const router = useRouter()
 watchEffect(async () => {
   await store.dispatch('user/get')
 
-  console.log(store.state.user.sac)
-
   if (store.state.user.token) {
     if (store.state.user.role === 1) {
       router.push('/superadmin')
@@ -22,7 +20,6 @@ watchEffect(async () => {
   } else if (store.state.user.sac > 0) {
     router.push('/scan')
   } else {
-    console.log(store.state.user.toke)
     router.push('/register')
   }
 })
