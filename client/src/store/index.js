@@ -79,6 +79,14 @@ const store = createStore({
           table, th, td {
             border: .5px solid #ccc;
           }
+
+          tr.grace td {
+            color: yellow;
+          }
+
+          tr.late td {
+            color: red;
+          }
         </style>
       `
       w.document.write(el.outerHTML + css)
