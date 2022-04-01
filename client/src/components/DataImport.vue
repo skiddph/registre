@@ -5,16 +5,16 @@
         <div v-if="loading" class="loading">
           <icon icon="spinner" />
         </div>
-        <h3>
+        <form :action="$store.state.api_url + '/data/restore'" method="post" encType="multipart/form-data">
           <span>Select File to Restore</span>
           <div class="upload">
-            <input type="file" @change="fileHandler" accept=".json" />
+            <input type="file" accept=".json" name="file" />
           </div>
           <div class="actions">
             <button @click="close">Cancel</button>
-            <button @click="restore">Restore</button>
+            <button type="submit">Restore</button>
           </div>
-        </h3>
+        </form>
       </div>
     </div>
   </teleport>
@@ -28,49 +28,13 @@ export default {
       default: false
     }
   },
-  data: () => ({
-    loading: false,
-    filedata: null
-  }),
   emits: [ 'close' ],
   methods: {
     close() {
       this.$emit('close')
-    },
-    fileHandler(e) {
-      var input = e.target;
-      var reader = new FileReader();
-      const data = null
-      reader.onload = () => this.filedata = JSON.parse(reader.result).data;
-      reader.readAsText(input.files[ 0 ]);
-    },
-    async restore() {
-      this.loading = true
-      const auth = this.$store.state.token ? true : false;
-      const API_URL = this.$store.state.api_url;
-      await fetch(`${API_URL}/restore`, {
-        method: 'POST',
-        headers: {
-          ...((auth, token) => (auth ? { 'Authorization': `Bearer ${token}` } : {}))(auth, this.$store.state.token),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: this.filedata
-        })
-      })
-        .then(e => e.json())
-        .then(() => {
-          alert('Data successfully restored')
-        })
-        .catch(e => ({ error: e.message || e.error }))
-        .finally(() => {
-          this.loading = false
-          this.close()
-        })
     }
   }
 }
-
 </script>
 <style lang="scss" scoped>
 .wrapper {
