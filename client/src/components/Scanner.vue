@@ -130,9 +130,9 @@ export default {
     async log(id) {
       this.state = 'loading'
       const res = await this.$store.dispatch('logs/create', id)
-        .catch(e => console.log('hh', e))
-      console.log(res)
+        .catch(() => null)
 
+      if (!res) return this.onStateError({ message: "Unknown Error"})
       if (res.status == "error" && res.status != "success") return this.onStateError(res);
       if(res.data.time_sigm == "OUT") return this.onStateOut(res);
       if(res.data.time_sigm == "IN") return this.onStateIn(res);
