@@ -6,7 +6,11 @@ import DataImport from '@/components/DataImport.vue'
 import DataReset from '@/components/DataReset.vue'
 const store = useStore()
 
-const fields = [ 'user', 'unit', 'position', 'office', 'logs', 'employee' ]
+const fields = [ "user",
+  "logs",
+  "employee",
+  "system"
+]
 
 const dataExport = ref(false)
 const dataImport = ref(false)
@@ -37,12 +41,7 @@ const dataReset = ref(false)
       <router-link class="link" to="/login" title="Sign in">
         <icon icon="sign-in" />
       </router-link>
-      <router-link
-        v-if="store.state.user.sac == 0"
-        class="link"
-        to="/register"
-        title="Register"
-      >
+      <router-link v-if="store.state.user.sac == 0" class="link" to="/register" title="Register">
         <icon icon="tasks" />
       </router-link>
     </div>
@@ -122,7 +121,8 @@ const dataReset = ref(false)
         transform: translateX(-80%);
         min-width: 200px;
 
-        button, a {
+        button,
+        a {
           @apply flex flex-row items-center text-sm font-normal capitalize;
           @apply py-2 px-4 hover:bg-gray-200 text-gray-600 hover:text-gray-900 text-left;
           .icon {
