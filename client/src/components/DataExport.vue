@@ -7,7 +7,7 @@
         </div>
         <h3>Select Data to backup</h3>
         <div class="checkboxes">
-          <div v-for="(        field, i        ) in fields" class="checkbox" :key="i">
+          <div v-for="(field, i) in fields" class="checkbox" :key="i">
             <input type="checkbox" :ref="field" :id="field" />
             <label :for="field">{{ field }}</label>
           </div>
@@ -42,12 +42,6 @@ export default {
     close() {
       this.$emit('close')
     },
-    download(data) {
-      let j = document.createElement("a")
-      j.download = "logbook-" + format(Date.now(), 'yyyyMMddHHmmss') + ".json"
-      j.href = URL.createObjectURL(new Blob([ JSON.stringify(data, null, 2) ]))
-      j.click()
-    },
     async backup() {
       const selected = []
       for (let field of this.fields)
@@ -55,27 +49,9 @@ export default {
           selected.push(field)
 
       this.loading = true
-      const auth = this.$store.state.token ? true : false;
-      const API_URL = this.$store.state.api_url;
-      await fetch(`${API_URL}/backup`, {
-        method: 'POST',
-        headers: {
-          ...((auth, token) => (auth ? { 'Authorization': `Bearer ${token}` } : {}))(auth, this.$store.state.token),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fields: selected
-        })
-      })
-        .then(e => e.json())
-        .then((e) => {
-          this.download(e)
-        })
-        .catch(e => ({ error: e.message || e.error }))
-        .finally(() => {
-          this.loading = false
-          this.close()
-        })
+      await this.$store.dispatch('backupData', selected)
+        .then((e) => e ? this.close() : null)
+        .finally(() => this.loading = false)
     }
   }
 }
