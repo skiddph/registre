@@ -115,6 +115,49 @@ const store = createStore({
       } else {
         document.body.classList.remove('dark')
       }
+    },
+    async backupData({ rootState }, fields) {
+      const url = await fetch(`${rootState.api_url}/data/backup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${rootState.user.token}`
+        },
+        body: JSON.stringify({ backup: fields })
+      })
+      .then(res => res.json())
+
+      if(url.status == "success") {
+        const downloadLink = rootState.server_url + url.link
+
+        // fetch raw json file content
+        const response = await fetch(downloadLink)
+        const blob = await response.blob()
+        
+        // create a link to the file
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(blob)
+        a.download = url.filename
+        console.log(url)
+        a.click()
+        return true
+      } else {
+        alert(url.message || "Failed to backup data")
+        return false
+      }
+    },
+    async resetData({ rootState }) {
+      return await fetch(`${rootState.api_url}/data/reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${rootState.user.token}`
+        },
+        // empty body
+        body: JSON.stringify({})
+      })
+      .then(res => res.json())
+      .then(e => e.status == "success")
     }
   }
 })
