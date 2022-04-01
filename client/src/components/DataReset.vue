@@ -36,24 +36,10 @@ export default {
     },
     async reset() {
       this.loading = true
-      const auth = this.$store.state.token ? true : false;
-      const API_URL = this.$store.state.api_url;
-      await fetch(`${API_URL}/reset`, {
-        method: 'POST',
-        headers: {
-          ...((auth, token) => (auth ? { 'Authorization': `Bearer ${token}` } : {}))(auth, this.$store.state.token),
-        }
-      })
-        .then(e => e.json())
-        .then(() => {
-          alert('Data successfully reset')
-          this.$router.push('/logout')
-        })
-        .catch(e => ({ error: e.message || e.error }))
-        .finally(() => {
-          this.loading = false
-          this.close()
-        })
+      await this.$store.dispatch('resetData')
+        .then((e) => e ? this.$router.push('/logout'): e)
+        .then(e => !e ? this.close() : e)
+        .finally(() => this.loading = false)
     }
   }
 }
