@@ -92,7 +92,6 @@ const module = {
     },
     async updatedata({ state, dispatch }) {
       if (state.active == 'employees') {
-        console.log('update employees')
         const data = _.pick(Object.assign({}, state.formdata), [ 'name', 'id' ])
         data.dropdown_fields = _.omit(Object.assign({}, state.formdata), [ 'name', 'id' ])
         return await dispatch('employee/update', data, { root: true })
