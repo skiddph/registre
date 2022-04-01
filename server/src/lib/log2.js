@@ -81,11 +81,23 @@ const transformLogData = (data) => {
         log_f = {
           ...log_f,
           ..._.omit(e, [ 'data', 'timestamp', 'id' ]),
-          ..._.omit(e.data, [ 'time_code', 'time_sigm', 'schedule' ]),
+          ..._.omit(e.data, [ 'time_code', 'time_sigm', 'schedule', 'log_remarks']),
+          ...(() => {
+            const d = {}
+            e.data.log_remarks.forEach(e => d[e] = true)
+            return d
+          })()
         }
       })
 
       log_f.timestamps = log_code
+      if(
+        (log_code.AM_IN && log_code.AM_OUT && !log_code.PM_IN && !log_code.PM_OUT) || 
+        (!log_code.AM_IN && !log_code.AM_OUT && log_code.PM_IN && log_code.PM_OUT)
+      ) {
+        log_f.undertime = true
+      }
+
       result.push(log_f)
     }
   }
@@ -96,22 +108,33 @@ const transformLogData = (data) => {
 const transformReportData = (data) => {
   logs = transformLogData(data)
   const result = Object.create(null)
+
   logs.forEach(e => {
-    const remarks = e.remarks || false
-    result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule' ])
-    if (!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {}
-
-    if(
-      (e.timestamps.AM_IN && e.timestamps.AM_OUT && !e.timestamps.PM_IN && !e.timestamps.PM_OUT) ||
-      (!e.timestamps.AM_IN && !e.timestamps.AM_OUT && e.timestamps.PM_IN && e.timestamps.PM_OUT)
-    ) {
-      result[ e.employee ].remarks.undertime = result[ e.employee ].remarks.undertime ? result[ e.employee ].remarks.undertime + 1 : 1
+    result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule', 'late', 'grace', 'late', 'undertime'])
+    if (!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {
+      late: 0,
+      undertime: 0,
+      grace: 0,
+      early: 0,
     }
 
-    if (remarks) {
-      // increment remarks
-      result[ e.employee ].remarks[ remarks ] = result[ e.employee ].remarks[ remarks ] ? result[ e.employee ].remarks[ remarks ] + 1 : 1
-    }
+
+    if(e.late) result[ e.employee ].remarks.late++
+    if(e.grace) result[ e.employee ].remarks.grace++
+    if(e.undertime) result[ e.employee ].remarks.undertime++
+    if(e.early) result[ e.employee ].remarks.early++
+
+    // if(
+    //   (e.timestamps.AM_IN && e.timestamps.AM_OUT && !e.timestamps.PM_IN && !e.timestamps.PM_OUT) ||
+    //   (!e.timestamps.AM_IN && !e.timestamps.AM_OUT && e.timestamps.PM_IN && e.timestamps.PM_OUT)
+    // ) {
+    //   result[ e.employee ].remarks.undertime = result[ e.employee ].remarks.undertime ? result[ e.employee ].remarks.undertime + 1 : 1
+    // }
+
+    // if (remarks) {
+    //   // increment remarks
+    //   result[ e.employee ].remarks[ remarks ] = result[ e.employee ].remarks[ remarks ] ? result[ e.employee ].remarks[ remarks ] + 1 : 1
+    // }
   })
 
   return Object.values(result)
