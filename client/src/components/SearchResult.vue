@@ -1,11 +1,11 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { useStore } from 'vuex'
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 const store = useStore();
 
 const logsH = ref([])
-const setTabs = (e) => logsH.value = [ "name", ...e.filter(e => e != "schedule"), 'AM_IN', 'AM_OUT', 'PM_IN', 'PM_OUT' ]  
+const setTabs = (e) => logsH.value = [ "name", ...e.filter(e => e != "schedule"), 'AM_IN', 'AM_OUT', 'PM_IN', 'PM_OUT' ]
 const parseSchedule = (e) => {
   return String(e).split('-').map(e => format(new Date(parseInt(e)), 'h:mm a')).join(' - ')
 }
@@ -27,14 +27,14 @@ watchEffect(() => setTabs(store.state.dashboard.tabs))
         :class="store.state.dashboard.active == 'logs' || store.state.dashboard.active == 'overview' ? 'table-for-print' : ''"
       >
         <tr class="w-full">
-          <th v-for="( v, k ) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
+          <th v-for="(v, k) in store.state.dashboard.result_headers" :key="k">{{ v }}</th>
           <th
             v-if="store.state.dashboard.active != 'overview' && store.state.dashboard.active != 'logs'"
             class="actions"
           >Actions</th>
         </tr>
-        <tr v-for="( item, i )  in store.state.dashboard.result">
-          <td v-for=" h  in store.state.dashboard.result_headers" :key="h">
+        <tr v-for="(item, i) in store.state.dashboard.result">
+          <td v-for="h in store.state.dashboard.result_headers" :key="h">
             {{
               store.state.dashboard.active == "schedule" || h == "schedule" ? parseSchedule(h == 'value' ? item : item[ h ]) : (h == 'value' ? item : item[ h ]) || '-'
             }}
@@ -68,10 +68,15 @@ watchEffect(() => setTabs(store.state.dashboard.tabs))
         :class="store.state.dashboard.active == 'logs' || store.state.dashboard.active == 'overview' ? 'table-for-print' : ''"
       >
         <tr class="w-full">
-          <th v-for="  v   in logsH" :key="v">{{ v.replaceAll('_', ' ') }}</th>
+          <th>date</th>
+          <th v-for="v in logsH" :key="v">{{ v.replaceAll('_', ' ') }}</th>
         </tr>
-        <tr v-for="  item   in store.state.dashboard.result">
-          <td v-for="  h   in logsH" :key="h">{{ item[ h ] || '-' }}</td>
+        <tr
+          v-for="item in store.state.dashboard.result"
+          :class="item.late ? 'late' : item.grace ? 'grace' : ''"
+        > 
+          <td>{{ item.date}}</td>
+          <td v-for="h in logsH" :key="h">{{ item[ h ] || '-' }}</td>
         </tr>
       </table>
     </div>
@@ -141,6 +146,18 @@ watchEffect(() => setTabs(store.state.dashboard.tabs))
             }
           }
         }
+
+        &.grace {
+          td {
+            @apply text-yellow-600;
+          }
+        }
+
+        &.late {
+          td {
+            @apply text-red-600;
+          }
+        }
       }
     }
 
@@ -163,6 +180,18 @@ watchEffect(() => setTabs(store.state.dashboard.tabs))
         th,
         td {
           @apply px-2 py-0;
+        }
+
+        &.grace {
+          td {
+            @apply text-yellow-600;
+          }
+        }
+
+        &.late {
+          td {
+            @apply text-red-600;
+          }
         }
       }
     }
