@@ -144,13 +144,13 @@ const plugins = fp(async (app, opts, done) => {
 
     return res.code(200).send({
       ...SUCCESS_CODE[ 'DS001' ],
-      link: '/download/' + filename
+      link: '/download/' + filename,
+      filename
     })
   })
 
   // data restore where they upload the file
   app.post(`${base_url}/data/restore`, async (req, res) => {
-
     // get file
     if (!req.body?.file?.tempFilePath) {
       return res.code(403).send(ERROR_CODE[ 'DE001' ])
@@ -198,16 +198,8 @@ const plugins = fp(async (app, opts, done) => {
             }
           }
 
-          return res.code(200).send({
-            ...SUCCESS_CODE[ 'DS002' ],
-            data: {
-              ...((t, f) => {
-                const d = {}
-                for (let tb of Object.keys(t)) d[ tb ] = `${t[ tb ] - (f[ tb ] || 0)} of ${t[ tb ]}`
-                return d
-              })(total, fail)
-            }
-          })
+          // redirect to main
+          return res.redirect('/')
         } else throw 'Invalid data version'
       } else throw 'Invalid data'
     } catch (e) {
