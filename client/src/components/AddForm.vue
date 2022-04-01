@@ -28,7 +28,6 @@ const submitAdd = async () => {
         store.dispatch('dashboard/cancelform')
       })
       .catch(e => {
-        console.log(e)
         error.value = e.message
       })
   } else {
@@ -41,7 +40,6 @@ const submitAdd = async () => {
         store.dispatch('dashboard/cancelform')
       })
       .catch(e => {
-        console.log(e)
         error.value = e.message
       })
   }
@@ -56,7 +54,6 @@ const submitEdit = async (data) => {
       store.dispatch('dashboard/cancelform')
     })
     .catch(e => {
-      console.log(e)
       error.value = e.message
     })
 }
