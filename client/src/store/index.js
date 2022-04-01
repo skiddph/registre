@@ -138,7 +138,6 @@ const store = createStore({
         const a = document.createElement('a')
         a.href = URL.createObjectURL(blob)
         a.download = url.filename
-        console.log(url)
         a.click()
         return true
       } else {
