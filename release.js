@@ -35,3 +35,5 @@ const archiveRelease = async (cb) => {
   archive.stderr.on('data', (data) => console.error(data))
   archive.on('close', (code) => console.log(`child process exited with code ${code}`))
 }
+
+build()
