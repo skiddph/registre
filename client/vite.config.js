@@ -30,6 +30,16 @@ export default defineConfig({
     build: {
         extractCSS: true,
         minify: 'terser',
-        outDir: '../server/public'
+        outDir: '../server/public',
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vue-bundle': ['vue','vuex','vue-router'],
+                    'fontawesome': ['@fortawesome/fontawesome-svg-core','@fortawesome/free-solid-svg-icons','@fortawesome/vue-fontawesome'],
+                    'scanner': ['qrcode-reader-vue3'],
+                    'utils': ['date-fns','lodash','postcss-import']
+                }
+            }
+        }
     }
 })
