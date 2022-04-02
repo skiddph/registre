@@ -10,11 +10,7 @@ const error = ref("");
 
 const field = ref("");
 
-const scheduleTimeHandler = async () => {
-  tr_from.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_from.value.value || "00:00"}:00`).getTime();
-  tr_to.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_to.value.value || "00:00"}:00`).getTime();
-  field.value = `${tr_from.value}-${tr_to.value}`;
-}
+
 
 const submitAdd = async () => {
   if (store.state.dashboard.tabs.includes(store.state.dashboard.active)) {
@@ -64,9 +60,17 @@ const str_to = ref(null);
 const tr_from = ref(null);
 const tr_to = ref(null);
 
+
+const scheduleTimeHandler = async () => {
+  tr_from.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_from.value.value || "00:00"}:00`).getTime();
+  tr_to.value = new Date(`${format(new Date(), 'yyyy-MM-dd')}T${str_to.value.value || "00:00"}:00`).getTime();
+  field.value = `${tr_from.value}-${tr_to.value}`;
+}
+
 const setDefaultTime = () => {
   if (str_from.value && !str_from.value?.value) str_from.value.value = format(new Date().setHours(8, 0, 0, 0), 'HH:mm');
   if (str_to.value && !str_to.value?.value) str_to.value.value = format(new Date().setHours(17, 0, 0, 0), 'HH:mm');
+  scheduleTimeHandler()
 }
 
 const parseSchedule = (e) => {
@@ -74,6 +78,7 @@ const parseSchedule = (e) => {
 }
 
 watchEffect(() => setDefaultTime())
+onMounted(() => setDefaultTime())
 </script>
 <template>
   <div
@@ -130,7 +135,7 @@ watchEffect(() => setDefaultTime())
         <div class="group">
           <label for="name">Name</label>
           <input
-            type="password"
+            type="text"
             name="name"
             v-model="store.state.dashboard.formdata[ 'name' ]"
             autocomplete="off"
