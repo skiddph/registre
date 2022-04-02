@@ -174,6 +174,7 @@ export default {
         } else if (error.name === 'StreamApiNotSupportedError') {
           // browser seems to be lacking features
         }
+        console.log(error.name)
       } finally {
         // hide loading indicator
       }
