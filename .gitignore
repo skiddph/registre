@@ -3,3 +3,5 @@ release/
 server/prisma/*.db
 server/tmp/
 server/emergency-backup-*.json
+server/*.exe
+*.log
