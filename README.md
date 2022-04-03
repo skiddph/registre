@@ -6,7 +6,7 @@ Registre is a QRCode base logbook system that tracks the time-in and time-out of
 
 
 Your OS must be one of following:
- - Capable of running nodejs 17+
+ - Capable of running nodejs 15+
  
 ### Dependecies 
  - build-tools
