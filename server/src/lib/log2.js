@@ -110,7 +110,7 @@ const transformReportData = (data) => {
   const result = Object.create(null)
 
   logs.forEach(e => {
-    result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule', 'late', 'grace', 'late', 'undertime'])
+    result[ e.employee ] = _.omit(e, [ 'remarks', 'timestamps', 'has_schedule', 'late', 'grace', 'early', 'late', 'undertime'])
     if (!result[ e.employee ].hasOwnProperty('remarks')) result[ e.employee ].remarks = {
       late: 0,
       undertime: 0,
