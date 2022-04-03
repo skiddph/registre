@@ -5,42 +5,20 @@ Registre is a QRCode base logbook system that tracks the time-in and time-out of
 ### Operating System (OS)
 
 
-Your OS must be one of following:
- - Capable of running nodejs 15+
+Your OS must:
+ - Capable of running nodejs >=15.x.x
  
 ### Dependecies 
  - build-tools
  - nodejs
+ - g++
 
-## Setup
-### Step 1: Install Required Application
+## For Contributors
+ - there are no commits standard
+ - fork the repository and create your own branch with format `v3-{username}` (ex: `v3-eru123`), and start the exploration/development
+ - to generate production file, run this command in the root directory: `npm run release` and it will generate a directory and a zip file inside `release` directory
 
- - Install necessary applications [nodejs v12+](https://nodejs.org/en/download/)
-
-### Step 2: Prepare workspace
-
- - Extract the `registre-*.zip` file from the latest [release](https://github.com/skiddph/registre/releases)
- - Open Terminal/Shell/CMD and cd to the extracted folder
- ```cd path/to/extracted/folder/registre```
- - Install npm dependencies
- ```npm install```
- - Run the setup command to set up the database
- ```npm run setup```
-
-## CLI Usage
-
-### Start the application
-
- - Open Terminal/Shell/CMD and cd to the extracted folder
- ```cd path/to/extracted/folder/registre```
- - Run start command
- ```npm run setup```
- - Open the generated links in the browser
- - **Note:** The `local` link can only be accessed in the server or local machine
-
-### Reset database manually
-
- - Open Terminal/Shell/CMD and cd to the extracted folder
- ```cd path/to/extracted/folder/registre```
- - Run reset command
- ```npm run reset```
+## For Users
+ - Download zip file from the latest version under [v3](https://github.com/skiddph/registre/releases/tag/v3) tag
+ - In the extracted folder run the `setup.exe` file to install the project's dependencies
+ - In the extracted folder run the `start.exe` file to start the server. The server will create/open available port on your system, you can open the links in the browser and start using the app.
